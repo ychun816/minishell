@@ -14,13 +14,26 @@
 
 
 # define PROMPT "\001\033[1;36m\002supershell>$ \001\033[0m\002" //color setting
-# define DEF_ENV "SHELL=supershell"
+# define DEFAULT_ENV "SHELL=supershell"
+
+
+// typedef struct s_exec
+// {
+
+// }	t_exec
+
 
 typedef struct s_shell
 {
-	unsigned char exit_code;
-
-
+	int default_in;
+	int default_out;
+	unsigned int exit_code;
+	pid_t *pids; //Pointer to an array of process IDs of child processes.
+	t_exec *exec; //Points to a structure holding command execution details.
+	int pid_count;
+	int exec_count;
+	t_shell env;
+	t_shell next;
 }	t_shell;
 
 
