@@ -1,7 +1,7 @@
 #ifndef LEXING_H
 # define LEXING_H
 
-# include "../includes/lexing.h"
+# include "../includes/minishell.h"
 
 typedef struct s_shell	t_shell;
 typedef struct s_token	t_token;

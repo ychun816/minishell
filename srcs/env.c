@@ -7,7 +7,7 @@
  * - Calls env_create() to allocate memory for a new t_env structure, initializing it with the extracted ID, value, and a duplicate of the raw string.
  * - Returns the newly created environment variable structure.
  */
-t_env	set_default_env(void)
+t_env	*set_default_env(void)
 {
 	char *env_id;
 	char *env_value;
@@ -24,9 +24,9 @@ char *get_env_id(char *env_line) //If raw points to the beginning of the string 
 {
 	char *equal;
 
-	equal = ft_strchr(env_line, '=');
 	if (!env_line)
 		return (NULL);
+	equal = ft_strchr(env_line, '=');
 	if (!equal)
 		return (ft_strdup(env_line));
 	else if (equal - env_line == 0) //invalid id(= at first place)
@@ -46,14 +46,14 @@ char *get_env_value(char *env_line)
 {
 	char *equal;
 	
-	equal = ft_strchr(env_line, '=');
 	if (!env_line)
 		return (NULL);
+	equal = ft_strchr(env_line, '=');
 	if (!equal)
 		return (NULL);
 	else if (equal - env_line == 0)
 		return (NULL);
-	return (ft_strdup(env_line, (equal - env_line + 1)));
+	return (ft_strdup(env_line + (equal - env_line + 1)));
 }
 
 /**
@@ -65,11 +65,11 @@ char *get_env_value(char *env_line)
  * - Returns a pointer to the newly created environment variable structure.
  */
 
-t_shell *create_env(char *env_id, char *env_value, char *env_line)
+t_env *create_env(char *env_id, char *env_value, char *env_line)
 {
 	t_env *new;
 
-	new = malloc(sizeof(t_shell));//Malloc memory for new_env
+	new = malloc(sizeof(t_env));//Malloc memory for new_env
 	if (!new)//Check if memory fail -> if fail -> free, return NULL
 	{
 		free(env_id);
@@ -93,9 +93,9 @@ t_shell *create_env(char *env_id, char *env_value, char *env_line)
  * - Returns 0 to indicate success.
  */
 
-int env_add_back(t_shell *head, t_shell *new)
+int env_add_back(t_env **head, t_env *new)
 {
-	t_shell *current;
+	t_env *current;
 
 	if (*head == NULL)
 		*head = new;

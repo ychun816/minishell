@@ -7,7 +7,10 @@ static int check_line_empty(char *line)
 	return (0);
 }
 
-t_env dup_env(char *env[])
+//inside dup_edit_env:
+//TODO : if env exists => edit the value, otherwise create it
+
+t_env *dup_env(char *env[])
 {
 	int	i; // Index for iterating through the environment variables
 	char *env_id; // Variable to hold the identifier of the environment variable(the part before the =)
@@ -16,11 +19,11 @@ t_env dup_env(char *env[])
 	t_env *tmp;
 
 	i = 0;
-	res_env = NULL;
+	res_env = set_default_env();;
 
 	//Check if the environment pointer is NULL or points to an empty string
-	if (!env || (env && *env == NULL)) //envp points to a valid location; But the environment variable list is empty.
-		return (set_default_env());
+	// if (!env || (env && *env == NULL)) //envp points to a valid location; But the environment variable list is empty.
+	// 	return (set_default_env());
 	while (env[i])// Loop through each environment variable
 	{
 		env_id = get_env_id(env[i]);//get identifier
@@ -29,7 +32,7 @@ t_env dup_env(char *env[])
 		//if fail -> return NULL
 		if (!tmp)
 			return (NULL);
-		res_env = env_add_back(env[i], tmp);
+		env_add_back(&res_env, tmp);
 		i++;
 	}
 	return (res_env);
@@ -37,7 +40,7 @@ t_env dup_env(char *env[])
 //Functions like export, unset, or env can rely on env_add_back to modify the environment. 
 //
 
-t_shell int_shell(char *env[])//initialize & dup env to supershell
+t_shell *init_shell(char *env[])//initialize & dup env to supershell
 {
 	t_shell *content; // Declare a pointer to a context structure
 	
@@ -45,7 +48,7 @@ t_shell int_shell(char *env[])//initialize & dup env to supershell
 	if (!content)
 		return (NULL);
 	content->env = dup_env(env); // Duplicate the environment variables into the context
-	if (!content->env)
+	if (!(content->env))
 	{
 		free(content);
 		return (NULL);
@@ -72,14 +75,18 @@ int read_n_loop(t_shell *content)
 		line = readline(PROMPT);
 		if (!line)
 			break ;// Exit the loop to end the shell
+		if (strncmp(line, "exit", 4) == 0)
+			break ;//TESTER
+		if (strncmp(line, "env", 3) == 0)
+			display_env(content->env);//TESTER
 		else if (check_line_empty(line) == 0)// check if line valid
 		{
 			add_history(line);//add history //REMEMBER TO CLEAR 
-			if (process_pipeline(content, line) != 0)//process pipeline
-			{
-				ft_putstr_fd("Parcing Error\n", 2);
-				content->exit_code = 2;
-			}
+			// if (process_pipeline(content, line) != 0)//process pipeline
+			// {
+			// 	ft_putstr_fd("Parcing Error\n", 2);
+			// 	content->exit_code = 2;
+			// }
 			line = NULL;//reset line
 		}
 		if (line)//if line not null -> free
@@ -95,8 +102,7 @@ int main(int ac, char *av[], char *env[])
 	content = NULL;
 	(void)ac;
 	(void)av;
-	(void)env;
-	content = init_content(env);//initialize everthing to 0/NULL
+	content = init_shell(env);//initialize everthing to 0/NULL
 	if (!content)
 		return (EXIT_FAILURE);
 	read_n_loop(content);//strat loop -> readline(PROMPT)

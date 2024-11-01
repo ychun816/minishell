@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2024/10/29 17:30:52 by yilin            ###   ########.fr        #
+#    Updated: 2024/11/01 15:41:40 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ LIBFT_DIR = libft
 #                              SRC & OBJ FILES                                 #
 # **************************************************************************** #
 
-SRCS = $(addprefix $(SRCS_DIR)/, main.c) #######
+SRCS = $(addprefix $(SRCS_DIR)/, builtin.c env.c main.c) #######
 #split_quote.c
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 

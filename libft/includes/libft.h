@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 12:04:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/10/29 14:18:16 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/01 15:06:09 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void(*del)(void *));
 t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
 int		ft_strcmp(char *s1, char *s2);
+char	*ft_strndup(const char *src, int n);
 
 #endif

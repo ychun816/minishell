@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/17 11:22:23 by yilin             #+#    #+#              #
-#    Updated: 2024/09/28 17:03:34 by yilin            ###   ########.fr        #
+#    Updated: 2024/11/01 15:06:44 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,8 @@ ARRAY_DIR  = $(SRCS_DIR)ft_array/ft_split.c\
              $(SRCS_DIR)ft_array/ft_strrchr.c\
              $(SRCS_DIR)ft_array/ft_strtrim.c\
              $(SRCS_DIR)ft_array/ft_substr.c\
-			 $(SRCS_DIR)ft_array/ft_strcmp.c
+			 $(SRCS_DIR)ft_array/ft_strcmp.c\
+			 $(SRCS_DIR)ft_array/ft_strndup.c
 
 IS_DIR     = $(SRCS_DIR)ft_is/ft_isalnum.c\
              $(SRCS_DIR)ft_is/ft_isalpha.c\

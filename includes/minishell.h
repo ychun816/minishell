@@ -63,25 +63,23 @@ typedef struct s_shell
 	t_exec *exec; //Points to a structure holding command execution details.
 	int pid_count;
 	int exec_count;
-	t_env env;
+	t_env *env;
 }	t_shell;
 
 
 t_env *create_env(char *env_id, char *env_value, char *env_line);
-t_env set_default_env(void);
+t_env	*set_default_env(void);
 char *get_env_id(char *env_line); //If raw points to the beginning of the string (index 0)
 char *get_env_value(char *env_line);
-int env_add_back(t_shell *head, t_shell *new);
+int env_add_back(t_env **head, t_env *new);
 
 
-t_shell int_shell(char *env[]);//initialize & dup env to supershell
-
-
-
-t_env dup_env(char *env[]);
-t_shell int_shell(char *env[]);//initialize & dup env to supershell
+t_env *dup_env(char *env[]);
+t_shell *init_shell(char *env[]);//initialize & dup env to supershell
 int read_n_loop(t_shell *content);
 
 
+/*test*/
+void display_env(t_env *env);
 
 #endif
