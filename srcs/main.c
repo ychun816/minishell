@@ -1,31 +1,31 @@
 #include "minishell.h"
 
-int check_line_empty(char *line)
+static int check_line_empty(char *line)
 {
 	if (line[0] == '\0')
 		return (1);
 	return (0);
 }
 
-t_shell dup_env(char *env[])
+t_env dup_env(char *env[])
 {
 	int	i; // Index for iterating through the environment variables
 	char *env_id; // Variable to hold the identifier of the environment variable(the part before the =)
 	char *env_value; // Variable to hold the value of the environment variable(environment variable’s contents, after =)
-	t_shell *res_env; 
-	t_shell *tmp;
+	t_env *res_env; 
+	t_env *tmp;
 
 	i = 0;
 	res_env = NULL;
 
 	//Check if the environment pointer is NULL or points to an empty string
-	if (!env || env && *env == NULL) //envp points to a valid location; But the environment variable list is empty.
+	if (!env || (env && *env == NULL)) //envp points to a valid location; But the environment variable list is empty.
 		return (set_default_env());
 	while (env[i])// Loop through each environment variable
 	{
 		env_id = get_env_id(env[i]);//get identifier
 		env_value = get_env_value(env[i]);//get value
-	//	tmp = create_env();// Create a new environment variable structure (tmp)
+		tmp = create_env(env_id, env_value, ft_strdup(env[i])); // Create a new environment variable structure (tmp)
 		//if fail -> return NULL
 		if (!tmp)
 			return (NULL);
@@ -46,7 +46,10 @@ t_shell int_shell(char *env[])//initialize & dup env to supershell
 		return (NULL);
 	content->env = dup_env(env); // Duplicate the environment variables into the context
 	if (!content->env)
-		return (free(content), NULL);
+	{
+		free(content);
+		return (NULL);
+	}
 	////initialize everything
 	content->default_in = STDIN_FILENO; // Set default input to standard input
 	content->default_out = STDOUT_FILENO; // Set default output to standard output
@@ -97,7 +100,7 @@ int main(int ac, char *av[], char *env[])
 	if (!content)
 		return (EXIT_FAILURE);
 	read_n_loop(content);//strat loop -> readline(PROMPT)
-	free_all(env);
+	// free_all(env);
 	ft_putstr_fd("exit\n", 2);//or 1
 	return (EXIT_SUCCESS);
 }

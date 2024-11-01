@@ -7,16 +7,16 @@
  * - Calls env_create() to allocate memory for a new t_env structure, initializing it with the extracted ID, value, and a duplicate of the raw string.
  * - Returns the newly created environment variable structure.
  */
-void set_default_env(void)
+t_env	set_default_env(void)
 {
 	char *env_id;
 	char *env_value;
-	t_shell *content; // Pointer to hold the new environment variable structure
+	t_env *def_content; // Pointer to hold the new environment variable structure
 
 	env_id = get_env_id(DEFAULT_ENV);
 	env_value = get_env_value(DEFAULT_ENV);
-	content = create_env(env_id, env_value, content);
-	return (content);
+	def_content = create_env(env_id, env_value, ft_strdup(DEFAULT_ENV));
+	return (def_content);
 }
 
 //USER_ZDOTDIR=/home/yilin
@@ -67,7 +67,7 @@ char *get_env_value(char *env_line)
 
 t_shell *create_env(char *env_id, char *env_value, char *env_line)
 {
-	t_shell *new;
+	t_env *new;
 
 	new = malloc(sizeof(t_shell));//Malloc memory for new_env
 	if (!new)//Check if memory fail -> if fail -> free, return NULL
@@ -77,8 +77,8 @@ t_shell *create_env(char *env_id, char *env_value, char *env_line)
 		return (NULL);
 	}
 	//Set the ID, value, raw string, and next pointer for the new environment variable structure
-	new->env_id = env_id; // Set the variable ID (e.g., "PATH")
-	new->env_value = env_value;  // Set the variable value (e.g., "/usr/bin")
+	new->id = env_id; // Set the variable ID (e.g., "PATH")
+	new->value = env_value;  // Set the variable value (e.g., "/usr/bin")
 	new->env_line = env_line; // Set the raw input string (e.g., "PATH=/usr/bin")
 	new->next = NULL; // Initialize the 'next' pointer to NULL, as it's a new node
 	return (new);
