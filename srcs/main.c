@@ -1,4 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
+/*   Updated: 2024/11/01 18:35:50 by yilin            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+void	env_free(t_env )
+{
+	
+}
+
+void	free_all_shell(t_shell *content)
+{
+	// Check if ctx (shell context) exists before freeing its contents
+	if (content)
+	{
+		if (content->exec)//exec
+			builder_free(content->exec);
+		if (content->env)//env
+			env_free(content->env);
+		if (content->pids)//pids
+			free(content->pids);
+		free (content);//content
+	}
+}
 
 static int check_line_empty(char *line)
 {
@@ -106,7 +138,7 @@ int main(int ac, char *av[], char *env[])
 	if (!content)
 		return (EXIT_FAILURE);
 	read_n_loop(content);//strat loop -> readline(PROMPT)
-	// free_all(env);
+	free_all_shell(env);
 	ft_putstr_fd("exit\n", 2);//or 1
 	return (EXIT_SUCCESS);
 }
