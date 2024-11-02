@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/01 18:35:50 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/02 19:43:20 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ t_env *dup_env(char *env[])
 	t_env *tmp;
 
 	i = 0;
-	res_env = set_default_env();;
-
+	res_env = set_default_env();
 	//Check if the environment pointer is NULL or points to an empty string
 	// if (!env || (env && *env == NULL)) //envp points to a valid location; But the environment variable list is empty.
 	// 	return (set_default_env());

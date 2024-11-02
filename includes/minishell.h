@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/01 17:55:26 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/02 20:00:55 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,23 @@ typedef struct s_shell
 }	t_shell;
 
 
+/*init shell*/
+t_shell *init_shell(char *env[]);//initialize & dup env to supershell
+int read_n_loop(t_shell *content);
+t_env *dup_env(char *env[]);
+
+/*lexing*/
+int ft_token_str_len(char *str);
+int ft_quotelen(char *str, char sd_quote);
+t_token_type get_token_type(char *str);
+int check_meta_char(char c);
+
+/*handle env*/
 t_env *create_env(char *env_id, char *env_value, char *env_line);
 t_env	*set_default_env(void);
 char *get_env_id(char *env_line); //If raw points to the beginning of the string (index 0)
 char *get_env_value(char *env_line);
 int env_add_back(t_env **head, t_env *new);
-
-
-t_env *dup_env(char *env[]);
-t_shell *init_shell(char *env[]);//initialize & dup env to supershell
-int read_n_loop(t_shell *content);
-
 
 /*test*/
 void display_env(t_env *env);
