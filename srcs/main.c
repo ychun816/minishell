@@ -6,24 +6,19 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/02 19:43:20 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/04 15:00:38 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	env_free(t_env )
-{
-	
-}
 
 void	free_all_shell(t_shell *content)
 {
 	// Check if ctx (shell context) exists before freeing its contents
 	if (content)
 	{
-		if (content->exec)//exec
-			builder_free(content->exec);
+	//	if (content->exec)//exec
+	//		builder_free(content->exec);
 		if (content->env)//env
 			env_free(content->env);
 		if (content->pids)//pids
@@ -137,7 +132,7 @@ int main(int ac, char *av[], char *env[])
 	if (!content)
 		return (EXIT_FAILURE);
 	read_n_loop(content);//strat loop -> readline(PROMPT)
-	free_all_shell(env);
+	free_all_shell(content);
 	ft_putstr_fd("exit\n", 2);//or 1
 	return (EXIT_SUCCESS);
 }

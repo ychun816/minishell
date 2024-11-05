@@ -4,6 +4,7 @@
 		"stdio.h": "c",
 		"unistd.h": "c",
 		"limits.h": "c",
-		"lexing.h": "c"
+		"lexing.h": "c",
+		"type_traits": "c"
 	}
 }

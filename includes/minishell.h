@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/02 20:00:55 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/05 18:54:04 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 # include <limits.h> 
 # include <readline/readline.h>
 # include <readline/history.h>
+
+# define SUCCESS 0
+# define FAILURE 1
 
 # define PROMPT "\001\033[1;36m\002supershell>$ \001\033[0m\002" //color setting
 # define DEFAULT_ENV "SHELL=supershell"
@@ -84,20 +87,40 @@ t_shell *init_shell(char *env[]);//initialize & dup env to supershell
 int read_n_loop(t_shell *content);
 t_env *dup_env(char *env[]);
 
-/*lexing*/
-int ft_token_str_len(char *str);
-int ft_quotelen(char *str, char sd_quote);
-t_token_type get_token_type(char *str);
-int check_meta_char(char c);
-
 /*handle env*/
 t_env *create_env(char *env_id, char *env_value, char *env_line);
 t_env	*set_default_env(void);
 char *get_env_id(char *env_line); //If raw points to the beginning of the string (index 0)
 char *get_env_value(char *env_line);
 int env_add_back(t_env **head, t_env *new);
+void	env_free(t_env *env);
+
+/*lexing*/
+t_token	*lex_tokenize_each_wd(char *str, t_shell *content);
+
+
+/*lexing helper*/
+t_token	*create_token(char *token_value, int n, t_token_type type, t_shell *content);
+int	ft_1token_len(char *str, t_token_type type);
+int ft_token_str_len(char *str);
+int ft_quotes_len(char *str, char sd_quote);
+t_token_type get_token_type(char *str);
+int check_meta_char(char c);
+
+/*token*/
+int	token_add_back(t_token **head, t_token *new_token);
+void	token_free(t_token *token);
+
+/*free /cleanup */
+void	free_all_shell(t_shell *content);
+
+
+
+
 
 /*test*/
 void display_env(t_env *env);
+
+
 
 #endif

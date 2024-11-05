@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/01 17:58:09 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/05 18:37:25 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,5 +118,72 @@ int env_add_back(t_env **head, t_env *new)
 			current = current->next; //keep looping
 		current->next = new; //add to the last
 	}
-	return (0);
+	return (SUCCESS);
 }
+
+/** ENV FREE
+ * 
+ */
+void	env_free(t_env *env)
+{
+	t_env	*tmp_next;
+
+	while(env)
+	{
+		tmp_next = env->next;
+		if (env->id)
+			free(env->id);
+		if (env->value)
+			free(env->value);
+		if (env->env_line)
+			free(env->env_line);
+		free(env);
+		env = tmp_next; //Move to the next node
+	}
+}
+
+/*
+The line `env = next;` (or equivalently `env = env->next;`) is crucial,
+because it **advances the pointer to the next node** in a linked list, 
+allowing the loop to continue processing each node one by one. 
+###
+In a linked list, each node has a pointer to the next node (`next`), forming a chain. 
+By setting `env = next;`, you are effectively **moving down the chain** of nodes, 
+which is essential in traversal or cleanup operations.
+
+##
+Without `env = next;`, the loop would repeatedly process the same node (the one pointed to by `env`) without moving forward. 
+This would cause:
+1. An **infinite loop** if the condition to stop relies on reaching the end of the list (`env == NULL`).
+2. Incomplete processing or cleanup, as the loop would not reach subsequent nodes in the list.
+
+### 
+How `env = next;` Works in the Context of Freeing a Linked List
+
+When you free each node in a linked list, you:
+1. **Access the Next Node**: Store `env->next` in a temporary variable (like `next` or `tmp`) before freeing `env`, so you know where the next node is.
+2. **Free the Current Node**: Deallocate the memory associated with `env`.
+3. **Move to the Next Node**: `env = next;` updates `env` to point to the next node, allowing the loop to continue and repeat the process on each subsequent node.
+
+### 
+Example:
+
+```c
+while (env)
+{
+    t_env *next = env->next; // Step 1: Store the next node
+    free(env);               // Step 2: Free the current node
+    env = next;              // Step 3: Move to the next node
+}
+```
+
+Each iteration:
+- **Step 1** temporarily saves the address of the next node.
+- **Step 2** frees the current node.
+- **Step 3** moves to the saved next node, ensuring the loop advances through the list.
+
+Without `env = next;`, the pointer `env` would never progress beyond the first node, 
+and only the first node would be freed repeatedly, 
+resulting in an infinite loop and memory leaks for the remaining nodes in the list.
+
+*/
