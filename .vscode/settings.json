@@ -5,6 +5,8 @@
 		"unistd.h": "c",
 		"limits.h": "c",
 		"lexing.h": "c",
-		"type_traits": "c"
+		"type_traits": "c",
+		"libft.h": "c",
+		"lib2.h": "c"
 	}
 }

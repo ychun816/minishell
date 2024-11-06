@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 18:58:20 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/05 19:44:43 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/06 17:02:45 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@ t_token	*lex_tokenize_each_wd(char *str, t_shell *content)
  * - It reads through the entire line, calling lex_tokenize each time it encounters a meaningful word or symbol.
  * - Frees any tokens created so far and returns NULL to indicate an error.
  * 
+ * @note 
+ * lex_tokenize_each_wd(&(input_line[i]), content);
+ * &(input_line[i]) instead of input_line: to iterate and process each character one by one
+ * 
  * @return  a linked list of tokens, 
  * representing the entire line as a sequence of categorized words or symbols.
  * 
@@ -59,15 +63,45 @@ t_token	*lexing(t_shell *content, char *input_line)
 			i++;
 		else
 		{
-			current = lex_tokenize_each_wd(input_line, content); //&(input_line[i]) ?? 
+			current = lex_tokenize_each_wd(&(input_line[i]), content); //&(input_line[i]) ?? 
 			if (!current) // If tokenize failed, free previously created tokens and exit
 			{
 				token_free(token);
 				return (NULL);
 			}
-			token_add_back(&token, current); //&(token) ??
+			token_add_back(&token, current); //&token: pointer to t_token
 			i += ft_strlen(current->value);
 		}
 	}
 	return (token);
 }
+
+
+/*test
+
+void	print_token(t_token *token)
+{
+		while (token)
+		{
+			printf("TOKEN: %s  |  TOKEN TYPE: %i\n", token->value, token->type);
+			token = token->next;
+		}
+}
+
+int test_lexing(void)
+{
+	char	*input_line = "echo Hello ; ls | grep test";
+	t_shell	*content = NULL;
+	t_token	*tokens;
+	
+	tokens = lexing(content, input_line);
+	if (!tokens)
+	{
+		printf("Error: Tokenization Fail\n");
+		return (FAILURE);
+	}
+	print_token(tokens);
+	token_free(tokens);
+	return (SUCCESS);
+}
+*/
