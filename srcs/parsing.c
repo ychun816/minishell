@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/07 17:53:02 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/12 18:48:49 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,47 +108,165 @@ int	prs_handle_cmd(t_token *token)
 	return (SUCCESS);
 }
 
-/** HEREDOC 
+/** HANDLE HEREDOC 
+ * @param char *filename; Variable to store the name of the generated file
+ * @param int fd; File descriptor for the temporary file
+ * @param int end; Flag to indicate an error (if set to 1)
+ * (1) Initialize the error flag to 0 (no error)
+ * (2) Loop token list -> check if it's HEREDOC
+ * -1  Generate a unique filename based on the heredoc content
+ * -2  open() //6: 4+2 (Owner can read and write) ; 4: Group can read ; 4: Group can read
+ * -3  Initialize the heredoc file with the input content (if error -> end = 1)
+ * -4  close(fd); + free() (Free the original value of the next token and replace it with the generated filename)
+ * -5  Mark this token as NON_TERM_HEREDOC to indicate it has been processed
+ * (3) Return end, which is 0 if successful or 1 if an error occurred
  * 
- * 
- *  
 */
 int	prs_handle_heredoc(t_token *token)
 {
-	char	*filename; // Variable to store the name of the generated file
-	int	fd; // File descriptor for the temporary file
-	int	end; // Flag to indicate an error (if set to 1)
+	char	*filename;
+	int	fd;
+	int	end;
 
-	end = 0;// Initialize the error flag to 0 (no error)
+	end = 0;
 	while (token && end == 0)
 	{
-		if (token->type == HEREDOC) //current token is HEREDOC
+		if (token->type == HEREDOC)
 		{
-			// Generate a unique filename based on the heredoc content
-			filename = shell_generate_random(token->next->value); 
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)
 				return (FAILURE);
-			// Initialize the heredoc file with the input content
 			if (prs_init_heredoc(fd, token->next->value) != 0)
-				end = 1; // Set end to 1 if ps_init_here_doc encounters an error
-			close (fd); // Close the file after writing to it
-			free(token->next->value); // Free the original value of the next token and replace it with the generated filename
+				end = 1;
+			close (fd);
+			free(token->next->value);
 			token->next->value =filename;
-			token->type = NON_TERM_HEREDOC;// Mark this token as N_HEREDOC to indicate it has been processed
+			token->type = NON_HEREDOC;
 		}
 		token = token->next;
 	}
-	return (end);// Return end, which is 0 if successful or 1 if an error occurred
+	return (end);
 }
 
-/**
+/** INIT HEREDOC
  * 
+ * (1) Set up a signal handler for SIGINT, which will execute `sig_heredoc` when Ctrl+C is pressed.
+ * (2) Start infinite loop
+ * -1 Display a "heredoc>" prompt and wait for the user to enter a line of text.
+ * -2 If the user enters Ctrl+D (end-of-file), `line` will be NULL. -> print error -> exit the loop
+ * -3 Check if (input matches the end-of-file marker) OR (signal to end heredoc has been triggered) -> free -> exit
+ * -4 Write the line to the file descriptor `fd` (where heredoc output is being saved)
+ * -5 Add a newline after each line in the output file
+ * -6 Free line buffer for the next iteration
+ * (3) Check if the `end_heredoc` flag in `g_signals` is set to 1, 
+ * 	   Indicate heredoc process was interrupted (e.g., by a signal like Ctrl+C)
+ * -> Reset the `end_heredoc` flag to 0 so it’s ready for future heredoc operations.
  * 
  */
-int	prs_remove_null(t_token *token)
+int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
-		
+	char	*line; 
+	
+	signal(SIGINT, sig_heredoc);
+	while (1) 
+	{
+		line = readline("heredoc>");
+		if (!line)
+		{
+			ft_putstr_fd("here_doc: called end-of-line (ctrl-d)\n", 2);
+			break ;
+		}
+		if (ft_strcmp(line, eof_delimiter) != 0 || g_signal.end_heredoc == 1)
+		{
+			free(line);
+			break ;
+		}
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+	if (g_signal.end_heredoc == 1)
+	{
+		g_signal.end_heredoc == 0;
+		return (FAILURE); //1
+	}
+	return (SUCCESS); //0
+}
+
+
+/** REMOVE NODE NULL
+ * (1) Initialize 'token' to point to the head of the list
+ * (2) Loop & handle NULL values at the beginning of the list: Loop and delete
+ * (3) Loop & handle NULL not at the beginning of the list: Loop and delete; if not NULL -> continue loop
+ * 
+ * @note *head = token;
+ * it updates the head pointer to the new start of the linked list after removing any initial nodes with NULL values.
+ * 
+ */
+int	prs_remove_node_null(t_token **head)
+{
+	t_token	*current;
+	t_token	*token;
+	
+	token = (*head);
+
+	while (token != NULL && token->value == NULL)
+	{
+		current = token;
+		token = token->next;
+		free(current);
+	}
+	*head = token;
+	while (token != NULL && token->value != NULL)
+	{
+		if (token->next->value == NULL)
+		{
+			current = token->next;
+			token->next = token->next->next; // Bypass the node with NULL value, linking to the following node.
+			free(current);
+		}
+		else
+			token = token->next; // Move to the next node only if no deletion occurred.
+	}
+	return (SUCCESS);
+}
+
+/** CHECK ALL NODES NULL
+ * Checks if all nodes in the linked list have NULL values, 
+ * 
+ * @return 1 if found NULL value
+ * @return 0 if found non-NULL value.
+ * 
+ */
+int	prs_check_allnodes_null(t_token *token)
+{
+	while (token)
+	{
+		if (token->value)
+			return (0);
+		token = token->next;
+	}
+	return (1);
+}
+
+/** UNLINK ERROR
+ * Iterates through a linked list of t_token nodes,
+ * When it encounters a node with a specific type (NON_HEREDOC), 
+ * It unlinks (deletes) a file whose path is stored in the value field of the next node. 
+ * 
+ * @note 
+ * unlink(): 
+ * - Delete temporary files associated with here-documents.
+ * - Ensures that these temporary files are properly removed.
+ */
+void	prs_unlink_error(t_token *token)
+{	
+	while (token)
+	{
+		if (token->type == NON_HEREDOC)
+			unlink(token->next->value);
+		token = token->next;
+	}
 }
 
 
@@ -162,9 +280,9 @@ int	parsing(t_token **token)
 		return_code = FAILURE;
 	else if (prs_expand_n_quotes(*token) != 0)
 		return_code = FAILURE;
-	else if (prs_remove_null(token) != 0)
+	else if (prs_remove_node_null(token) != 0)
 		return_code = FAILURE;
-	else if (prs_check_all_null(*token) != 0)
+	else if (prs_check_allnodes_null(*token) != 0)
 		return_code = FAILURE_VOID;
 	else if (prs_handle_redir(*token) != 0)
 		return_code = FAILURE;
@@ -172,7 +290,7 @@ int	parsing(t_token **token)
 		return_code = FAILURE;
 	else if (prs_handle_heredoc(*token) != 0)
 	{
-		prs_unlink_err(*token);
+		prs_unlink_error(*token);
 		return_code = FAILURE_VOID;
 	}
 	return (return_code);

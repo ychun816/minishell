@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/06 17:18:58 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/12 18:48:15 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <limits.h> 
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -82,6 +83,15 @@ typedef struct s_shell
 	t_env *env;
 }	t_shell;
 
+typedef struct s_signal
+{
+	int	end_heredoc;
+	int	signal_code;
+	
+}	t_signal;
+
+extern t_signal g_signal;
+
 
 /*init shell*/
 t_shell *init_shell(char *env[]);//initialize & dup env to supershell
@@ -99,7 +109,6 @@ void	env_free(t_env *env);
 /*lexing*/
 t_token	*lex_tokenize_each_wd(char *str, t_shell *content);
 
-
 /*lexing helper*/
 t_token	*create_token(char *token_value, int n, t_token_type type, t_shell *content);
 int	ft_1token_len(char *str, t_token_type type);
@@ -111,6 +120,21 @@ int check_meta_char(char c);
 /*token*/
 int	token_add_back(t_token **head, t_token *new_token);
 void	token_free(t_token *token);
+
+/*parsing*/
+
+int	prs_handle_quotes(t_token *token);
+int	prs_handle_redir(t_token *token);
+int	prs_handle_cmd(t_token *token);
+int	prs_handle_heredoc(t_token *token);
+int	prs_remove_node_null(t_token **head);
+int	prs_check_allnodes_null(t_token *token);
+void	prs_unlink_error(t_token *token);
+
+/*heredoc*/
+int	prs_init_heredoc(int fd, char *eof_delimiter);
+
+
 
 /*free /cleanup */
 void	free_all_shell(t_shell *content);

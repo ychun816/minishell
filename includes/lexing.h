@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/05 18:17:44 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/12 18:41:06 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef enum e_token_type
 	INFILE,
 	OUTFILE,
 	HEREDOC,
-	NON_TERM_HEREDOC,
+	NON_HEREDOC,
 	APPEND,
 	PIPE,
 	STR,

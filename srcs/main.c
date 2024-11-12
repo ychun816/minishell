@@ -6,11 +6,13 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/06 16:26:01 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/12 17:26:11 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_signal g_signal = {0};
 
 void	free_all_shell(t_shell *content)
 {
@@ -64,7 +66,6 @@ t_env *dup_env(char *env[])
 	return (res_env);
 }
 //Functions like export, unset, or env can rely on env_add_back to modify the environment. 
-//
 
 t_shell *init_shell(char *env[])//initialize & dup env to supershell
 {
