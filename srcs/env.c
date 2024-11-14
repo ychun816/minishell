@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/13 14:44:02 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/14 15:27:07 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,15 @@ void	env_free(t_env *env)
 		env = tmp_next; //Move to the next node
 	}
 }
+
+/**FOR PASIG- GET ENV*/
+t_env	*get_env_variable(char *pathname, t_env env)
+{
+	
+
+	return (env);
+}
+
 
 /*
 The line `env = next;` (or equivalently `env = env->next;`) is crucial,

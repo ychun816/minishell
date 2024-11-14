@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/13 18:01:33 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/14 15:26:12 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
  * 	
  * @return (int) length after $ sign
  */
-int	ft_envname_len(char	*after_dollar)
+int	ft_pathname_len(char	*after_dollar)
 {
 	int	len;
 	len = 0;
@@ -53,12 +53,12 @@ int	ft_envname_len(char	*after_dollar)
  * 
  * @return (char *)
  */
-char	*get_envname(char *after_dollar)
+char	*get_env_pathname(char *after_dollar)
 {
 	int	len;
 	char	*env_name;
 
-	len = ft_envname_len(after_dollar);
+	len = ft_pathname_len(after_dollar);
 	env_name = ft_strndup(after_dollar, len);
 	return (env_name);
 }
@@ -77,7 +77,7 @@ char	*get_envname(char *after_dollar)
  * Returns the part(string) BEFORE $USER (environment variable).
  * @return (char *)
  */
-char	*get_str_before_envname(char *full_str, char *after_dollar)
+char	*get_str_before_pathname(char *full_str, char *after_dollar)
 {
 	int	front_strlen;
 	char	*front_str;
@@ -93,12 +93,12 @@ char	*get_str_before_envname(char *full_str, char *after_dollar)
  * Returns the part(string) AFTER $USER (environment variable).
  *  
  */
-char	*get_str_after_envname(char *full_str, char *after_dollar)
+char	*get_str_after_pathname(char *full_str, char *after_dollar)
 {
 	int	envname_len;
 	char	*after_str;
 	
-	envname_len = ft_envname_len(after_dollar);
+	envname_len = ft_pathname_len(after_dollar);
 	// Skip the environment variable name itself.
 	//By adding envname_len (4) to after_dollar, the pointer now points to the character after USER
 	after_str = ft_strdup(full_str + envname_len); 
@@ -116,50 +116,48 @@ char	*get_str_after_envname(char *full_str, char *after_dollar)
  * $$ : 
  * 
  */
-char	*get_envname_path(char *after_dollar, t_shell content)
+char	*get_pathname_envvariable(char *after_dollar, t_shell *content)
 {
-	char	*envname_path;
+	char	*pathname;
 	t_env	*env_variable;
 	int	code;
 	
 	// Get the name of the environment variable from the `after_dollar$` string.
-	envname_path = get_envname(after_dollar);
+	pathname = get_env_pathname(after_dollar);
 
 	// Check if the variable is "?" (special variable for the last command's exit code).
-	if (envname_path && ft_strcmp(envname_path, "?") == 0)
+	if (pathname && ft_strcmp(pathname, "?") == 0)
 	{
-		free(envname_path); // Free `path` as it's no longer needed.
+		free(pathname); // Free `path` as it's no longer needed.
 		if (g_signal.signal_code != 0) // If a signal exit code is present, use it, then reset the signal code.
-			return (handle_qmark(content));
+			return (handle_qmark_exit_status(content));
 	}
 	// Check if the variable is "$" 
-	else if (envname_path && ft_strcmp(envname_path, "$") == 0)
+	else if (pathname && ft_strcmp(pathname, "$") == 0)
 	{
-		free(envname_path);
-		return (handle_dollar_sign());
+		free(pathname);
+		return (handle_dollar_pid());
 	}
-
-
-	return (envname_path);
+	env_variable = get_env_variable();
+	
+	return (pathname);
 }
 
 /** envname_handle_question_mark
  * 
- * @note
- * If a signal terminated the process, 
- * g_signals.signal_code will hold that signal's exit status (e.g., 130 for SIGINT). 
- * The function returns that signal code.
- * 
  * - If a signal code is present, it takes priority.
  * - If NO signal code is present, the normal exit code is used.
  * 
+ * @note
  * - If a process was terminated by a signal, the function returns the signal code as a string (ft_itoa(code)).
  * - If the process wasn’t terminated by a signal (g_signals.signal_code == 0), it returns the normal exit code (ft_itoa(ctx->exit_code)).
  * - After returning the signal code, it’s reset to 0 to avoid using stale signal values for future processes.
  * 
+ * @return 
  * 
+ *  
 */
-char	*handle_question_mark(t_shell *content)
+char	*handle_qmark_exit_status(t_shell *content)
 {
 	int status_code;
 
@@ -177,8 +175,10 @@ char	*handle_question_mark(t_shell *content)
 /** handle dollar sign
  * 
  */
-char *handle_dollar_sign(t_shell content)
+char *handle_dollar_pid(void)
 {
-
-	return ();	
+	//int	pid;
+	//pid = getpid();
+	//return (ft_itoa(pid));
+	return (ft_strdup("program_pid"));
 }
