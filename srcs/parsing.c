@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/13 13:30:49 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/15 16:40:11 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,16 @@ int	prs_handle_quotes(t_token *token)
 	}
 	return (SUCCESS);
 }
+
+/** prs_expand_n_quotes
+ * 
+ */
+int	prs_expand_and_quotes(t_token *token)
+{
+	
+}
+
+
 
 /** REDIR
  * - Check if the first token is PIPE -> ERROR

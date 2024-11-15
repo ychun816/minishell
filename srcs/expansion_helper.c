@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/14 15:26:12 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/15 16:24:27 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,8 @@ char	*get_str_after_pathname(char *full_str, char *after_dollar)
  * Ex: "$USER", ctx (with "USER" = "john"); "john" is the value
  * 
  * @note
- * $? : 
- * $$ : 
+ * $? : expands to the exit status (return code) of the last command executed.
+ * $$ : expands to the process ID (PID) of the shell that is executing the script or command.
  * 
  */
 char	*get_pathname_envvariable(char *after_dollar, t_shell *content)
@@ -121,7 +121,7 @@ char	*get_pathname_envvariable(char *after_dollar, t_shell *content)
 	char	*pathname;
 	t_env	*env_variable;
 	int	code;
-	
+
 	// Get the name of the environment variable from the `after_dollar$` string.
 	pathname = get_env_pathname(after_dollar);
 
@@ -138,12 +138,16 @@ char	*get_pathname_envvariable(char *after_dollar, t_shell *content)
 		free(pathname);
 		return (handle_dollar_pid());
 	}
-	env_variable = get_env_variable();
-	
+	env_variable = get_env(pathname, content->env);
+	// Free `path` as it is no longer needed after the lookup.
+	if (pathname) 
+		free(pathname);
+	if (!env_variable || !env_variable->value) // If the variable is not found or has no value, return NULL.
+		return (NULL);
 	return (pathname);
 }
 
-/** envname_handle_question_mark
+/** HANDLE QMARK_EXIT STATUS ($?)
  * 
  * - If a signal code is present, it takes priority.
  * - If NO signal code is present, the normal exit code is used.
@@ -154,7 +158,6 @@ char	*get_pathname_envvariable(char *after_dollar, t_shell *content)
  * - After returning the signal code, it’s reset to 0 to avoid using stale signal values for future processes.
  * 
  * @return 
- * 
  *  
 */
 char	*handle_qmark_exit_status(t_shell *content)
@@ -172,7 +175,7 @@ char	*handle_qmark_exit_status(t_shell *content)
 	return (ft_itoa(content->exit_code));
 }
 
-/** handle dollar sign
+/** HANDLE DOLLAR SIGN PID ($$)
  * 
  */
 char *handle_dollar_pid(void)

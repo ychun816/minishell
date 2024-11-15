@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/12 18:48:15 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/15 16:36:39 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ int	token_add_back(t_token **head, t_token *new_token);
 void	token_free(t_token *token);
 
 /*parsing*/
-
 int	prs_handle_quotes(t_token *token);
 int	prs_handle_redir(t_token *token);
 int	prs_handle_cmd(t_token *token);
@@ -130,6 +129,20 @@ int	prs_handle_heredoc(t_token *token);
 int	prs_remove_node_null(t_token **head);
 int	prs_check_allnodes_null(t_token *token);
 void	prs_unlink_error(t_token *token);
+
+/*expansion*/
+
+
+
+/*expansion helper*/
+int	ft_pathname_len(char	*after_dollar);
+char	*get_env_pathname(char *after_dollar);
+char	*get_str_before_pathname(char *full_str, char *after_dollar);
+char	*get_str_after_pathname(char *full_str, char *after_dollar);
+char	*get_pathname_envvariable(char *after_dollar, t_shell *content);
+char	*handle_qmark_exit_status(t_shell *content);
+char *handle_dollar_pid(void);
+t_env	*get_env(char *pathname, t_env *env);
 
 /*heredoc*/
 int	prs_init_heredoc(int fd, char *eof_delimiter);

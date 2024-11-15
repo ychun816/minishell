@@ -6,11 +6,11 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:44:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/13 15:14:41 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/15 16:25:03 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/** EXAMPLE INPUT:
+/* EXAMPLE INPUT:
  * input string = "Hello $USER, welcome to the shell!";
  * "$USER" : Environment Variable (env_name)
  * "Hello" : String BEFORE (env_name)
@@ -33,6 +33,7 @@
  * retrieves the variable's value from the environment, 
  * and then joins these parts back together with the expanded environment variable.
  */
+
 
 
 /** PARSE- HANDLE ENV

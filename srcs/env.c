@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/14 15:27:07 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/15 16:26:23 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,14 +142,23 @@ void	env_free(t_env *env)
 	}
 }
 
-/**FOR PASIG- GET ENV*/
-t_env	*get_env_variable(char *pathname, t_env env)
+/**FOR PASING- GET ENV
+ * Search for an environment variable by its name (path) in a linked list of environment variables (envp).
+ * 
+*/
+t_env	*get_env(char *pathname, t_env *env)
 {
-	
-
-	return (env);
+	//chek if either is NULL
+	if (pathname == NULL || env == NULL)
+		return (NULL);
+	while (env != NULL)
+	{
+		if (ft_strcmp(pathname, env->id) == 0)
+			return (env);		
+		env = env->next;
+	}
+	return (NULL);
 }
-
 
 /*
 The line `env = next;` (or equivalently `env = env->next;`) is crucial,

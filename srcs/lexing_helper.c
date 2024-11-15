@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:02 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/14 15:21:12 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/15 14:55:34 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ t_token_type get_token_type(char *str)
  */
 int check_meta_char(char c)
 {
+	//Stop at the closing single quote ('
 	int	found;
 
 	found = 0;
