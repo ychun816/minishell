@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/15 16:36:39 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/20 19:09:43 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,13 +122,20 @@ int	token_add_back(t_token **head, t_token *new_token);
 void	token_free(t_token *token);
 
 /*parsing*/
-int	prs_handle_quotes(t_token *token);
+int	prs_check_quotes_valid(t_token *token);
+int	prs_handle_quotes_n_expand_env(t_token *token);
+int	prs_remove_node_null(t_token **head);
+int	prs_check_allnodes_null(t_token *token);
 int	prs_handle_redir(t_token *token);
 int	prs_handle_cmd(t_token *token);
 int	prs_handle_heredoc(t_token *token);
-int	prs_remove_node_null(t_token **head);
-int	prs_check_allnodes_null(t_token *token);
 void	prs_unlink_error(t_token *token);
+
+t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content);
+t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content);
+int	ft_rogue_len(char	*str);
+
+
 
 /*expansion*/
 
