@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/20 19:05:03 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/22 18:05:35 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,20 @@ int	prs_check_quotes_valid(t_token *token)
 	int i;
 	char *str;
 
-	while (token)
+	while (token != NULL)
 	{
 		if (token->type == STR)
 		{
 			i = 0;
+			str = token->value;
 			while (str[i])
 			{
 				if (str[i] == '\'' || str[i] == '\"') // If a quote is found, process it
 					i += ft_quotes_len(&(str[i]), str[i]);//incremet i to the end of unquote
-				i++;
+				if (str[i] == '\0')
+					return (FAILURE);
 			}
-			if (str[i] == '\0')
-				return (FAILURE);
+			i++;
 		}
 		token = token->next;
 	}
@@ -69,7 +70,7 @@ t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content)
 {
 	int	len;
 	t_token	*new_token;
-	t_token_type	*type;
+	t_token_type	type;
 	
 	len = ft_quotes_len(input_str, c) - 1; 
 	new_token = NULL;
@@ -79,7 +80,7 @@ t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content)
 	if (len > 0)
 		new_token = create_token(input_str + 1, len, type, content);
 	else
-		new_token = create_token('\0', 1, STR,  content);
+		new_token = create_token("\0", 1, STR,  content);
 	return (new_token);	
 }
 
@@ -165,13 +166,14 @@ int	prs_handle_quotes_n_expand_env(t_token *token)
 
 	while (!token)
 	{
+		prs_expand_env(input_str);
 		if (token->type == STR)
 		{
 			input_str = prs_quotes_to_tokens(token->value, token->content);
 			prs_expand_env(input_str);
 			if (token->value)
 				free(token->value);
-			token->value = prs_combine_tokens(input_str);
+			token->value = prs_tokens_combine(input_str);
 			token_free(input_str);	
 		}
 		token = token->next;
@@ -179,8 +181,6 @@ int	prs_handle_quotes_n_expand_env(t_token *token)
 
 	return (SUCCESS);
 }
-
-
 
 /** REDIR
  * - Check if the first token is PIPE -> ERROR
@@ -192,11 +192,11 @@ int	prs_handle_quotes_n_expand_env(t_token *token)
  */
 int	prs_handle_redir(t_token *token)
 {
-	if (token && token->value == PIPE)
+	if (token && token->type == PIPE)
 		return (FAILURE);
 	while (token)
 	{
-		if (token->value == INFILE || token->value == OUTFILE || token->value == HEREDOC || token->value == APPEND)
+		if (token->type == INFILE || token->type == OUTFILE || token->type == HEREDOC || token->type == APPEND)
 		{
 			if (token->next == NULL || token->next->type != STR)
 				return (FAILURE);
@@ -227,7 +227,7 @@ int	prs_handle_cmd(t_token *token)
 	{
 		if (token->type == STR)
 		{
-			token->type == COMMAND;
+			token->type = COMMAND;
 			while (token && token->type != PIPE)
 			{
 				if (token->type == STR)
@@ -262,10 +262,12 @@ int	prs_handle_heredoc(t_token *token)
 	int	end;
 
 	end = 0;
-	while (token && end == 0)
+	while (token != NULL && end == 0)
 	{
 		if (token->type == HEREDOC)
 		{
+			filename = NULL;
+			//filename = ms_generate_random(token->next->value); //generate random -> generate random file
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)
 				return (FAILURE);
@@ -273,7 +275,7 @@ int	prs_handle_heredoc(t_token *token)
 				end = 1;
 			close (fd);
 			free(token->next->value);
-			token->next->value =filename;
+			token->next->value = filename;
 			token->type = NON_HEREDOC;
 		}
 		token = token->next;
@@ -300,7 +302,7 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
 	char	*line; 
 	
-	signal(SIGINT, sig_heredoc);
+	signal(SIGINT, sig_heredoc);/// RECHECK
 	while (1) 
 	{
 		line = readline("heredoc>");
@@ -320,7 +322,7 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 	}
 	if (g_signal.end_heredoc == 1)
 	{
-		g_signal.end_heredoc == 0;
+		g_signal.end_heredoc = 0;
 		return (FAILURE); //1
 	}
 	return (SUCCESS); //0
@@ -427,4 +429,51 @@ int	parsing(t_token **token)
 		return_code = FAILURE_VOID;
 	}
 	return (return_code);
+}
+
+/** PARSE- EXPAND ENV
+ * Iterates through all tokens in a list and applies ps_handle_env to process $VAR expansions.
+ * 
+ * 
+ * Loops through a list of tokens and expands environment variables in tokens of type STRING or DOUBLEQUOTE.
+ * It calls (ps_handle_env) to handle the expansion for each token that requires it.
+ * 
+ * @return Tokens updated with $VAR expansions.
+ * 
+ */
+int	prs_expand_env(t_token *token)
+{
+	while (token != NULL)
+	{
+		if (token->type == STR || token->type == DBL_QUOTE)
+			prs_expand_envvar_to_token(token);
+		token = token->next;
+	}
+	return (SUCCESS);	
+}
+
+/** PRS TOKENS COMBINE 
+ * 
+ * (1) Duplicate an empty string ("")(Initialize `value` as an empty string to start the concatenation process.)
+ * (2) Loop thru token list
+ * - If the current token has a non-NULL value, concatenate it,
+ * -> Append the token's value to `value` using `prs_strjoin`
+ * 
+*/
+char	*prs_tokens_combine(t_token *token)
+{
+	char	*result;
+	
+	result = ft_strdup("");
+	while (token != NULL)
+	{
+		if (token->value != NULL)
+		{
+			result = prs_strjoin(result, token->value);
+			if (!result)
+				break ;
+		}
+		token = token->next;
+	}
+	return (result);
 }

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/20 14:33:14 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/22 15:22:57 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@
  * 	
  * @return (int) length after $ sign
  */
-int	ft_pathname_len(char	*after_dollar)
+int	ft_envvar_len(char	*env_var)
 {
 	int	len;
 	len = 0;
 
-	if (ft_isdigit(after_dollar[len]) == 1 || after_dollar[len] == '?' || after_dollar[len] == '$')
+	if (ft_isdigit(env_var[len]) == 1 || env_var[len] == '?' || env_var[len] == '$')
 		return (FAILURE);
-	while (after_dollar[len])
+	while (env_var[len])
 	{
-		if (ft_isalnum(after_dollar[len]) == 1 && after_dollar[len] != '_')
+		if (ft_isalnum(env_var[len]) == 1 && env_var[len] != '_')
 			break ;
 		len++;
 	}
@@ -49,18 +49,17 @@ int	ft_pathname_len(char	*after_dollar)
 
 /** GET DOLLAR_ENVNAME
  * Extracts the variable name "USER" from "$USER".
- * Ex: Get the variable name "USER" from "$USER".
  * 
  * @return (char *)
  */
-char	*get_env_pathname(char *after_dollar)
+char	*get_envvar_pathname(char *env_var)
 {
 	int	len;
-	char	*env_name;
+	char	*pathname;
 
-	len = ft_pathname_len(after_dollar);
-	env_name = ft_strndup(after_dollar, len);
-	return (env_name);
+	len = ft_envvar_len(env_var);
+	pathname = ft_strndup(env_var, len);
+	return (pathname);
 }
 
 /** GET BEFORE ENVNAME
@@ -77,12 +76,12 @@ char	*get_env_pathname(char *after_dollar)
  * Returns the part(string) BEFORE $USER (environment variable).
  * @return (char *)
  */
-char	*get_str_before_pathname(char *full_str, char *after_dollar)
+char	*get_str_before_envvar(char *full_str, char *env_var)
 {
 	int	front_strlen;
 	char	*front_str;
 
-	front_strlen = after_dollar - full_str;
+	front_strlen = env_var - full_str;
 	front_str = ft_strndup(full_str, front_strlen);
 	if (front_strlen == 0)
 		return (ft_strdup(""));
@@ -93,14 +92,14 @@ char	*get_str_before_pathname(char *full_str, char *after_dollar)
  * Returns the part(string) AFTER $USER (environment variable).
  *  
  */
-char	*get_str_after_pathname(char *full_str, char *after_dollar)
+char	*get_str_after_envvar(char *full_str, char *env_var)
 {
 	int	envname_len;
 	char	*after_str;
 	
-	envname_len = ft_pathname_len(after_dollar);
+	envname_len = ft_envvar_len(env_var);
 	// Skip the environment variable name itself.
-	//By adding envname_len (4) to after_dollar, the pointer now points to the character after USER
+	//By adding envname_len (4) to env_var, the pointer now points to the character after USER
 	after_str = ft_strdup(full_str + envname_len); 
 	return (after_str);
 }
@@ -116,14 +115,13 @@ char	*get_str_after_pathname(char *full_str, char *after_dollar)
  * $$ : expands to the process ID (PID) of the shell that is executing the script or command.
  * 
  */
-char	*get_pathname_envvariable(char *after_dollar, t_shell *content)
+char	*get_envvar_value(char *env_var, t_shell *content)
 {
 	char	*pathname;
 	t_env	*env_variable;
-	int	code;
 
-	// Get the name of the environment variable from the `after_dollar$` string.
-	pathname = get_env_pathname(after_dollar);
+	// Get the name of the environment variable from the `env_var$` string.
+	pathname = get_envvar_pathname(env_var);
 
 	// Check if the variable is "?" (special variable for the last command's exit code).
 	if (pathname && ft_strcmp(pathname, "?") == 0)
@@ -144,7 +142,7 @@ char	*get_pathname_envvariable(char *after_dollar, t_shell *content)
 		free(pathname);
 	if (!env_variable || !env_variable->value) // If the variable is not found or has no value, return NULL.
 		return (NULL);
-	return (pathname);
+	return (ft_strdup(env_variable->value));
 }
 
 /** HANDLE QMARK_EXIT STATUS ($?)
@@ -184,4 +182,25 @@ char *handle_dollar_pid(void)
 	//pid = getpid();
 	//return (ft_itoa(pid));
 	return (ft_strdup("program_pid"));
+}
+
+
+/** prs_strjoin
+ * 
+ * Joins two strings but is specifically designed to manage memory for dynamic strings (s1 and s2).
+ * 
+*/
+char	*prs_strjoin(char *s1, char *s2)
+{
+	char	*result;
+	
+	if (s1 == NULL && s2 == NULL)
+		return (NULL);
+	else if (s2 == NULL)
+		return (s1);
+	else if (s1 == NULL)
+		return (ft_strdup(s2));
+	result = ft_strjoin(s1, s2);
+	free(s1);
+	return (result);
 }
