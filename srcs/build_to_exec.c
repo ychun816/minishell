@@ -1,40 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   build_exec.c                                       :+:      :+:    :+:   */
+/*   build_to_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 18:05:40 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/22 19:17:47 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/23 20:39:44 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**	init_build();
- * 
  */
-t_exec	init_build(void)
+t_exec	*init_build(void)
 {
-		
+	t_exec	*new;
+
+	new = malloc(sizeof(t_exec));
+	if (!new)
+		return (NULL);
+	new->cmd = NULL;
+	new->args = NULL;
+	new->redirs = NULL;
+	new->next = NULL;
+	new->fd_in = STDIN_FILENO;
+	new->fd_out = STDOUT_FILENO;
+	return (new);
 }
-
-/**	bd_handle_redirs();	
- * Processes tokens representing redirections (e.g., >, >>, <, <<).
- * Creates and appends a redirection entry (target file or heredoc content) to the exec->redirs list.
- * 
- */
-
-
-
-/** bd_handle_args();
- * Processes tokens representing arguments to a command (e.g., filenames, options).
- * Creates and appends each argument to the exec->args list.
- * 
- */
-
-
 
 /** BUILD_FOR_EXEC
  * 
@@ -49,8 +43,6 @@ t_exec	init_build(void)
  * 
  * @note
  * exec->next = builder(token->next);
- * 
- * 
  * 
  * @return constructed `t_exec` structure
  * 
