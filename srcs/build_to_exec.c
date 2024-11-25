@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 18:05:40 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/23 20:39:44 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/25 18:28:24 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,37 @@ t_exec	*init_build(void)
 	return (new);
 }
 
+/** BD- HANDLE PIPE 
+ * 
+ * @note
+ * - Input token list:
+ * [COMMAND: "ls"] -> [PIPE] -> [COMMAND: "grep file"] -> [PIPE] -> [COMMAND: "wc -l"]
+ * - Recursion will build:
+ * exec (cmd: "ls", next: exec(cmd: "grep file", next: exec(cmd: "wc -l")))
+ * 
+*/
+int	bd_handle_pipe(t_exec *exec, t_token *token)
+{
+	if (token->type == PIPE)
+	{
+		exec->next = build_for_exec(token->next); //recursive
+		return (FAILURE);//1
+	}
+	return (SUCCESS);//0
+}
+
+/** BD- HANDLE COMMAND */
+int	bd_handle_cmd(t_exec *exec, t_token *token)
+{
+	if (token->type == COMMAND)
+	{
+		exec->cmd = ft_strdup(token->value);
+		if (!exec->cmd)
+			return (FAILURE);//1
+	}	
+	return (SUCCESS);//0		
+}
+
 /** BUILD_FOR_EXEC
  * 
  * Builds a `t_exec` structure from the linked list of tokens.
@@ -42,7 +73,20 @@ t_exec	*init_build(void)
  * -4 Handle argument tokens
  * 
  * @note
- * exec->next = builder(token->next);
+ * if (bd_handle_pipe(exec, token) == FAILURE)
+ * 		break ;
+ * 
+ * NEED break 
+ * -> The loop would continue processing tokens that belong to the next command segment,
+ * which is incorrect since those tokens should be handled by the recursive call.
+ * 
+ * @note
+ * if (handle_command(exec, token))
+ * 		return (NULL);
+ * 
+ * NEED return NULL
+ * -> If memory allocation fails, the program need stop processing the current segment to avoid undefined behavior or memory leaks.
+ * 
  * 
  * @return constructed `t_exec` structure
  * 
@@ -56,17 +100,10 @@ t_exec *build_for_exec(t_token *token)
 		return (NULL);
 	while (token != NULL)
 	{
-		if (token->type == PIPE) //PIPE
-		{
-			exec->next = build_for_exec(token->next); //recursive
+		if (bd_handle_pipe(exec, token) == FAILURE)
 			break ;
-		}
-		else if (token->type == COMMAND) //COMMAND
-		{
-			exec->cmd = ft_strdup(token->value);
-			if (!exec->cmd)
-				return (NULL);
-		}
+		if (bd_handle_cmd(exec, token) == FAILURE)
+			return (NULL);
 		bd_handle_redirs(exec, token);
 		bd_handle_args(exec, token);
 		token = token->next;

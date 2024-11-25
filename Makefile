@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2024/11/05 18:41:45 by yilin            ###   ########.fr        #
+#    Updated: 2024/11/23 20:38:09 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,8 +29,7 @@ LIBFT_DIR = libft
 #                              SRC & OBJ FILES                                 #
 # **************************************************************************** #
 
-SRCS = $(addprefix $(SRCS_DIR)/, token.c lexing.c lexing_helper.c builtin.c env.c main.c) #######
-#split_quote.c
+SRCS = $(addprefix $(SRCS_DIR)/, build_args.c build_helper.c builtin.c expansion.c lexing.c main.c signal.c build_filename.c build_to_exec.c env.c expansion_helper.c lexing_helper.c parsing.c token.c) #######
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 # **************************************************************************** #
