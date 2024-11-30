@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/25 19:16:37 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/30 16:43:37 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 // # define BUILD_FAILURE -1
 
-# define PROMPT "\001\033[1;36m\002supershell>$ \001\033[0m\002" //color setting
+# define PROMPT "\001\033[1;36m\002 supershell>$ \001\033[0m\002" //color setting
 # define DEFAULT_ENV "SHELL=supershell"
 
 # define SIGNAL_OFFSET 0
@@ -96,36 +96,44 @@ typedef struct s_signal
 
 extern t_signal g_signal;
 
-
-/*init shell*/
+/*******************************/
+/************ MAIN *************/
+/*********************************/
+/*main (shell)*/ //CHECKED, TO DO: signal
 t_shell *init_shell(char *env[]);//initialize & dup env to supershell
 int read_n_loop(t_shell *content);
 t_env *dup_env(char *env[]);
 
-/*handle env*/
-t_env *create_env(char *env_id, char *env_value, char *env_line);
+/*env*/ //CHECKED
+t_env *env_create(char *env_id, char *env_value, char *env_line);
 t_env	*set_default_env(void);
 char *get_env_id(char *env_line); //If raw points to the beginning of the string (index 0)
 char *get_env_value(char *env_line);
 int env_add_back(t_env **head, t_env *new);
 void	env_free(t_env *env);
-t_env	*get_env(char *pathname, t_env *env);
 
-/*lexing*/
+/********************************/
+/************ LEXING ************/
+/*********************************/
+/*lexing*/ //CHECKED
 t_token	*lex_tokenize_each_wd(char *str, t_shell *content);
+t_token	*lexing(t_shell *content, char *input_line);
 
-/*lexing helper*/
-t_token	*create_token(char *token_value, int n, t_token_type type, t_shell *content);
-int	ft_1token_len(char *str, t_token_type type);
+/*lexing helper*/ //CHECKED
+t_token_type lex_get_token_meta_type(char *str);
+int	lex_ft_1tokenlen(char *str, t_token_type type);
 int ft_token_str_len(char *str);
 int ft_quotes_len(char *str, char sd_quote);
-t_token_type get_token_type(char *str);
 int check_meta_char(char c);
 
-/*token*/
-void	token_free(t_token *token);
+/*token*/ //CHECKED
+t_token	*token_create(char *token_value, int n, t_token_type type, t_shell *content);
 int	token_add_back(t_token **head, t_token *new_token);
+void	token_free(t_token *token);
 
+/*********************************/
+/************ PARSING ************/
+/*********************************/
 /*parsing*/
 int	prs_check_quotes_valid(t_token *token);
 int	prs_handle_quotes_n_expand_env(t_token *token);
@@ -140,30 +148,36 @@ t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content);
 t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content);
 int	ft_rogue_len(char	*str);
 
+/*parsing helper*/
+t_env	*get_env(char *pathname, t_env *env);
 int	prs_expand_env(t_token *token);
 char	*prs_tokens_combine(t_token *token);
 
+
+/***********************************/
+/************ EXPANSION ************/
+/***********************************/
 /*expansion*/
-int	count_dollar_sign(char *input_str);
-char	*prs_exapnd_env_to_str(char *str, char *envvar_found, t_shell *content);
-int	prs_expand_envvar_to_token(t_token *token);
+int	prs_count_dollar_sign(char *input_str);
+char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content);
+int	prs_handle_envvar_expansion(t_token *token);
 
 /*expansion helper*/
 int	ft_envvar_len(char	*env_var);
-char	*get_envvar_pathname(char *env_var);
+char	*get_envvar_name(char *env_var);
 char	*get_str_before_envvar(char *full_str, char *env_var);
-char	*get_str_after_envvar(char *full_str, char *env_var);
+char	*get_str_after_envvar(char *env_var);
 char	*get_envvar_value(char *env_var, t_shell *content);
-
 char	*handle_qmark_exit_status(t_shell *content);
 char *handle_dollar_pid(void);
-
 char	*prs_strjoin(char *s1, char *s2);
 
 /*heredoc*/
 int	prs_init_heredoc(int fd, char *eof_delimiter);
 
-
+/********************************/
+/************ BUILD ************/
+/*******************************/
 /*build to exec*/
 t_exec	*init_build(void);
 t_exec *build_for_exec(t_token *token);
@@ -184,17 +198,24 @@ t_filename *filename_create(char *pathname, t_token_type type);
 int	filename_add_back(t_filename **head, t_filename *new);
 void	filename_free(t_filename *filename);
 
+
+/********************************/
+/************ SIGNAL ************/
+/********************************/
 /*signal*/
 void	sig_heredoc(int status);
 
-
+/*******************************/
+/************ FREE ************/
+/******************************/
 /*free /cleanup */
 void	free_all_shell(t_shell *content);
 
-
+/******************************/
+/************ TEST ************/
+/******************************/
 /*test*/
 void display_env(t_env *env);
-
 
 
 #endif

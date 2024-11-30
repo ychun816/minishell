@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 18:58:20 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/12 16:06:53 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/28 12:30:56 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@ t_token	*lex_tokenize_each_wd(char *str, t_shell *content)
 	t_token_type	token_type;
 	int	token_len;	
 	
-	token_type = get_token_type(str);
-	token_len = ft_1token_len(str, token_type);
-	new_token = create_token(str, token_len, token_type, content); // Create a new token with the identified properties
+	new_token = NULL;
+	token_type = lex_get_token_meta_type(str);
+	token_len = lex_ft_1tokenlen(str, token_type);
+	new_token = token_create(str, token_len, token_type, content); // Create a new token with the identified properties
 	return (new_token);
 }
 
@@ -55,11 +56,10 @@ t_token	*lexing(t_shell *content, char *input_line)
 	
 	i = 0;
 	token = NULL;
-
 	while (input_line[i])
 	{
 		// If the character is not a space or tab, process it as a token
-		if (input_line[i] == ' ' && input_line[i] == '\t')
+		if (input_line[i] == ' ' || input_line[i] == '\t')
 			i++;
 		else
 		{
@@ -75,33 +75,3 @@ t_token	*lexing(t_shell *content, char *input_line)
 	}
 	return (token);
 }
-
-
-/*test
-
-void	print_token(t_token *token)
-{
-		while (token)
-		{
-			printf("TOKEN: %s  |  TOKEN TYPE: %i\n", token->value, token->type);
-			token = token->next;
-		}
-}
-
-int test_lexing(void)
-{
-	char	*input_line = "echo Hello ; ls | grep test";
-	t_shell	*content = NULL;
-	t_token	*tokens;
-	
-	tokens = lexing(content, input_line);
-	if (!tokens)
-	{
-		printf("Error: Tokenization Fail\n");
-		return (FAILURE);
-	}
-	print_token(tokens);
-	token_free(tokens);
-	return (SUCCESS);
-}
-*/

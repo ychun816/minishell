@@ -6,13 +6,13 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/15 16:26:23 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/28 12:48:42 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
+/** SET DEFAULT ENV
  * Purpose: Creates a default environment variable node based on a predefined constant DEF_ENV.
  * Process:
  * - Calls env_get_id() and env_get_value() to extract the ID and value of the default environment variable.
@@ -27,11 +27,13 @@ t_env	*set_default_env(void)
 
 	env_id = get_env_id(DEFAULT_ENV);
 	env_value = get_env_value(DEFAULT_ENV);
-	def_content = create_env(env_id, env_value, ft_strdup(DEFAULT_ENV));
+	def_content = env_create(env_id, env_value, ft_strdup(DEFAULT_ENV));
 	return (def_content);
 }
 
-//USER_ZDOTDIR=/home/yilin
+/** GET NEV ID 
+ * //USER_ZDOTDIR=/home/yilin
+*/
 char *get_env_id(char *env_line) //If raw points to the beginning of the string (index 0)
 {
 	char *equal;
@@ -46,7 +48,7 @@ char *get_env_id(char *env_line) //If raw points to the beginning of the string 
 	return (ft_strndup(env_line, equal - env_line)); //return substring uptil '='
 }
 
-/**
+/** GET ENV VALUE
 env_line:    V  A  R  =  v  a  l  u  e
        		 0  1  2  3  4  5  6  7  8
         	 ^
@@ -68,7 +70,7 @@ char *get_env_value(char *env_line)
 	return (ft_strdup(env_line + (equal - env_line + 1)));
 }
 
-/**
+/** ENV CREATE
  * Purpose: Allocates memory for a new environment variable node and initializes its fields.
  * Process:
  * - Allocates memory for a t_env structure.
@@ -76,8 +78,7 @@ char *get_env_value(char *env_line)
  * - Initializes the new structure’s id, value, and raw fields with the provided arguments, and sets the next pointer to NULL.
  * - Returns a pointer to the newly created environment variable structure.
  */
-
-t_env *create_env(char *env_id, char *env_value, char *env_line)
+t_env *env_create(char *env_id, char *env_value, char *env_line)
 {
 	t_env *new;
 
@@ -96,7 +97,7 @@ t_env *create_env(char *env_id, char *env_value, char *env_line)
 	return (new);
 }
 
-/**
+/** ENV ADD BACK
  * Purpose: Adds a new environment variable node to the end of a linked list of environment variables.
  * Process:
  * - If the list is empty (i.e., *head is NULL), it sets *head to point to the new node.
@@ -104,7 +105,6 @@ t_env *create_env(char *env_id, char *env_value, char *env_line)
  * - Links the new node to the end of the list by setting the next pointer of the last node to point to the new node.
  * - Returns 0 to indicate success.
  */
-
 int env_add_back(t_env **head, t_env *new)
 {
 	t_env *current;
@@ -121,9 +121,7 @@ int env_add_back(t_env **head, t_env *new)
 	return (SUCCESS);
 }
 
-/** ENV FREE
- * 
- */
+/** ENV FREE */
 void	env_free(t_env *env)
 {
 	t_env	*tmp_next;
@@ -138,26 +136,8 @@ void	env_free(t_env *env)
 		if (env->env_line)
 			free(env->env_line);
 		free(env);
-		env = tmp_next; //Move to the next node
+		env = tmp_next;
 	}
-}
-
-/**FOR PASING- GET ENV
- * Search for an environment variable by its name (path) in a linked list of environment variables (envp).
- * 
-*/
-t_env	*get_env(char *pathname, t_env *env)
-{
-	//chek if either is NULL
-	if (pathname == NULL || env == NULL)
-		return (NULL);
-	while (env != NULL)
-	{
-		if (ft_strcmp(pathname, env->id) == 0)
-			return (env);		
-		env = env->next;
-	}
-	return (NULL);
 }
 
 /*

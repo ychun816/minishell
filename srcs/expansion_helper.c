@@ -6,75 +6,67 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/22 15:22:57 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/30 16:37:47 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/** EXAMPLE INPUT:
- * input string = "Hello $USER, welcome to the shell!";
- * "$USER" : Environment Variable (env_name)
- * "Hello" : String BEFORE (env_name)
- * ", welcome to the shell!" : String AFTER (env_name)
- */
-
 #include "minishell.h"
 
-/** FT_DOLLAR_ENVNAME_LEN
- * Counts the length of "USER" after $.
- * Starts from the given string `found`
- * Checks for valid characters that can make up an environment variable's name.
+/** FT_ENVVAR_LEN
+ * - Counts the length of "USER" AFTER $.
+ * - Starts from the given string `env_var`
+ * - Checks for valid characters that can make up an environment variable's name.
  * 
- * (1) If the first character is a digit, '?' or '$', it's invalid as an environment variable name.
- * (2) Iterate through the string, checking if each character is valid for an environment variable name.
- * 		// A valid name can contain letters, digits, and underscores.
-		// If a character is neither alphanumeric nor an underscore, stop counting.
- * 	
- * @return (int) length after $ sign
+ * @note
+ * - A valid name can contain letters, digits, and underscores.
+ * - If the first character is a digit, '?' or '$', it's invalid as an environment variable name.
+ * - If a character is neither alphanumeric nor an underscore, stop counting.
+ * @return (int) length AFTER $ sign
  */
 int	ft_envvar_len(char	*env_var)
 {
-	int	len;
-	len = 0;
+	int	i;
 
-	if (ft_isdigit(env_var[len]) == 1 || env_var[len] == '?' || env_var[len] == '$')
-		return (FAILURE);
-	while (env_var[len])
+	i = 0;
+	if (env_var[i] == '$') // Skip initial '$' ////TO CHECK LATER
+        i++;
+	if (ft_isdigit(env_var[i]) == 1 || env_var[i] == '?' || env_var[i] == '$')
+		return (1);
+	while (env_var[i])
 	{
-		if (ft_isalnum(env_var[len]) == 1 && env_var[len] != '_')
+		if (env_var[i] != '_' && ft_isalnum(env_var[i]) == 0)
 			break ;
-		len++;
+		i++;
 	}
-	return (len);
+	return (i);
 }
 
-/** GET DOLLAR_ENVNAME
+/** GET ENVVAR NAME
  * Extracts the variable name "USER" from "$USER".
- * 
  * @return (char *)
  */
-char	*get_envvar_pathname(char *env_var)
+char	*get_envvar_name(char *env_var)
 {
 	int	len;
-	char	*pathname;
+	char	*name;
 
 	len = ft_envvar_len(env_var);
-	pathname = ft_strndup(env_var, len);
-	return (pathname);
+	name = ft_strndup(env_var, len);
+	return (name);
 }
 
-/** GET BEFORE ENVNAME
+/** GET BEFORE STR BEFORE ENVVAR
  * (1) Calculate the length of the string before the environment variable.
  * (2) If there is nothing before the environment variable, return an empty string.
  * (3) Otherwise, return the substring before the environment variable.
- * 
- * @note
+ * @param
  * char *str = "Hello $USER world!";
  * char *found = str + 6; // This points to '$' in "$USER"
+ * @note
  * len = found - str; would be 6, because $ is at position 6 in the string "Hello $USER world!" (0-based index).
  * ft_strndup(str, 6) would return "Hello " (the substring before $USER).
  * 
- * Returns the part(string) BEFORE $USER (environment variable).
- * @return (char *)
+ * @return (char *) the part(string) BEFORE $USER (environment variable).
  */
 char	*get_str_before_envvar(char *full_str, char *env_var)
 {
@@ -88,75 +80,58 @@ char	*get_str_before_envvar(char *full_str, char *env_var)
 	return (front_str);
 }
 
-/** GET AFTER ENV_NAME
- * Returns the part(string) AFTER $USER (environment variable).
- *  
- */
-char	*get_str_after_envvar(char *full_str, char *env_var)
+/** GET AFTER ENV_NAME*/
+char	*get_str_after_envvar(char *env_var)
 {
-	int	envname_len;
-	char	*after_str;
-	
-	envname_len = ft_envvar_len(env_var);
-	// Skip the environment variable name itself.
-	//By adding envname_len (4) to env_var, the pointer now points to the character after USER
-	after_str = ft_strdup(full_str + envname_len); 
-	return (after_str);
+	int		len;
+	char	*new;
+
+	len = ft_envvar_len(env_var);
+	new = ft_strdup(env_var + len);
+	return (new);
 }
 
-/** GET ENVNAME_VALUE
+/** GET ENVVAR_VALUE
  * Retrieves the value of the environment variable USER.
  * 
- * @param char	*envname_path : the name of an environment variable,
+ * @param 
+ * char	*path : the path name of an environment variable,
  * Ex: "$USER", ctx (with "USER" = "john"); "john" is the value
  * 
  * @note
  * $? : expands to the exit status (return code) of the last command executed.
  * $$ : expands to the process ID (PID) of the shell that is executing the script or command.
- * 
  */
 char	*get_envvar_value(char *env_var, t_shell *content)
 {
-	char	*pathname;
+	char	*path;
 	t_env	*env_variable;
+	char	*result;
 
-	// Get the name of the environment variable from the `env_var$` string.
-	pathname = get_envvar_pathname(env_var);
-
-	// Check if the variable is "?" (special variable for the last command's exit code).
-	if (pathname && ft_strcmp(pathname, "?") == 0)
+	path = get_envvar_name(env_var);
+	if (path && ft_strcmp(path, "?") == 0)
 	{
-		free(pathname); // Free `path` as it's no longer needed.
-		if (g_signal.signal_code != 0) // If a signal exit code is present, use it, then reset the signal code.
-			return (handle_qmark_exit_status(content));
+		result = handle_qmark_exit_status(content);
+		free(path);
+		return (result);
 	}
-	// Check if the variable is "$" 
-	else if (pathname && ft_strcmp(pathname, "$") == 0)
-	{
-		free(pathname);
-		return (handle_dollar_pid());
-	}
-	env_variable = get_env(pathname, content->env);
-	// Free `path` as it is no longer needed after the lookup.
-	if (pathname) 
-		free(pathname);
-	if (!env_variable || !env_variable->value) // If the variable is not found or has no value, return NULL.
+	else if (path && ft_strcmp(path, "$") == 0)
+		return (free(path), handle_dollar_pid());
+	env_variable = get_env(path, content->env);
+	if (path)
+		free(path);
+	if (!env_variable || !env_variable->value)
 		return (NULL);
 	return (ft_strdup(env_variable->value));
 }
 
 /** HANDLE QMARK_EXIT STATUS ($?)
- * 
  * - If a signal code is present, it takes priority.
  * - If NO signal code is present, the normal exit code is used.
- * 
  * @note
- * - If a process was terminated by a signal, the function returns the signal code as a string (ft_itoa(code)).
- * - If the process wasn’t terminated by a signal (g_signals.signal_code == 0), it returns the normal exit code (ft_itoa(ctx->exit_code)).
- * - After returning the signal code, it’s reset to 0 to avoid using stale signal values for future processes.
- * 
- * @return 
- *  
+ * After return the signal code, it’s reset to 0 to avoid using stale signal values for future processes.
+ * @return string (ft_itoa(code)); If a process was terminated by a signal
+ * @return normal exit code (ft_itoa(ctx->exit_code)); If the process wasn’t terminated by a signal (g_signals.signal_code == 0)
 */
 char	*handle_qmark_exit_status(t_shell *content)
 {
@@ -165,31 +140,22 @@ char	*handle_qmark_exit_status(t_shell *content)
 	if (g_signal.signal_code != 0)
 	{
 		status_code = g_signal.signal_code;
-		//resets the signal code after it has been processed.
-		//resetting it ensures that it does not incorrectly persist or interfere with future commands or processes.
 		g_signal.signal_code = 0;
 		return (ft_itoa(status_code));
 	}
 	return (ft_itoa(content->exit_code));
 }
 
-/** HANDLE DOLLAR SIGN PID ($$)
- * 
- */
+/** HANDLE DOLLAR SIGN PID ($$)*/
 char *handle_dollar_pid(void)
 {
+	return (ft_strdup("program_pid"));
 	//int	pid;
 	//pid = getpid();
 	//return (ft_itoa(pid));
-	return (ft_strdup("program_pid"));
 }
 
-
-/** prs_strjoin
- * 
- * Joins two strings but is specifically designed to manage memory for dynamic strings (s1 and s2).
- * 
-*/
+/** prs_strjoin*/
 char	*prs_strjoin(char *s1, char *s2)
 {
 	char	*result;

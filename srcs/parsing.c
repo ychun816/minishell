@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/22 18:05:35 by yilin            ###   ########.fr       */
+/*   Updated: 2024/11/28 15:36:49 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content)
 	if (c == '\'')
 		type = SGL_QUOTE;	
 	if (len > 0)
-		new_token = create_token(input_str + 1, len, type, content);
+		new_token = token_create(input_str + 1, len, type, content);
 	else
-		new_token = create_token("\0", 1, STR,  content);
+		new_token = token_create("\0", 1, STR,  content);
 	return (new_token);	
 }
 
@@ -139,7 +139,7 @@ t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 		}
 		else
 		{
-			new_token = create_token(&(input_str[i]), ft_rogue_len(&(input_str[i])), STR, content);
+			new_token = token_create(&(input_str[i]), ft_rogue_len(&(input_str[i])), STR, content);
 			i += ft_strlen(new_token->value) - 1;
 		}
 		if (!new_token)
@@ -404,7 +404,6 @@ void	prs_unlink_error(t_token *token)
 	}
 }
 
-
 /** PARSING */
 int	parsing(t_token **token)
 {
@@ -429,51 +428,4 @@ int	parsing(t_token **token)
 		return_code = FAILURE_VOID;
 	}
 	return (return_code);
-}
-
-/** PARSE- EXPAND ENV
- * Iterates through all tokens in a list and applies ps_handle_env to process $VAR expansions.
- * 
- * 
- * Loops through a list of tokens and expands environment variables in tokens of type STRING or DOUBLEQUOTE.
- * It calls (ps_handle_env) to handle the expansion for each token that requires it.
- * 
- * @return Tokens updated with $VAR expansions.
- * 
- */
-int	prs_expand_env(t_token *token)
-{
-	while (token != NULL)
-	{
-		if (token->type == STR || token->type == DBL_QUOTE)
-			prs_expand_envvar_to_token(token);
-		token = token->next;
-	}
-	return (SUCCESS);	
-}
-
-/** PRS TOKENS COMBINE 
- * 
- * (1) Duplicate an empty string ("")(Initialize `value` as an empty string to start the concatenation process.)
- * (2) Loop thru token list
- * - If the current token has a non-NULL value, concatenate it,
- * -> Append the token's value to `value` using `prs_strjoin`
- * 
-*/
-char	*prs_tokens_combine(t_token *token)
-{
-	char	*result;
-	
-	result = ft_strdup("");
-	while (token != NULL)
-	{
-		if (token->value != NULL)
-		{
-			result = prs_strjoin(result, token->value);
-			if (!result)
-				break ;
-		}
-		token = token->next;
-	}
-	return (result);
 }
