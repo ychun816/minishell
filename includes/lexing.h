@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/02 11:58:25 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/03 18:57:43 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,18 @@ typedef struct s_token	t_token;
 
 typedef enum e_token_type
 {
-	INFILE,
-	OUTFILE,
-	HEREDOC, //<<
-	NON_HEREDOC,
-	APPEND,
-	PIPE,
-	STR,
-	SGL_QUOTE,
-	DBL_QUOTE,
-	COMMAND,
-	FILENAME,
-	ARG,
+	INFILE, //0
+	OUTFILE, //1
+	HEREDOC, //2 <<
+	NON_HEREDOC, //3
+	APPEND,//4
+	PIPE,//5
+	STR,//6
+	SGL_QUOTE,//7
+	DBL_QUOTE,//8
+	COMMAND,//9
+	FILENAME,//10
+	ARG,//11
 } t_token_type;
 
 typedef struct s_token

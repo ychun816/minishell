@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:08:18 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/28 12:19:26 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/03 19:47:40 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * - (2) Dup input txt by parts: strndup() -> dup and saves this copy as the token’s "value." 
  * - (3) Label the token: t_token_type
  * - (4) Link context: It attaches any additional context, like where it came from, if needed.
- * 
+
  * @param token_value:  A pointer to the start of the token’s value in the input string.
  * @param n: The number of characters to copy from `value` to the token’s value.
  * @param type: The type of the token (e.g., STRING, COMMAND)

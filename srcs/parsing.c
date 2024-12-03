@@ -6,12 +6,11 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/02 12:04:37 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/03 18:09:18 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 /** REDIR
  * - Check if the first token is PIPE -> ERROR
@@ -171,11 +170,32 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
  */
 int	prs_remove_node_null(t_token **head)
 {
+	// t_token	*tmp;
+	// t_token	*token;
+
+	// token = (*head);
+	// while (token != NULL && token->value == NULL)
+	// {
+	// 	tmp = token;
+	// 	token = token->next;
+	// 	free(tmp);
+	// }
+	// *head = token;
+	// while (token != NULL && token->next != NULL)
+	// {
+	// 	if (token->next->value == NULL)
+	// 	{
+	// 		tmp = token->next;
+	// 		token->next = token->next->next;
+	// 		free(tmp);
+	// 	}
+	// 	else
+	// 		token = token->next;
+	// }
 	t_token	*current;
 	t_token	*token;
 	
 	token = (*head);
-
 	while (token != NULL && token->value == NULL)
 	{
 		current = token;
@@ -183,7 +203,7 @@ int	prs_remove_node_null(t_token **head)
 		free(current);
 	}
 	*head = token;
-	while (token != NULL && token->value != NULL)
+	while (token != NULL && token->next != NULL)
 	{
 		if (token->next->value == NULL)
 		{

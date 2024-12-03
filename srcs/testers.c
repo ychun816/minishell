@@ -1,25 +1,265 @@
 
 #include "minishell.h"
+#include <stdio.h>
 
 // //////////////////////////////////////
-// /// TEST: PARSING                  ///
+// /// TEST: PARSING                  /// ///TO CHANGE THE TEST MAIN! 
 // //////////////////////////////////////
-
-
-
-// //////////////////////////////////////
-// /// TEST: PARSING- QUOTES          ///   ///CHECKED!!
-// //////////////////////////////////////
-int main(int ac, char *av[], char *env[]) 
+int main(int ac, char *av[], char *env[])
 {
-	(void)ac;
-	// (void)av;
+    (void)ac;
+	(void)av;
 	t_shell *content = init_shell(env);
 	if (!content) 
 	{
 		fprintf(stderr, "Failed to initialize shell\n");
 		return (1);
 	}
+
+	///// /** 1. TEST: remove NULL token */ ///// 
+	// printf("\n--- Test 1: Removing NULL Tokens ---\n");
+	// t_token *head = NULL;
+    // test_print_tokens(head);
+    // // Create a list with valid and NULL values
+    // test_token_append(&head, "echo", 4, STR, content);
+    // test_token_append(&head, NULL, 0, STR, content); // NULL value token
+    // test_token_append(&head, "Hello", 5, STR, content);
+    // test_token_append(&head, NULL, 0, STR, content); // NULL value token
+    // test_token_append(&head, "World", 5, STR, content);
+    // printf("Before removing NULL nodes:\n");
+    // test_print_tokens(head);
+    // // Call the function to remove NULL value nodes
+    // prs_remove_node_null(&head);
+    // printf("After removing NULL nodes:\n");
+    // test_print_tokens(head);
+    // // Free allocated memory
+    // while (head) 
+	// {
+    //     t_token *tmp = head->next;
+    //     free(head->value);
+    //     free(head);
+    //     head = tmp;
+    // }
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+	///// /** 2. TEST: prs_check_allnodes_null */ /////
+    // Test 1: List with no NULL nodes
+    // printf("--- Test 1: List with no NULL nodes ---\n");
+    // t_token *head1 = NULL;
+    // test_token_append(&head1, "Hello", 5, STR, content);
+    // test_token_append(&head1, "World", 5, STR, content);
+
+    // test_print_tokens(head1);
+
+    // int result1 = prs_check_allnodes_null(head1);
+    // printf("Result: %d\n", result1); // Should print 0 because there are non-NULL tokens
+
+    // // Clean up
+    // while (head1)
+    // {
+    //     t_token *tmp = head1->next;
+    //     free(head1->value);
+    //     free(head1);
+    //     head1 = tmp;
+    // }
+
+    // // Test 2: List with all NULL nodes
+    // printf("\n--- Test 2: List with all NULL nodes ---\n");
+    // t_token *head2 = NULL;
+    // test_token_append(&head2, NULL, 0, STR, content);
+    // test_token_append(&head2, NULL, 0, STR, content);
+
+    // test_print_tokens(head2);
+
+    // int result2 = prs_check_allnodes_null(head2);
+    // printf("Result: %d\n", result2); // Should print 1 because all tokens are NULL
+
+    // // Clean up
+    // while (head2)
+    // {
+    //     t_token *tmp = head2->next;
+    //     free(head2->value);
+    //     free(head2);
+    //     head2 = tmp;
+    // }
+
+    // // Test 3: List with mixed NULL and non-NULL nodes
+    // printf("\n--- Test 3: List with mixed NULL and non-NULL nodes ---\n");
+    // t_token *head3 = NULL;
+    // test_token_append(&head3, "First", 5, STR, content);
+    // test_token_append(&head3, NULL, 0, STR, content);
+    // test_token_append(&head3, "Third", 5, STR, content);
+
+    // test_print_tokens(head3);
+
+    // int result3 = prs_check_allnodes_null(head3);
+    // printf("Result: %d\n", result3); // Should print 0 because there is at least one non-NULL token
+
+    // // Clean up
+    // while (head3)
+    // {
+    //     t_token *tmp = head3->next;
+    //     free(head3->value);
+    //     free(head3);
+    //     head3 = tmp;
+    // }
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+	///// /** 3. TEST: prs_handle_redir */ /////
+	/* TEST CASE
+
+	"echo Hello > output.txt"
+	"cat < input.txt"
+	"ls | grep txt"
+	"cat < input.txt > output.txt"
+	"grep \"search\" << EOF"
+	"echo \"Hello\" >> output.txt"
+	"echo \"Hello\" > output.txt | cat"
+	
+	INVALID
+	"cat <"
+	command <
+	command >
+	command <<
+	command >> >>
+	command > < 
+	command > file | command2
+	command | command2 > file
+	| command
+	command |
+	command1 > file command2
+	command > file with spaces
+	command >> file$>name
+	> outputfile
+	command | | command2
+	command < file | command2
+	command1 < command2
+
+	echo > file
+	command > file < file2
+	> file
+	*/
+
+    // Step 1: Initialize the shell context
+    // t_shell shell = {0};
+
+    // // Step 2: Tokenize the input string provided in argv[1]
+    // char *input = av[1];
+    // t_token *tokens = test_tokenize_input(input, &shell);
+
+    // // Step 3: Print tokens before processing
+    // printf("\n--- BEFORE prs_handle_redir: ---\n");
+    // test_print_tokens(tokens);
+
+    // // Step 4: Process redirection using the prs_handle_redir function
+    // int result = prs_handle_redir(tokens);
+
+    // // Step 5: Print the result of redirection handling and the updated tokens
+    // if (result == SUCCESS)
+    //     printf("\n=> :) SUCCESS-Redirection handling! <=\n");
+    // else
+    //     printf("\n=> :( FAIL-Redirection handling! <=\n");
+
+    // printf("\n--- AFTER prs_handle_redir: ---\n");
+    // test_print_tokens(tokens);
+
+    // // Step 6: Free allocated memory (you should implement a function to do this in production)
+    // t_token *tmp;
+    // while (tokens)
+    // {
+    //     tmp = tokens;
+    //     tokens = tokens->next;
+    //     free(tmp->value);
+    //     free(tmp);
+    // }
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+	///// /** 4. TEST: prs_handle_cmd */ /////
+	/*
+	echo Hello | cat file.txt
+	echo Hello
+	ls -l | grep txt
+	echo Hello > output.txt
+	cat < input.txt  /////////////////TO CHECK HERE
+	grep -r "search_term" | sort
+	echo "data" >> output.log
+	cat < input.txt > output.txt
+	cat << EOF
+	echo 'single quoted' > output.txt
+
+
+	*/
+	// Initialize the shell context (for testing, we set it to NULL)
+	// t_shell *content = NULL;
+
+	// Tokenize the input (simulate simple tokenization)
+	// In a real scenario, you would tokenize based on spaces, operators, etc.
+	t_token *head = NULL, *last_token = NULL;
+	char *input = av[1];
+	char *token_str = strtok(input, " "); // Assuming space as the delimiter
+
+	while (token_str != NULL)
+	{
+		t_token_type type = STR; // Default type for words
+		if (strcmp(token_str, "|") == 0)
+			type = PIPE;
+		// Add more checks here for other operators if necessary (e.g., INFILE, OUTFILE)
+
+		// Create a new token and add it to the list
+		t_token *new_token = token_create(token_str, strlen(token_str), type, content);
+		if (last_token)
+			last_token->next = new_token;
+		else
+			head = new_token; // Set the head if it's the first token
+		last_token = new_token;
+
+		// Get the next token
+		token_str = strtok(NULL, " ");
+	}
+
+	// Print tokens before calling prs_handle_cmd
+	printf("Tokens before prs_handle_cmd:\n");
+	test_print_tokens(head);
+
+	// Call the function to process the tokens
+	prs_handle_cmd(head);
+
+	// Print tokens after calling prs_handle_cmd
+	printf("\nTokens after prs_handle_cmd:\n");
+	test_print_tokens(head);
+
+	// Free memory (for testing purposes)
+	t_token *current = head;
+	t_token *next_token;
+	while (current)
+	{
+		next_token = current->next;
+		free(current->value);
+		free(current);
+		current = next_token;
+	}
+
+	return 0;
+}
+
+
+
+// //////////////////////////////////////
+// /// TEST: PARSING- QUOTES          ///   ///CHECKED!!
+// //////////////////////////////////////
+// int main(int ac, char *av[], char *env[]) 
+// {
+// 	(void)ac;
+// 	// (void)av;
+// 	t_shell *content = init_shell(env);
+// 	if (!content) 
+// 	{
+// 		fprintf(stderr, "Failed to initialize shell\n");
+// 		return (1);
+// 	}
     // Example input strings
     // char *input1 = "Hello 'world' \"test\"";
     // char *input2 = "'single quote string'";
@@ -317,20 +557,20 @@ int main(int ac, char *av[], char *env[])
 	"prefix \"escaped \\\"quote\\\"\""
 
 	*/	
-	printf("\n=== TEST: prs_handle_quotes_n_expand_env ===\n");
-    t_token *env_input = token_create(av[1], strlen(av[1]), STR, content);
-    printf("Input: %s\n", av[1]);// printf("Input: %s\n", env_input->value);
-    prs_handle_quotes_n_expand_env(env_input);
-    printf("Expanded and handled quotes: %s\n\n", env_input->value);
+// 	printf("\n=== TEST: prs_handle_quotes_n_expand_env ===\n");
+//     t_token *env_input = token_create(av[1], strlen(av[1]), STR, content);
+//     printf("Input: %s\n", av[1]);// printf("Input: %s\n", env_input->value);
+//     prs_handle_quotes_n_expand_env(env_input);
+//     printf("Expanded and handled quotes: %s\n\n", env_input->value);
 
-    // Free memory
-    // token_free(token1);
-    // token_free(quoted_token);
-    // token_free(mixed_tokens);
-    // token_free(env_input);
+//     // Free memory
+//     // token_free(token1);
+//     // token_free(quoted_token);
+//     // token_free(mixed_tokens);
+//     // token_free(env_input);
 
-    return 0;
-}
+//     return 0;
+// }
 
 // //////////////////////////////////////
 // /// TEST: EXPANSION                ///  ///CHECKED!!

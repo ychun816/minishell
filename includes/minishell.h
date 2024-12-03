@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/30 16:47:08 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/03 19:01:08 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,10 @@ void	free_all_shell(t_shell *content);
 /************ TEST ************/
 /******************************/
 /*test*/
-void display_env(t_env *env);
-
+void	display_env(t_env *env);
+void test_token_append(t_token **head, char *value, int n, t_token_type type, t_shell *content);
+void	test_print_tokens(t_token *head);
+t_token *test_tokenize_input(char *input, t_shell *shell);
+const char *test_tokentype_to_str(t_token_type type);
 
 #endif
