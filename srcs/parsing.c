@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/03 18:09:18 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/04 19:21:23 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ int	prs_handle_redir(t_token *token)
  */
 int	prs_handle_cmd(t_token *token)
 {
-	while (token)
+	while (token != NULL)
 	{
 		if (token->type == STR)
 		{
 			token->type = COMMAND;
-			while (token && token->type != PIPE)
+			while (token != NULL && token->type != PIPE)
 			{
 				if (token->type == STR)
 					token->type = ARG;
@@ -96,12 +96,14 @@ int	prs_handle_heredoc(t_token *token)
 	{
 		if (token->type == HEREDOC)
 		{
-			filename = NULL;
+			// filename = NULL;
+			filename = "/tmp/heredoc_file"; ///TESTER
 			//filename = ms_generate_random(token->next->value); //generate random -> generate random file
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)
 				return (FAILURE);
-			if (prs_init_heredoc(fd, token->next->value) != 0)
+			printf("I CAN GO HERE??\n");
+			if (prs_init_heredoc(fd, token->next->value) != 0)//FAILURE
 				end = 1;
 			close (fd);
 			free(token->next->value);
@@ -141,7 +143,7 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 			ft_putstr_fd("here_doc: called end-of-line (ctrl-d)\n", 2);
 			break ;
 		}
-		if (ft_strcmp(line, eof_delimiter) != 0 || g_signal.end_heredoc == 1)
+		if (ft_strcmp(line, eof_delimiter) == 0 || g_signal.end_heredoc == 1)
 		{
 			free(line);
 			break ;
@@ -170,28 +172,6 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
  */
 int	prs_remove_node_null(t_token **head)
 {
-	// t_token	*tmp;
-	// t_token	*token;
-
-	// token = (*head);
-	// while (token != NULL && token->value == NULL)
-	// {
-	// 	tmp = token;
-	// 	token = token->next;
-	// 	free(tmp);
-	// }
-	// *head = token;
-	// while (token != NULL && token->next != NULL)
-	// {
-	// 	if (token->next->value == NULL)
-	// 	{
-	// 		tmp = token->next;
-	// 		token->next = token->next->next;
-	// 		free(tmp);
-	// 	}
-	// 	else
-	// 		token = token->next;
-	// }
 	t_token	*current;
 	t_token	*token;
 	

@@ -3,18 +3,18 @@
 #include <stdio.h>
 
 // //////////////////////////////////////
-// /// TEST: PARSING                  /// ///TO CHANGE THE TEST MAIN! 
+// /// TEST: PARSING                  /// ///CHECKED!!
 // //////////////////////////////////////
-int main(int ac, char *av[], char *env[])
-{
-    (void)ac;
-	(void)av;
-	t_shell *content = init_shell(env);
-	if (!content) 
-	{
-		fprintf(stderr, "Failed to initialize shell\n");
-		return (1);
-	}
+// int main(int ac, char *av[], char *env[])
+// {
+//     (void)ac;
+// 	(void)av;
+// 	t_shell *content = init_shell(env);
+// 	if (!content) 
+// 	{
+// 		fprintf(stderr, "Failed to initialize shell\n");
+// 		return (1);
+// 	}
 
 	///// /** 1. TEST: remove NULL token */ ///// 
 	// printf("\n--- Test 1: Removing NULL Tokens ---\n");
@@ -69,20 +69,9 @@ int main(int ac, char *av[], char *env[])
     // t_token *head2 = NULL;
     // test_token_append(&head2, NULL, 0, STR, content);
     // test_token_append(&head2, NULL, 0, STR, content);
-
-    // test_print_tokens(head2);
-
+    
     // int result2 = prs_check_allnodes_null(head2);
     // printf("Result: %d\n", result2); // Should print 1 because all tokens are NULL
-
-    // // Clean up
-    // while (head2)
-    // {
-    //     t_token *tmp = head2->next;
-    //     free(head2->value);
-    //     free(head2);
-    //     head2 = tmp;
-    // }
 
     // // Test 3: List with mixed NULL and non-NULL nodes
     // printf("\n--- Test 3: List with mixed NULL and non-NULL nodes ---\n");
@@ -197,54 +186,116 @@ int main(int ac, char *av[], char *env[])
 
 	// Tokenize the input (simulate simple tokenization)
 	// In a real scenario, you would tokenize based on spaces, operators, etc.
-	t_token *head = NULL, *last_token = NULL;
-	char *input = av[1];
-	char *token_str = strtok(input, " "); // Assuming space as the delimiter
+	// t_token *head = NULL, *last_token = NULL;
+	// char *input = av[1];
+	// char *token_str = strtok(input, " "); // Assuming space as the delimiter
 
-	while (token_str != NULL)
-	{
-		t_token_type type = STR; // Default type for words
-		if (strcmp(token_str, "|") == 0)
-			type = PIPE;
-		// Add more checks here for other operators if necessary (e.g., INFILE, OUTFILE)
+	// while (token_str != NULL)
+	// {
+	// 	t_token_type type = STR; // Default type for words
+	// 	if (strcmp(token_str, "|") == 0)
+	// 		type = PIPE;
+	// 	// Add more checks here for other operators if necessary (e.g., INFILE, OUTFILE)
 
-		// Create a new token and add it to the list
-		t_token *new_token = token_create(token_str, strlen(token_str), type, content);
-		if (last_token)
-			last_token->next = new_token;
-		else
-			head = new_token; // Set the head if it's the first token
-		last_token = new_token;
+	// 	// Create a new token and add it to the list
+	// 	t_token *new_token = token_create(token_str, strlen(token_str), type, content);
+	// 	if (last_token)
+	// 		last_token->next = new_token;
+	// 	else
+	// 		head = new_token; // Set the head if it's the first token
+	// 	last_token = new_token;
 
-		// Get the next token
-		token_str = strtok(NULL, " ");
-	}
+	// 	// Get the next token
+	// 	token_str = strtok(NULL, " ");
+	// }
 
-	// Print tokens before calling prs_handle_cmd
-	printf("Tokens before prs_handle_cmd:\n");
-	test_print_tokens(head);
+	// // Print tokens before calling prs_handle_cmd
+	// printf("Tokens before prs_handle_cmd:\n");
+	// test_print_tokens(head);
 
-	// Call the function to process the tokens
-	prs_handle_cmd(head);
+	// // Call the function to process the tokens
+	// prs_handle_cmd(head);
 
-	// Print tokens after calling prs_handle_cmd
-	printf("\nTokens after prs_handle_cmd:\n");
-	test_print_tokens(head);
+	// // Print tokens after calling prs_handle_cmd
+	// printf("\nTokens after prs_handle_cmd:\n");
+	// test_print_tokens(head);
 
-	// Free memory (for testing purposes)
-	t_token *current = head;
-	t_token *next_token;
-	while (current)
-	{
-		next_token = current->next;
-		free(current->value);
-		free(current);
-		current = next_token;
-	}
+	// // Free memory (for testing purposes)
+	// t_token *current = head;
+	// t_token *next_token;
+	// while (current)
+	// {
+	// 	next_token = current->next;
+	// 	free(current->value);
+	// 	free(current);
+	// 	current = next_token;
+	// }
 
-	return 0;
-}
+///////////////////////////////////////////////////////
 
+	///// /** 5. TEST: prs_init_heredoc */ /////
+	// Test: Setting up a token list with a HEREDOC token
+    // t_token *head = (t_token *)malloc(sizeof(t_token));
+    // t_token *second = (t_token *)malloc(sizeof(t_token));
+
+    // // Initialize tokens
+    // head->value = strdup("<<");  // HEREDOC token
+    // head->type = HEREDOC;
+    // head->next = second;
+
+    // // Use the delimiter provided via av[1] (the first argument passed to the program)
+    // second->value = strdup(av[1]);  // The delimiter for the heredoc
+    // second->type = STR;  // Not a HEREDOC itself, but the content
+    // second->next = NULL;
+
+    // // Simulate processing the tokens
+    // printf("Processing heredoc with delimiter: %s\n", av[1]);
+    // int result = prs_handle_heredoc(head);
+
+    // // Check the result
+    // if (result == SUCCESS)//0
+    //     printf("Heredoc handled successfully!\n");
+    // else
+    //     printf("Failed to handle heredoc.\n");
+
+    // // Clean up
+    // free(head->value);
+    // free(head);
+    // free(second->value);
+    // free(second);
+
+///////////////////////////////////////////////////////
+
+	///// /* 6. TEST: unlink */ /////
+    //Step 1: Create test files
+    // Step 1: Create test files
+//     FILE *file1 = fopen("test_file1.txt", "w");
+//     FILE *file2 = fopen("test_file2.txt", "w");
+//     if (file1) fclose(file1);
+//     if (file2) fclose(file2);
+
+//     // Step 2: Create linked list of tokens
+//     t_token *head = token_create("test_file1.txt", strlen("test_file1.txt"), NON_HEREDOC, NULL);
+//     head->next = token_create("test_file2.txt", strlen("test_file2.txt"), NON_HEREDOC, NULL);
+
+//     // Step 3: Call prs_unlink_error to delete files
+//     printf("Before prs_unlink_error:\n");
+//     printf("File 1 exists: %s\n", access("test_file1.txt", F_OK) == 0 ? "Yes" : "No");
+//     printf("File 2 exists: %s\n", access("test_file2.txt", F_OK) == 0 ? "Yes" : "No");
+
+//     prs_unlink_error(head);
+
+//     // Step 4: Verify files are deleted
+//     printf("After prs_unlink_error:\n");
+//     printf("File 1 exists: %s\n", access("test_file1.txt", F_OK) == 0 ? "Yes" : "No");
+//     printf("File 2 exists: %s\n", access("test_file2.txt", F_OK) == 0 ? "Yes" : "No");
+
+//     // Step 5: Clean up
+//     token_free(head);
+
+
+// 	return 0;
+// }
 
 
 // //////////////////////////////////////
@@ -351,7 +402,6 @@ int main(int ac, char *av[], char *env[])
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-	//// TODO: TODO: TODO: CHECK LATER!! MISS FIRST CHARACTER////
    	//// /** 2. TEST: `prs_get_quoted_str` */ /////////
     // printf("\n=== TEST: prs_get_quoted_str ===\n");
     // char *quoted_input = "'quoted string'";

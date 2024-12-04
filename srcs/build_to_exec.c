@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 18:05:40 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/25 18:28:24 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/04 19:30:15 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int	bd_handle_cmd(t_exec *exec, t_token *token)
  * @note
  * if (bd_handle_pipe(exec, token) == FAILURE)
  * 		break ;
- * 
  * NEED break 
  * -> The loop would continue processing tokens that belong to the next command segment,
  * which is incorrect since those tokens should be handled by the recursive call.
@@ -83,10 +82,8 @@ int	bd_handle_cmd(t_exec *exec, t_token *token)
  * @note
  * if (handle_command(exec, token))
  * 		return (NULL);
- * 
  * NEED return NULL
  * -> If memory allocation fails, the program need stop processing the current segment to avoid undefined behavior or memory leaks.
- * 
  * 
  * @return constructed `t_exec` structure
  * 
