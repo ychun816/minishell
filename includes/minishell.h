@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/03 19:01:08 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/05 18:56:23 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void	token_free(t_token *token);
 /************ PARSING ************/
 /*********************************/
 /*parsing*/
+int	parsing(t_token **token);
 int	prs_check_quotes_valid(t_token *token);
 int	prs_handle_quotes_n_expand_env(t_token *token);
 int	prs_remove_node_null(t_token **head);
@@ -181,6 +182,7 @@ int	prs_init_heredoc(int fd, char *eof_delimiter);
 /*build to exec*/
 t_exec	*init_build(void);
 t_exec *build_for_exec(t_token *token);
+int	bd_handle_cmd(t_exec *exec, t_token *token);
 
 /*build helper*/
 int	build_listsize(t_exec *exec);
@@ -212,13 +214,17 @@ void	sig_heredoc(int status);
 void	free_all_shell(t_shell *content);
 
 /******************************/
-/************ TEST ************/
+/*********** TESTERS **********/
 /******************************/
-/*test*/
+/*parsing*/
 void	display_env(t_env *env);
 void test_token_append(t_token **head, char *value, int n, t_token_type type, t_shell *content);
 void	test_print_tokens(t_token *head);
 t_token *test_tokenize_input(char *input, t_shell *shell);
 const char *test_tokentype_to_str(t_token_type type);
+void test_print_exec(t_exec *exec);
+
+/*exec*/
+
 
 #endif

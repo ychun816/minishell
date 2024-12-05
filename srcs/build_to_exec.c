@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 18:05:40 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/04 19:30:15 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/05 17:47:47 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	bd_handle_cmd(t_exec *exec, t_token *token)
 		exec->cmd = ft_strdup(token->value);
 		if (!exec->cmd)
 			return (FAILURE);//1
-	}	
+	}
 	return (SUCCESS);//0		
 }
 

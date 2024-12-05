@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/04 19:21:23 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/05 19:46:04 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,11 @@ int	prs_handle_heredoc(t_token *token)
 		{
 			// filename = NULL;
 			filename = "/tmp/heredoc_file"; ///TESTER
-			//filename = ms_generate_random(token->next->value); //generate random -> generate random file
+			// filename = ms_generate_random(token->next->value); //generate random -> generate random file
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)
 				return (FAILURE);
-			printf("I CAN GO HERE??\n");
+			// printf("I CAN GO HERE??\n");
 			if (prs_init_heredoc(fd, token->next->value) != 0)//FAILURE
 				end = 1;
 			close (fd);
