@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/05 19:46:04 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/06 17:30:16 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,7 +241,7 @@ int	parsing(t_token **token)
 	int	return_code;
 
 	return_code = 0;
-	if (prs_check_quotes_valid(*token) != 0)
+	if (prs_check_quotes_valid(*token) != 0)//!=0 FAILURE
 		return_code = FAILURE;
 	else if (prs_handle_quotes_n_expand_env(*token) != 0)
 		return_code = FAILURE;
@@ -260,3 +260,29 @@ int	parsing(t_token **token)
 	}
 	return (return_code);
 }
+
+// /** test OT */
+// int	parsing(t_token **token)
+// {
+// 	int	err;
+
+// 	err = 0;
+// 	if (prs_check_quotes_valid(*token) != 0)
+// 		err = 1;
+// 	else if (prs_handle_quotes_n_expand_env(*token) != 0)
+// 		err = 1;
+// 	else if (prs_remove_node_null(token) != 0)
+// 		err = 1;
+// 	else if (prs_check_allnodes_null(*token) != 0)
+// 		err = 2;
+// 	else if (prs_handle_redir(*token) != 0)
+// 		err = 1;
+// 	else if (prs_handle_cmd(*token) != 0)
+// 		err = 1;
+// 	else if (prs_handle_heredoc(*token) != 0)
+// 	{
+// 		prs_unlink_error(*token);
+// 		err = 2;
+// 	}
+// 	return (err);
+// }

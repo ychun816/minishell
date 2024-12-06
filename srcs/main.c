@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/04 17:02:26 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/06 16:17:53 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_signal g_signal = {0};
 
 
-static int check_line_empty(char *line)
+int check_line_empty(char *line)
 {
 	if (line[0] == '\0')
 		return (1);
@@ -25,9 +25,6 @@ static int check_line_empty(char *line)
 /** DUP ENV 
  * inside dup_edit_env:
  * TODO : if env exists => edit the value, otherwise create it
- * 
- * 
- * 
 */
 t_env *dup_env(char *env[])
 {
@@ -79,7 +76,7 @@ t_shell *init_shell(char *env[])//initialize & dup env to supershell
 	return (content);
 }
 
-/** READ N LOOP */
+/** === OG READ N LOOP === */
 int read_n_loop(t_shell *content)
 {
 	char *line;

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:44:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/30 16:22:46 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/06 19:30:55 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
 	char	*new;
 
 	before_envvar = get_str_before_envvar(str, envvar_found);
-	// printf("TEST BEFORE ENVAR: %s\n", get_str_before_envvar(str, envvar_found));////TESTER
+	printf("🎅 TEST BEFORE ENVAR: %s\n", get_str_before_envvar(str, envvar_found));////TESTER
 	if (!before_envvar)
 		return NULL;
 	envvar_value = get_envvar_value((envvar_found + 1), content);
-	// printf("TEST ENVVAR VALUE: %s\n", get_envvar_value((envvar_found + 1), content));////TESTER
+	printf("🎅 TEST ENVVAR VALUE: %s\n", get_envvar_value((envvar_found + 1), content));////TESTER
 	after_envvar = get_str_after_envvar(envvar_found);
-	// printf("TEST AFTER ENVAR:%s\n", get_str_after_envvar(envvar_found));////TESTER
+	printf("🎅 TEST AFTER ENVAR:%s\n", get_str_after_envvar(envvar_found));////TESTER
 	if (!after_envvar)
 		return (free(before_envvar), free(envvar_value), NULL);
 	new = prs_strjoin(before_envvar, envvar_value);
@@ -99,12 +99,10 @@ int	prs_handle_envvar_expansion(t_token *token)
 		envvar_found = ft_strchr(token->value, '$');
 		if (envvar_found == NULL || n_dollar == 0)
 			break ;
-		current = token->value;
 		if (ft_strcmp(envvar_found, "$") == 0)
 			break ;
-		// printf("TEST current token value: %s\n", current); ///TESTER
+		current = token->value;
 		new = prs_exapnd_1envvar(token->value, envvar_found, token->content);
-		// printf("TEST (new) prs_exapnd_env_to_str: %s\n", prs_exapnd_env_to_str(token->value, envvar_found, token->content)); ///TESTER
 		if (new && new[0] == '\0') //Only free if `new` is empty
 		{
 			free(new);

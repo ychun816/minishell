@@ -1,15 +1,43 @@
 #include "minishell.h"
 
+// //////////////////////////////////////
+// /// FINAL TEST IN LOOP             ///
+// //////////////////////////////////////
+/* TEST INPUT
+[HACKMD] Test Input for Minishell (lexing/parsing/build for exec):
+https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/BJiOL9xEye
+*/
 int main(int ac, char *av[], char *env[])
 {
-    (void)ac;
-	// (void)av;
-	t_shell *content = init_shell(env);
-	if (!content) 
-	{
-		fprintf(stderr, "Failed to initialize shell\n");
-		return (1);
-	}
+	t_shell *content;
+
+	content = NULL;
+	(void)ac;
+	(void)av;
+	content = init_shell(env);//initialize everthing to 0/NULL
+	if (!content)
+		return (EXIT_FAILURE);
+	test_read_n_loop(content);//strat loop -> readline(PROMPT)
+	free_all_shell(content);
+	ft_putstr_fd("exit\n", 2);//or 1
+	return (EXIT_SUCCESS);
+
+}
+
+// //////////////////////////////////////
+// /// TEST: BUILD to EXEC            /// ///CHECKED!!
+// //////////////////////////////////////
+
+// int main(int ac, char *av[], char *env[])
+// {
+//     (void)ac;
+// 	// (void)av;
+// 	t_shell *content = init_shell(env);
+// 	if (!content) 
+// 	{
+// 		fprintf(stderr, "Failed to initialize shell\n");
+// 		return (1);
+// 	}
 
 	///// /** 1. TEST: init build */ /////
 	// t_exec *exec = init_build();
@@ -234,89 +262,87 @@ INVALID
 	10. "echo Hello >"
 	11. "ls -l |"
 	*/
-    t_token *tokens = NULL;
-    t_token *current_token = NULL;
+    // t_token *tokens = NULL;
+    // t_token *current_token = NULL;
     // t_shell *shell_context = {0};  // Shell context, could be set as needed
 
     // Tokenize the input string (argument example)
-    char *test_input = av[1];
+    // char *test_input = av[1];
     // char *token_str = strtok(cmd_input, " ");
 
 	//tokenize input
-	///// LEXING /////
-	printf("\n===  🍿 TEST LEXING    ===\n");
-    t_token *lexed_tokens = lexing(content, test_input);  // Pass the test input to lexing function
-	test_print_tokens(lexed_tokens);
-	printf("\n========================\n");
+	// ///// LEXING /////
+	// printf("\n===  🍿 TEST LEXING    ===\n");
+    // t_token *lexed_tokens = lexing(content, test_input);  // Pass the test input to lexing function
+	// test_print_tokens(lexed_tokens);
+	// printf("\n========================\n");
 
-	///// PARSING /////
-	printf("\n===  🥐 TEST PARSING   ===\n");
-    // Print tokens before parsing
-    printf("= Tokens BEFORE parsing: =\n");
-    test_print_tokens(lexed_tokens);
-    // Call the parsing function
-    int result = parsing(&lexed_tokens);
-    // Print result of parsing
-	printf("\n= Tokens AFTER parsing: =\n");
-	test_print_tokens(lexed_tokens);
-    if (result == 0) //SUCCESS
-        printf("🢂 🤙 Parsing Successful!!\n");
-    else if (result == FAILURE)
-        printf("🢂 👎 Parsing Failed (General Error)!\n");
-    else if (result == FAILURE_VOID){
-        printf("🢂 🫶 Parsing Failed (Failure void error)!\n");
-	}
-	printf("\n========================\n");
+	// ///// PARSING /////
+	// printf("\n===  🥐 TEST PARSING   ===\n");
+    // // Print tokens before parsing
+    // printf("= Tokens BEFORE parsing: =\n");
+    // test_print_tokens(lexed_tokens);
+    // // Call the parsing function
+    // int result = parsing(&lexed_tokens);
+    // // Print result of parsing
+	// printf("\n= Tokens AFTER parsing: =\n");
+	// test_print_tokens(lexed_tokens);
+    // if (result == 0) //SUCCESS
+    //     printf("🢂 🤙 Parsing Successful!!\n");
+    // else if (result == FAILURE)
+    //     printf("🢂 👎 Parsing Failed (General Error)!\n");
+    // else if (result == FAILURE_VOID){
+    //     printf("🢂 🫶 Parsing Failed (Failure void error)!\n");
+	// }
+	// printf("\n========================\n");
 
-    // Call the function (build_for_exec)
-    t_exec *result_exec = build_for_exec(lexed_tokens);
+    // // Call the function (build_for_exec)
+    // t_exec *result_exec = build_for_exec(lexed_tokens);
 
-	printf("\n=== 🍰 PRINT ALL EXEC  ===\n");
-    // Check if the result is valid and print the result using the test_print_exec function
-    if (result_exec) 
-	{
-        printf("[test_build_for_exec] SUCCESS: Executable built successfully!!\n");
-        test_print_exec(result_exec); // Print details of the exec structure
-    } 
-	else
-        printf("[test_build_for_exec] FAILURE: Failed to build exec structure.\n");
-	printf("\n");
+	// printf("\n=== 🍰 PRINT ALL EXEC  ===\n");
+    // // Check if the result is valid and print the result using the test_print_exec function
+    // if (result_exec) 
+	// {
+    //     printf("[test_build_for_exec] SUCCESS: Executable built successfully!!\n");
+    //     test_print_exec(result_exec); // Print details of the exec structure
+    // } 
+	// else
+    //     printf("[test_build_for_exec] FAILURE: Failed to build exec structure.\n");
+	// printf("\n");
 
-    // Free allocated memory for tokens
-    current_token = tokens;
-    while (current_token) 
-	{
-        t_token *temp = current_token;
-        current_token = current_token->next;
-        free(temp->value);
-        free(temp);
-    }
+    // // Free allocated memory for tokens
+    // current_token = tokens;
+    // while (current_token) 
+	// {
+    //     t_token *temp = current_token;
+    //     current_token = current_token->next;
+    //     free(temp->value);
+    //     free(temp);
+    // }
 
-    // Cleanup and return
-    if (result_exec) 
-	{
-        // Clean up exec structure (ensure to free all allocated memory in t_exec, t_filename, t_arg)
-        if (result_exec->cmd) free(result_exec->cmd);
-        t_filename *redir = result_exec->redirs;
-        while (redir) {
-            t_filename *tmp = redir;
-            redir = redir->next;
-            free(tmp->path);
-            free(tmp);
-        }
-        t_arg *arg = result_exec->args;
-        while (arg) 
-		{
-            t_arg *tmp = arg;
-            arg = arg->next;
-            free(tmp->value);
-            free(tmp);
-        }
-        free(result_exec);
-    }
+    // // Cleanup and return
+    // if (result_exec) 
+	// {
+    //     // Clean up exec structure (ensure to free all allocated memory in t_exec, t_filename, t_arg)
+    //     if (result_exec->cmd) free(result_exec->cmd);
+    //     t_filename *redir = result_exec->redirs;
+    //     while (redir) {
+    //         t_filename *tmp = redir;
+    //         redir = redir->next;
+    //         free(tmp->path);
+    //         free(tmp);
+    //     }
+    //     t_arg *arg = result_exec->args;
+    //     while (arg) 
+	// 	{
+    //         t_arg *tmp = arg;
+    //         arg = arg->next;
+    //         free(tmp->value);
+    //         free(tmp);
+    //     }
+    //     free(result_exec);
+    // }
 
+    // return 0;
 
-
-    return 0;
-
-}
+// }

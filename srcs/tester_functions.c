@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:44:33 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/05 19:23:35 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/06 18:25:24 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void test_print_exec(t_exec *exec)
     }
 
     // Print command
-    if (exec->cmd) 
+    if (exec->cmd)
         printf("[Command]: %s\n", exec->cmd);
     else
         printf("No command set.\n");
@@ -166,4 +166,91 @@ void test_print_exec(t_exec *exec)
     } 
 	else 
         printf("No redirections set.\n");
+}
+
+
+/* TEST READ N LOOP*/				// ft_putstr_fd("Parsing Error!\n", 2);
+int test_read_n_loop(t_shell *content)
+{
+	char *line;
+	t_token	*lexed_tokens;
+	t_exec	*result_exec;
+
+	// (void)content;
+	line = NULL;
+	while (1)
+	{
+		// sig_init_signals(); // Set up signal handling for each loop iteration
+		line = readline(PROMPT);
+		if (!line)// EOF or NULL input
+			break ;// EOF or NULL input
+		if (strncmp(line, "env", 3) == 0) //////////TESTER//////////
+			display_env(content->env);
+		if (strncmp(line, "exit", 4) == 0) //////////TESTER//////////
+			break ;
+		else if (check_line_empty(line) == 0)// check if line valid
+		{
+			add_history(line);//add history //REMEMBER TO CLEAR
+			// if (process_pipeline(content, line) != 0)//process pipeline
+			// {
+			// 	ft_putstr_fd("Parcing Error\n", 2);
+			// 	content->exit_code = 2;
+			// }
+
+			/// STEP 1: LEXING ///
+			lexed_tokens = lexing(content, line);
+			if (!lexed_tokens)
+			{
+				ft_putstr_fd("Lexing Error\n", 2);
+				content->exit_code = 1;
+				free(line);
+				continue ;// Skip parsing and execution for this input
+			}
+			else
+			{
+				printf("\n=== 🍿 LEXED TOKENS ===\n");
+				test_print_tokens(lexed_tokens);
+				// Continue to parsing, no need continue
+			}
+			
+			/// STEP 2: PARSING ///
+			if (parsing(&lexed_tokens) != 0) //parsing fail
+			{
+				// ft_putstr_fd("Parsing Error!\n", 2);
+    			if (parsing(&lexed_tokens) == FAILURE)
+    			    printf("🢂 👎 Parsing Failed (General Error)!\n");
+    			else if (parsing(&lexed_tokens) == FAILURE_VOID)
+    			    printf("🢂 🫶 Parsing Failed (Failure void error)!\n");
+				content->exit_code = 2;
+				token_free(lexed_tokens);
+				free(line);
+				continue ;
+			}
+			else
+			{
+				printf("\n=== 🥐 TEST PARSING ===\n");
+				test_print_tokens(lexed_tokens);
+				// if (result == 0) //SUCCESS
+				printf("🢂 🤙 Parsing Successful!!\n");
+			}
+
+			/// STEP 3: BUILD TO EXEC ///
+			result_exec = build_for_exec(lexed_tokens);
+			if (!result_exec)
+			{
+				ft_putstr_fd("Execution Preparation Error\n", 2);
+				content->exit_code = 3;
+			}
+			else
+			{
+				printf("\n=== 🍰 TEST EXEC ===\n");
+				test_print_exec(result_exec);
+				build_free_all(result_exec);
+			}
+			token_free(lexed_tokens);
+		}
+		if (line)
+			free(line);
+	}
+	return (0); //return if loop end ((i.e., on EOF or NULL input))
 }

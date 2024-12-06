@@ -6,9 +6,11 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/05 18:56:23 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/06 17:43:01 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+		// printf("🎅TEST current token value: %s\n", current); ///TESTER
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -103,6 +105,7 @@ extern t_signal g_signal;
 t_shell *init_shell(char *env[]);//initialize & dup env to supershell
 int read_n_loop(t_shell *content);
 t_env *dup_env(char *env[]);
+int check_line_empty(char *line);
 
 /*env*/ //CHECKED
 t_env *env_create(char *env_id, char *env_value, char *env_line);
@@ -223,6 +226,7 @@ void	test_print_tokens(t_token *head);
 t_token *test_tokenize_input(char *input, t_shell *shell);
 const char *test_tokentype_to_str(t_token_type type);
 void test_print_exec(t_exec *exec);
+int test_read_n_loop(t_shell *content);
 
 /*exec*/
 
