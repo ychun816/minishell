@@ -17,7 +17,7 @@ void	exe_close(int *fd)
 	if (fd && *fd != -1)
 	{
 		close(*fd);
-		fprintf(stderr, "close\n");
+		//fprintf(stderr, "close\n");
 		*fd = -1;
 	}
 }
@@ -80,7 +80,6 @@ void	create_args(t_exec *temp, int args_nb, char *args[args_nb])
 	t_args	*curr;
 	int		i;
 
-	// fprintf(stderr, "entering create args\n");
 	i = 0;
 	args[i] = temp->cmd;
 	curr = temp->args;
@@ -88,12 +87,10 @@ void	create_args(t_exec *temp, int args_nb, char *args[args_nb])
 	while (curr)
 	{
 		args[i] = curr->value;
-		// fprintf(stderr, "args[%d] : %s\n", i, args[i]);
 		curr = curr->next;
 		i++;
 	}
 	args[i] = NULL;
-	// fprintf(stderr, "args[%d] : %s\n", i, args[i]);
 }
 
 int	ft_char_count(char *str, char c)
@@ -130,15 +127,12 @@ char	*find_path(char *cmd, t_env *envp)
 	t_env	*curr;
 	int		i;
 
-	// fprintf(stderr, "entered find_path\n");
 	curr = envp;
 	while (curr && ft_strncmp("PATH=", curr->raw, 5) != 0)
 		curr = curr->next;
 	if (!curr)
 		return (ft_strdup(cmd));
-	// fprintf(stderr, "sorti de la boucle curr\n");
 	paths = ft_split(curr->value, ':');
-	// fprintf(stderr, "split done\n");
 	i = 0;
 	while (paths[i])
 	{
@@ -148,14 +142,12 @@ char	*find_path(char *cmd, t_env *envp)
 		if (!access(exec, X_OK | F_OK))
 		{
 			ft_free_all(paths);
-			// fprintf(stderr, "command returned : %s\n", exec);
 			return (exec);
 		}
 		free(exec);
 		i++;
 	}
 	ft_free_all(paths);
-	// fprintf(stderr, "command not found");
 	return (ft_strdup(cmd));
 }
 
@@ -200,24 +192,14 @@ int	ft_execution(t_ctx *ctx, t_exec *temp)
 	char	*args[size_linked_list(temp->args) + 2];
 	char	**envp;
 
-	// fprintf(stderr, "entered ft_execution\n");
 	args_nb = size_linked_list(temp->args) + 2;
 	// execve(path, comd, envp);
 	// char	*args[] = {"/bin/ls", "-l", "/home", NULL};
 	create_args(temp, args_nb, args);
-	// int n = 0;
-	// while(args[n] != NULL)
-	// {
-	// 	//fprintf(stderr, "args[%d] : %s\n", n, args[n]);
-	// 	n++;
-	// }
 	envp = envp_format(ctx->envp);
-	// fprintf(stderr, "envp copied\n");
 	if (execve(temp->cmd, args, envp) == -1)
 	{
-		// fprintf(stderr, "not absolute link\n");
 		path = find_path(temp->cmd, ctx->envp);
-		// fprintf(stderr, "path found\n");
 		if (execve(path, args, envp) == -1)
 		{
 			free(path);
@@ -243,13 +225,13 @@ void	child_process(t_ctx *ctx, int (*fd)[2], int i, t_exec *temp)
 		if (i > 0)
 		{
 			dup2(fd[i - 1][0], STDIN_FILENO);
-			fprintf(stderr, "dup2\n");
+			//fprintf(stderr, "dup2\n");
 			exe_close(&fd[i - 1][0]);
 		}
 		if (i < ctx->exec_count - 1)
 		{
 			dup2(fd[i][1], STDOUT_FILENO);
-			fprintf(stderr, "dup2\n");
+			//fprintf(stderr, "dup2\n");
 			exe_close(&fd[i][1]);
 		}
 	}
@@ -266,17 +248,17 @@ void	child_process(t_ctx *ctx, int (*fd)[2], int i, t_exec *temp)
 		exit(1);
 	}
 }
-void	exe_err_coredump(int pid)
+void	exe_err_coredump(int pid) // TODO
 {
 	int	fd_tmp;
 
 	fd_tmp = dup(STDOUT_FILENO);
-	fprintf(stderr, "dup.c\n");
+	//fprintf(stderr, "dup.c\n");
 	dup2(STDERR_FILENO, STDOUT_FILENO);
-	fprintf(stderr, "dup2\n");
+	//fprintf(stderr, "dup2\n");
 	printf("[%d]: Quit (core dumped)\n", pid);
 	dup2(fd_tmp, STDOUT_FILENO);
-	fprintf(stderr, "dup2\n");
+	//fprintf(stderr, "dup2\n");
 	exe_close(&fd_tmp);
 }
 
@@ -328,7 +310,7 @@ int	open_pipes(int pipes_nb, int (*fd)[2])
 			}
 			return (-1); // Signal failure
 		}
-		fprintf(stderr, "pipe\n");
+		//fprintf(stderr, "pipe\n");
 		i++;
 	}
 	return (0); // Signal success
@@ -339,16 +321,16 @@ void	set_std(t_ctx *ctx, int mode)
 	if (!mode)
 	{
 		ctx->def_in = dup(STDIN_FILENO);
-		fprintf(stderr, "dup.a\n");
+		//fprintf(stderr, "dup.a\n");
 		ctx->def_out = dup(STDOUT_FILENO);
-		fprintf(stderr, "dup.b\n");
+		//fprintf(stderr, "dup.b\n");
 	}
 	else
 	{
 		dup2(ctx->def_in, STDIN_FILENO);
-		fprintf(stderr, "dup2\n");
+		//fprintf(stderr, "dup2\n");
 		dup2(ctx->def_out, STDOUT_FILENO);
-		fprintf(stderr, "dup2\n");
+		//fprintf(stderr, "dup2\n");
 		ft_close(ctx);
 	}
 }
@@ -397,7 +379,7 @@ int	exec_parent(t_ctx *ctx)
 void	exe_dup2_close(int fd1, int fd2)
 {
 	dup2(fd1, fd2);
-	fprintf(stderr, "dup2\n");
+	//fprintf(stderr, "dup2\n");
 	exe_close(&fd1);
 }
 
@@ -425,36 +407,32 @@ int	redirs_type(t_exec *exec, t_filenames *file)
 	if (file->type == INFILE || file->type == N_HEREDOC)
 	{
 		if (exec->fd_in != STDIN_FILENO)
-		{
 			exe_close(&(exec->fd_in));
-		}
 		exec->fd_in = open(file->path, O_RDONLY);
-		fprintf(stderr, "open");
+		//fprintf(stderr, "open");
 		if (exec->fd_in == -1)
 		{
 			printf("error with open"); // TODO
 			return (1);
 		}
 		dup2(exec->fd_in, STDIN_FILENO);
-		fprintf(stderr, "dup2\n");
+		//fprintf(stderr, "dup2\n");
 		exe_close(&(exec->fd_in));
 	}
 	else
 	{
 		if (exec->fd_out != STDOUT_FILENO)
-		{
 			exe_close(&(exec->fd_out));
-		}
 		if (file->type == OUTFILE)
 		{
 			exec->fd_out = open(file->path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			fprintf(stderr, "open");
+			//fprintf(stderr, "open");
 		}
 		else if (file->type == APPEND)
 		{
 			exec->fd_out = open(file->path, O_WRONLY | O_CREAT | O_APPEND,
 					0644);
-			fprintf(stderr, "open");
+			//fprintf(stderr, "open");
 		}
 		if (exec->fd_out == -1)
 		{
@@ -462,7 +440,7 @@ int	redirs_type(t_exec *exec, t_filenames *file)
 			return (1);
 		}
 		dup2(exec->fd_out, STDOUT_FILENO);
-		fprintf(stderr, "dup2\n");
+		//fprintf(stderr, "dup2\n");
 		exe_close(&(exec->fd_out));
 	}
 	return (0);
@@ -497,7 +475,6 @@ int	exec(t_ctx *ctx)
 {
 	t_exec	*temp;
 
-	// il sert a quoi exit_code ?
 	if (ctx->exec_count == 0)
 		return (0);
 	// store STDIN & STDOUT
@@ -517,8 +494,7 @@ int	exec(t_ctx *ctx)
 		// id exit, printf "exit" ?? (dans la bi_exit?)
 		// unlink (close) all the N_HEREDOC(unlik dans le else)
 		unlink_all(ctx);
-		// fonction reutilisee dans le else
-		// ctx->exit_code = do_builtin(ctx, temp->cmd, temp->args); //TODO
+		// fonction used again in the else
 		ctx->exit_code = bi_do_builtin(ctx, temp->cmd, temp->args);
 		set_std(ctx, 1);
 		return (ctx->exit_code);
