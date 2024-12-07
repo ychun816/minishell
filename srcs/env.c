@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/28 12:48:42 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/07 18:04:25 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /** SET DEFAULT ENV
  * Purpose: Creates a default environment variable node based on a predefined constant DEF_ENV.
  * Process:
- * - Calls env_get_id() and env_get_value() to extract the ID and value of the default environment variable.
+ * - Calls get_env_id() and get_env_value() to extract the ID and value of the default environment variable.
  * - Calls env_create() to allocate memory for a new t_env structure, initializing it with the extracted ID, value, and a duplicate of the raw string.
  * - Returns the newly created environment variable structure.
  */
@@ -138,6 +138,18 @@ void	env_free(t_env *env)
 		free(env);
 		env = tmp_next;
 	}
+}
+
+/* ENV DELETE ONE */ //ADDED EXTRA FOR BUILTIN, CHECK LATER
+void	env_del_one(t_env *env)
+{
+	if (env->id)
+		free(env->id);
+	if (env->value)
+		free(env->value);
+	if (env->raw)
+		free(env->raw);
+	free(env);
 }
 
 /*

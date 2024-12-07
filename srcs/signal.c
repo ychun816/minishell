@@ -3,23 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: okoca <okoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:50:16 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/22 18:02:29 by yilin            ###   ########.fr       */
+/*   Created: 2024/07/12 09:46:40 by okoca             #+#    #+#             */
+/*   Updated: 2024/07/17 13:51:38 by okoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	sig_event(void)
+{
+	return (EXIT_SUCCESS);
+}
 
-/** restudy */
+void	sig_init_signals(void)
+{
+	rl_event_hook = sig_event;
+	signal(SIGINT, sig_int_handler);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
+}
+
+void	sig_int_handler(int status)
+{
+	(void)status;
+	if (g_signals.signal_code != 1)
+	{
+		g_signals.signal_code = SIGNAL_OFFSET + SIGINT;
+		write(STDIN_FILENO, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+void	sig_exec(int status)
+{
+	(void)status;
+	g_signals.signal_code = SIGNAL_OFFSET + SIGINT;
+	write(STDERR_FILENO, "\n", 1);
+}
+
 void	sig_heredoc(int status)
 {
 	(void)status;
 	rl_replace_line("", 0);
 	rl_redisplay();
 	rl_done = 1;
-	g_signal.end_heredoc = 1;
-	g_signal.signal_code = SIGNAL_OFFSET + SIGINT;
+	g_signals.end_heredoc = 1;
+	g_signals.signal_code = SIGNAL_OFFSET + SIGINT;
 }

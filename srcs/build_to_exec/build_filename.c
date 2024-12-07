@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 18:28:46 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/29 21:31:25 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/07 15:33:11 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int	bd_handle_redirs(t_exec *exec, t_token *token) //static int
 }
 
 /** BUILD- FILENAME CREATE
- * Creates a structured object (t_filenames) that stores the file path and the type of redirection
+ * Creates a structured object (t_filename) that stores the file path and the type of redirection
  * 
- * @param  t_filenames *filename;  // Declare a pointer to a t_filenames structure to hold the redirection information
+ * @param  t_filename *filename;  // Declare a pointer to a t_filename structure to hold the redirection information
  * @param  char *new;  // Declare a pointer to store the duplicated string (path)
  * 
  * Example:
@@ -69,7 +69,7 @@ t_filename *filename_create(char *pathname, t_token_type type)
 	filename->path = dup_path;
 	filename->type = type;
 	filename->next = NULL;
-	// Initialize the next pointer to NULL (this will link to the next t_filenames structure in a linked list, if needed)
+	// Initialize the next pointer to NULL (this will link to the next t_filename structure in a linked list, if needed)
 	return (filename);
 }
 

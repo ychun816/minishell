@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   bi_func_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 09:09:45 by tsuchen           #+#    #+#             */
-/*   Updated: 2024/12/03 19:25:52 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:59:30 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	bi_echo(t_args *args)
+int	bi_echo(t_arg *args)
 {
 	int	n_flag;
 
@@ -34,7 +34,7 @@ int	bi_echo(t_args *args)
 	return (0);
 }
 
-int	bi_cd(t_ctx *ctx, t_args *args)
+int	bi_cd(t_shell *ctx, t_arg *args)
 {
 	int		siz;
 	char	*cwd;
@@ -47,7 +47,7 @@ int	bi_cd(t_ctx *ctx, t_args *args)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		perror("minishell: cd: error retrieving current directory");
-	home = ms_getenv("HOME", ctx->envp);
+	home = get_env("HOME", ctx->env);
 	if ((!siz || !ft_strcmp(args->value, "--")) && home && home->value)
 		chdir(home->value);
 	else if ((!siz || !ft_strcmp(args->value, "--")) && (!home || !home->value))
@@ -62,7 +62,7 @@ int	bi_cd(t_ctx *ctx, t_args *args)
 	return (free(cwd), 0);
 }
 
-int	bi_pwd(t_args *args)
+int	bi_pwd(t_arg *args)
 {
 	char	*cwd;
 
@@ -83,7 +83,7 @@ int	bi_pwd(t_args *args)
 	return (0);
 }
 
-int	bi_exit(t_ctx *ctx, t_args *args)
+int	bi_exit(t_shell *ctx, t_arg *args)
 {
 	int	exit_code;
 
@@ -103,11 +103,11 @@ int	bi_exit(t_ctx *ctx, t_args *args)
 	exit(exit_code);
 }
 
-int	bi_env(t_ctx *ctx, t_args *args)
+int	bi_env(t_shell *ctx, t_arg *args)
 {
 	t_env	*tmp;
 
-	tmp = ctx->envp;
+	tmp = ctx->env;
 	if (args)
 	{
 		bi_err_env(args->value);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/05 15:49:29 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/07 18:25:48 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	exe_close(int *fd)
 	}
 }
 
-void	ft_close(t_ctx *ctx)
+void	ft_close(t_shell *ctx)
 {
 	if (ctx)
 	{
@@ -60,9 +60,9 @@ void	close_fds(int pipes_nb, int (*fd)[2], int current_cmd,
 	}
 }
 
-int	size_linked_list(t_args *args)
+int	size_linked_list(t_arg *args)
 {
-	t_args	*curr;
+	t_arg	*curr;
 	int		count;
 
 	count = 0;
@@ -77,7 +77,7 @@ int	size_linked_list(t_args *args)
 
 void	create_args(t_exec *temp, int args_nb, char *args[args_nb])
 {
-	t_args	*curr;
+	t_arg	*curr;
 	int		i;
 
 	i = 0;
@@ -119,7 +119,7 @@ void	ft_free_all(char **arr)
 	free(arr);
 }
 
-char	*find_path(char *cmd, t_env *envp)
+char	*find_path(char *cmd, t_env *env)
 {
 	char	**paths;
 	char	*path;
@@ -127,6 +127,7 @@ char	*find_path(char *cmd, t_env *envp)
 	t_env	*curr;
 	int		i;
 
+	// fprintf(stderr, "entered find_path\n");
 	curr = envp;
 	while (curr && ft_strncmp("PATH=", curr->raw, 5) != 0)
 		curr = curr->next;
@@ -151,70 +152,79 @@ char	*find_path(char *cmd, t_env *envp)
 	return (ft_strdup(cmd));
 }
 
-int	size_env(t_env *envp)
+int	size_env(t_env *env)
 {
 	int	count;
 
 	count = 0;
-	while (envp)
+	while (env)
 	{
 		count++;
-		envp = envp->next;
+		env = env->next;
 	}
 	return (count);
 }
 
-char	**envp_format(t_env *envp)
+char	**env_format(t_env *env)
 {
 	char	**env;
 	int		size;
 	int		i;
 
 	i = 0;
-	size = size_env(envp);
+	size = size_env(env);
 	env = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!env)
 		return (NULL);
 	while (i < size)
 	{
-		env[i] = envp->raw;
-		envp = envp->next;
+		env[i] = env->raw;
+		env = env->next;
 		i++;
 	}
 	env[i] = NULL;
 	return (env);
 }
 
-int	ft_execution(t_ctx *ctx, t_exec *temp)
+int	ft_execution(t_shell *ctx, t_exec *temp)
 {
 	int		args_nb;
 	char	*path;
 	char	*args[size_linked_list(temp->args) + 2];
-	char	**envp;
+	char	**env;
 
 	args_nb = size_linked_list(temp->args) + 2;
-	// execve(path, comd, envp);
+	// execve(path, comd, env);
 	// char	*args[] = {"/bin/ls", "-l", "/home", NULL};
 	create_args(temp, args_nb, args);
+	// int n = 0;
+	// while(args[n] != NULL)
+	// {
+	// 	//fprintf(stderr, "args[%d] : %s\n", n, args[n]);
+	// 	n++;
+	// }
 	envp = envp_format(ctx->envp);
+	// fprintf(stderr, "envp copied\n");
 	if (execve(temp->cmd, args, envp) == -1)
 	{
+		// fprintf(stderr, "not absolute link\n");
 		path = find_path(temp->cmd, ctx->envp);
+		// fprintf(stderr, "path found\n");
 		if (execve(path, args, envp) == -1)
 		{
 			free(path);
-			ft_free_all(envp);
+			ft_free_all(env);
 			perror("Error with execve");
 			exit(1);
 		}
 		free(path);
 		return (0);
 	}
-	ft_free_all(envp);
+	ft_free_all(env);
 	return (0);
 }
 
-void	child_process(t_ctx *ctx, int (*fd)[2], int i, t_exec *temp)
+void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 {
 	int	exit_code;
 
@@ -262,7 +272,7 @@ void	exe_err_coredump(int pid) // TODO
 	exe_close(&fd_tmp);
 }
 
-void	exe_wait_all(t_ctx *ctx) // TODO
+void	exe_wait_all(t_shell *ctx) // TODO
 {
 	int status;
 	int i;
@@ -316,7 +326,7 @@ int	open_pipes(int pipes_nb, int (*fd)[2])
 	return (0); // Signal success
 }
 
-void	set_std(t_ctx *ctx, int mode)
+void	set_std(t_shell *ctx, int mode)
 {
 	if (!mode)
 	{
@@ -335,7 +345,7 @@ void	set_std(t_ctx *ctx, int mode)
 	}
 }
 
-int	exec_parent(t_ctx *ctx)
+int	exec_parent(t_shell *ctx)
 {
 	t_exec	*temp;
 	int		fd[ctx->exec_count - 1][2];
@@ -383,10 +393,10 @@ void	exe_dup2_close(int fd1, int fd2)
 	exe_close(&fd1);
 }
 
-void	unlink_all(t_ctx *ctx)
+void	unlink_all(t_shell *ctx)
 {
 	t_exec		*exec;
-	t_filenames	*temp;
+	t_filename	*temp;
 
 	exec = ctx->exec;
 	while (exec)
@@ -402,7 +412,7 @@ void	unlink_all(t_ctx *ctx)
 	}
 }
 
-int	redirs_type(t_exec *exec, t_filenames *file)
+int	redirs_type(t_exec *exec, t_filename *file)
 {
 	if (file->type == INFILE || file->type == N_HEREDOC)
 	{
@@ -448,7 +458,7 @@ int	redirs_type(t_exec *exec, t_filenames *file)
 
 int	exec_redirs(t_exec *exec)
 {
-	t_filenames	*temp;
+	t_filename	*temp;
 
 	temp = exec->redirs;
 	while (temp)
@@ -471,7 +481,7 @@ int	err_redirs(t_exec *exec)
 	return (0);
 }
 
-int	exec(t_ctx *ctx)
+int	exec(t_shell *ctx)
 {
 	t_exec	*temp;
 

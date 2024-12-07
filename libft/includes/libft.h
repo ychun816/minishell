@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 12:04:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/03 18:04:48 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/07 18:10:02 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void(*del)(void *));
 t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
-int		ft_strcmp(char *s1, char *s2);
+int	ft_strcmp(const char *s1, const char *s2);
 char	*ft_strndup(const char *str, int nb);
+long	ft_atol(const char *nptr);
 
 #endif

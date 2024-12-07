@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2024/12/05 17:51:40 by yilin            ###   ########.fr        #
+#    Updated: 2024/12/07 17:57:06 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,29 @@ SRCS_DIR = srcs
 OBJS_DIR = objs
 LIBFT_DIR = libft
 
+BUILD_DIR = build_to_exec
+BUILTIN_DIR = builtins
+EXEC_DIR = exec
+LEX_DIR = lexing
+PRS_DIR = parsing
+
+TESTER_DIR = testers
+
+
+BUILD_FL = $(addprefix $(BUILD_DIR)/, build_args.c  build_filename.c  build_helper.c  build_to_exec.c)
+BUILTIN_FL = $(addprefix $(BUILTIN_DIR)/, bi_check_utils.c  bi_err_utils.c  bi_func.c  bi_func_utils2.c  bi_func_utils.c  builtin.c)
+EXEC_FL = $(addprefix $(EXEC_DIR)/, exec.c)
+LEX_FL = $(addprefix $(LEX_DIR)/, lexing.c  lexing_helper.c)
+PRS_FL = $(addprefix $(PRS_DIR)/, expansion.c  expansion_helper.c  parsing.c  parsing_helper.c  quotes.c)
+MAIN_FL = main.c env.c signal.c tokens.c
+
+TESTER_FL = $(addprefix $(TESTER_DIR)/, tester_functions.c  testers_build.c  testers.c)
+
 # **************************************************************************** #
 #                              SRC & OBJ FILES                                 #
 # **************************************************************************** #
 
-SRCS = $(addprefix $(SRCS_DIR)/, tester_functions.c testers_build.c testers.c quotes.c build_args.c build_helper.c builtin.c expansion.c lexing.c main.c signal.c build_filename.c build_to_exec.c env.c expansion_helper.c lexing_helper.c parsing.c parsing_helper.c token.c) #######
+SRCS = $(addprefix $(SRCS_DIR)/, $(BUILD_FL) $(BUILTIN_FL) $(EXEC_FL) $(LEX_FL) $(PRS_FL) $(MAIN_FL) $(TESTER_FL)) #######
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 # **************************************************************************** #

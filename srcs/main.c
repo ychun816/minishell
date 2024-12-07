@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/06 16:17:53 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/07 17:47:54 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_env *dup_env(char *env[])
 	i = 0;
 	res_env = set_default_env();
 	//Check if the environment pointer is NULL or points to an empty string
-	// if (!env || (env && *env == NULL)) //envp points to a valid location; But the environment variable list is empty.
+	// if (!env || (env && *env == NULL)) //env points to a valid location; But the environment variable list is empty.
 	// 	return (set_default_env());
 	while (env[i])// Loop through each environment variable
 	{
@@ -125,18 +125,18 @@ void	free_all_shell(t_shell *content)
 	}
 }
 
-// int main(int ac, char *av[], char *env[])
-// {
-// 	t_shell *content;
+int main(int ac, char *av[], char *env[])
+{
+	t_shell *content;
 
-// 	content = NULL;
-// 	(void)ac;
-// 	(void)av;
-// 	content = init_shell(env);//initialize everthing to 0/NULL
-// 	if (!content)
-// 		return (EXIT_FAILURE);
-// 	read_n_loop(content);//strat loop -> readline(PROMPT)
-// 	free_all_shell(content);
-// 	ft_putstr_fd("exit\n", 2);//or 1
-// 	return (EXIT_SUCCESS);
-// }
+	content = NULL;
+	(void)ac;
+	(void)av;
+	content = init_shell(env);//initialize everthing to 0/NULL
+	if (!content)
+		return (EXIT_FAILURE);
+	read_n_loop(content);//strat loop -> readline(PROMPT)
+	free_all_shell(content);
+	ft_putstr_fd("exit\n", 2);//or 1
+	return (EXIT_SUCCESS);
+}

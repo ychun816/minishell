@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bi_func.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okoca <okoca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:34:33 by okoca             #+#    #+#             */
-/*   Updated: 2024/07/14 09:34:03 by okoca            ###   ########.fr       */
+/*   Updated: 2024/12/07 17:47:54 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	bi_is_builtin(char *cmd)
 		return (0);
 }
 
-int	bi_do_builtin(t_ctx *ctx, char *cmd, t_args *args)
+int	bi_do_builtin(t_shell *ctx, char *cmd, t_arg *args)
 {
 	if (!ft_strcmp(cmd, "echo"))
 		return (bi_echo(args));
@@ -54,21 +54,21 @@ int	bi_do_builtin(t_ctx *ctx, char *cmd, t_args *args)
 		return (0);
 }
 
-int	bi_export(t_ctx *ctx, t_args *args)
+int	bi_export(t_shell *ctx, t_arg *args)
 {
 	int	exit_code;
 
 	exit_code = 0;
 	if (!args)
 	{
-		if (bi_print_export(ctx->envp))
+		if (bi_print_export(ctx->env))
 			exit_code = 1;
 	}
 	else
 	{
 		while (args)
 		{
-			if (bi_add_var(args->value, &(ctx->envp)))
+			if (bi_add_var(args->value, &(ctx->env)))
 				exit_code = 1;
 			args = args->next;
 		}
@@ -76,7 +76,7 @@ int	bi_export(t_ctx *ctx, t_args *args)
 	return (exit_code);
 }
 
-int	bi_unset(t_ctx *ctx, t_args *args)
+int	bi_unset(t_shell *ctx, t_arg *args)
 {
 	if (!args)
 		return (0);
@@ -84,7 +84,7 @@ int	bi_unset(t_ctx *ctx, t_args *args)
 	{
 		while (args)
 		{
-			if (bi_del_var(args->value, &(ctx->envp)))
+			if (bi_del_var(args->value, &(ctx->env)))
 				return (1);
 			args = args->next;
 		}

@@ -6,14 +6,14 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:48:18 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/06 18:06:05 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/07 17:47:54 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**FOR PASING- GET ENV
- * Search for an environment variable by its name (path) in a linked list of environment variables (envp).
+ * Search for an environment variable by its name (path) in a linked list of environment variables (env).
  * 
 */
 t_env	*get_env(char *pathname, t_env *env)

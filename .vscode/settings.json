@@ -9,6 +9,8 @@
 		"libft.h": "c",
 		"lib2.h": "c",
 		"ft_printf.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"parse_build.h": "c",
+		"exec.h": "c"
 	}
 }
