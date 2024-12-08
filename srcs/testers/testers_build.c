@@ -208,7 +208,7 @@ int main(int ac, char *av[], char *env[])
 
 ////////////////////////////////////////////////////////////////////////////////
 
-	///// /** 5. TEST: build_for_exec */ /////
+	///// /** 5. TEST: build_to_exec */ /////
 	/* TEST INPUT
 	1. "echo Hello World"
 	Command: echo
@@ -296,18 +296,18 @@ INVALID
 	// }
 	// printf("\n========================\n");
 
-    // // Call the function (build_for_exec)
-    // t_exec *result_exec = build_for_exec(lexed_tokens);
+    // // Call the function (build_to_exec)
+    // t_exec *result_exec = build_to_exec(lexed_tokens);
 
 	// printf("\n=== 🍰 PRINT ALL EXEC  ===\n");
     // // Check if the result is valid and print the result using the test_print_exec function
     // if (result_exec) 
 	// {
-    //     printf("[test_build_for_exec] SUCCESS: Executable built successfully!!\n");
+    //     printf("[test_build_to_exec] SUCCESS: Executable built successfully!!\n");
     //     test_print_exec(result_exec); // Print details of the exec structure
     // } 
 	// else
-    //     printf("[test_build_for_exec] FAILURE: Failed to build exec structure.\n");
+    //     printf("[test_build_to_exec] FAILURE: Failed to build exec structure.\n");
 	// printf("\n");
 
     // // Free allocated memory for tokens

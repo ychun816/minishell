@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 18:05:40 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/05 17:47:47 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 19:07:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	bd_handle_pipe(t_exec *exec, t_token *token)
 {
 	if (token->type == PIPE)
 	{
-		exec->next = build_for_exec(token->next); //recursive
+		exec->next = build_to_exec(token->next); //recursive
 		return (FAILURE);//1
 	}
 	return (SUCCESS);//0
@@ -61,7 +61,7 @@ int	bd_handle_cmd(t_exec *exec, t_token *token)
 	return (SUCCESS);//0		
 }
 
-/** BUILD_FOR_EXEC
+/** build_to_exec
  * 
  * Builds a `t_exec` structure from the linked list of tokens.
  * 
@@ -88,7 +88,7 @@ int	bd_handle_cmd(t_exec *exec, t_token *token)
  * @return constructed `t_exec` structure
  * 
  */
-t_exec *build_for_exec(t_token *token)
+t_exec *build_to_exec(t_token *token)
 {
 	t_exec	*exec;
 	

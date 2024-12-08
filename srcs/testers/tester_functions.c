@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:44:33 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 16:54:19 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 19:07:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ int test_read_n_loop(t_shell *content)
 			}
 
 			/// STEP 3: BUILD TO EXEC ///
-			result_exec = build_for_exec(lexed_tokens);
+			result_exec = build_to_exec(lexed_tokens);
 			if (!result_exec)
 			{
 				ft_putstr_fd("Execution Preparation Error\n", 2);

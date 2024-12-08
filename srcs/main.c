@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 19:04:40 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 19:07:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	process_input(t_shell *content, char *line)
 /** INIT EXEC */ ///CHECK LATER
 int	init_exec(t_shell *content, t_token **token)
 {
-	content->exec = build_for_exec(*token);
+	content->exec = build_to_exec(*token);
 	token_free(*token);
 	*token = NULL; //Set the original token pointer to NULL to avoid dangling pointers
 	if (!content->exec)

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 19:03:48 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 19:07:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	prs_init_heredoc(int fd, char *eof_delimiter);
 /*******************************/
 /*build to exec*/
 t_exec	*init_build(void);
-t_exec *build_for_exec(t_token *token);
+t_exec *build_to_exec(t_token *token);
 int	bd_handle_cmd(t_exec *exec, t_token *token);
 
 /*build helper*/
