@@ -6,14 +6,14 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:37:28 by yilin             #+#    #+#             */
-/*   Updated: 2024/11/01 15:58:37 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 16:56:54 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //env
-void display_env(t_env *env)
+void test_display_env(t_env *env)
 {
 	while (env)
 	{

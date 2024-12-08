@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/07 18:25:48 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 16:41:10 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	ft_close(t_shell *ctx)
 {
 	if (ctx)
 	{
-		exe_close(&(ctx->def_in));
-		exe_close(&(ctx->def_out));
+		exe_close(&(ctx->default_in));
+		exe_close(&(ctx->default_out));
 	}
 }
 // we close useless fds OR
@@ -128,8 +128,8 @@ char	*find_path(char *cmd, t_env *env)
 	int		i;
 
 	// fprintf(stderr, "entered find_path\n");
-	curr = envp;
-	while (curr && ft_strncmp("PATH=", curr->raw, 5) != 0)
+	curr = env;
+	while (curr && ft_strncmp("PATH=", curr->env_line, 5) != 0)
 		curr = curr->next;
 	if (!curr)
 		return (ft_strdup(cmd));
@@ -167,23 +167,23 @@ int	size_env(t_env *env)
 
 char	**env_format(t_env *env)
 {
-	char	**env;
+	char	**env_arr;
 	int		size;
 	int		i;
 
 	i = 0;
 	size = size_env(env);
-	env = (char **)malloc(sizeof(char *) * (size + 1));
+	env_arr = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!env)
 		return (NULL);
 	while (i < size)
 	{
-		env[i] = env->raw;
+		env_arr[i] = env->env_line;
 		env = env->next;
 		i++;
 	}
-	env[i] = NULL;
-	return (env);
+	env_arr[i] = NULL;
+	return (env_arr);
 }
 
 int	ft_execution(t_shell *ctx, t_exec *temp)
@@ -203,14 +203,14 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 	// 	//fprintf(stderr, "args[%d] : %s\n", n, args[n]);
 	// 	n++;
 	// }
-	envp = envp_format(ctx->envp);
+	env = env_format(ctx->env);
 	// fprintf(stderr, "envp copied\n");
-	if (execve(temp->cmd, args, envp) == -1)
+	if (execve(temp->cmd, args, env) == -1)
 	{
 		// fprintf(stderr, "not absolute link\n");
-		path = find_path(temp->cmd, ctx->envp);
+		path = find_path(temp->cmd, ctx->env);
 		// fprintf(stderr, "path found\n");
-		if (execve(path, args, envp) == -1)
+		if (execve(path, args, env) == -1)
 		{
 			free(path);
 			ft_free_all(env);
@@ -284,14 +284,14 @@ void	exe_wait_all(t_shell *ctx) // TODO
 		{
 			if (WIFEXITED(status))
 			{
-				g_signals.signal_code = 0;
+				g_signal.signal_code = 0;
 				ctx->exit_code = WEXITSTATUS(status);
 			}
 			else if (WIFSIGNALED(status))
 			{
 				if (WTERMSIG(status) == SIGQUIT)
 					exe_err_coredump(ctx->pids[i]);
-				g_signals.signal_code = SIGNAL_OFFSET + WTERMSIG(status);
+				g_signal.signal_code = SIGNAL_OFFSET + WTERMSIG(status);
 			}
 		}
 		i++;
@@ -330,16 +330,16 @@ void	set_std(t_shell *ctx, int mode)
 {
 	if (!mode)
 	{
-		ctx->def_in = dup(STDIN_FILENO);
+		ctx->default_in = dup(STDIN_FILENO);
 		//fprintf(stderr, "dup.a\n");
-		ctx->def_out = dup(STDOUT_FILENO);
+		ctx->default_out = dup(STDOUT_FILENO);
 		//fprintf(stderr, "dup.b\n");
 	}
 	else
 	{
-		dup2(ctx->def_in, STDIN_FILENO);
+		dup2(ctx->default_in, STDIN_FILENO);
 		//fprintf(stderr, "dup2\n");
-		dup2(ctx->def_out, STDOUT_FILENO);
+		dup2(ctx->default_out, STDOUT_FILENO);
 		//fprintf(stderr, "dup2\n");
 		ft_close(ctx);
 	}
@@ -404,7 +404,7 @@ void	unlink_all(t_shell *ctx)
 		temp = exec->redirs;
 		while (temp)
 		{
-			if (temp->type == N_HEREDOC)
+			if (temp->type == NON_HEREDOC)
 				unlink(temp->path);
 			temp = temp->next;
 		}
@@ -414,7 +414,7 @@ void	unlink_all(t_shell *ctx)
 
 int	redirs_type(t_exec *exec, t_filename *file)
 {
-	if (file->type == INFILE || file->type == N_HEREDOC)
+	if (file->type == INFILE || file->type == NON_HEREDOC)
 	{
 		if (exec->fd_in != STDIN_FILENO)
 			exe_close(&(exec->fd_in));

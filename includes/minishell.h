@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/07 18:05:47 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 16:58:08 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <sys/wait.h>
+# include <errno.h>
 
 # include "../libft/includes/libft.h"
 # include "../libft/includes/ft_printf.h"
@@ -157,7 +159,7 @@ void	free_all_shell(t_shell *content);
 /******************************/
 /*parsing*/
 int test_read_n_loop(t_shell *content);
-void	display_env(t_env *env);
+void	test_display_env(t_env *env);
 void test_token_append(t_token **head, char *value, int n, t_token_type type, t_shell *content);
 void	test_print_tokens(t_token *head);
 t_token *test_tokenize_input(char *input, t_shell *shell);

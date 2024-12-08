@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:02:35 by okoca             #+#    #+#             */
-/*   Updated: 2024/12/07 18:07:42 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 15:40:50 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 # include "../includes/minishell.h"
 
 # define P_NAME "minishell"
+
+typedef struct s_shell	t_shell;
+typedef struct s_env	t_env;
+typedef enum e_token_type	t_token_type;
+typedef struct s_token	t_token;
+typedef struct s_arg	t_arg;
+typedef struct s_filename	t_filename;
 
 /* Built-in handler */
 int		bi_do_builtin(t_shell *ctx, char *cmd, t_arg *args);
@@ -50,6 +57,6 @@ void	bi_err_env(char *file);
 /* ADDED HELPER FUNC*/ //CHECK LATER
 void	ft_advanced_sort_string_tab(char **tab,
 	int (*cmp)(const char *, const char *));
-
+int	ft_arg_lstsize(t_arg *args);
 
 #endif

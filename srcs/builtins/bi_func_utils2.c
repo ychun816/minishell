@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 18:02:54 by tsuchen           #+#    #+#             */
-/*   Updated: 2024/12/07 18:12:05 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 17:56:11 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,8 @@ int	bi_del_var(char *value, t_env **env)
 	return (0);
 }
 
-/* ft_advanced_sort_string_tab */ //ADDED HELPER FUNC, CHECK LATER
+/***** ADDED EXTRA FUNCTIONS *****/
+/* ft_advanced_sort_string_tab */ //CHECK LATER
 static void	ft_swap_pointer(char **a1, char **a2)
 {
 	char	*temp;
@@ -154,4 +155,18 @@ void	ft_advanced_sort_string_tab(char **tab,
 		}
 		i++;
 	}
+}
+
+/* arg lstsize*/
+int	ft_arg_lstsize(t_arg *args)
+{
+	int	i;
+
+	i = 0;
+	while (args)
+	{
+		i++;
+		args = args->next;
+	}
+	return (i);
 }

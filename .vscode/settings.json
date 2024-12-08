@@ -11,6 +11,7 @@
 		"ft_printf.h": "c",
 		"stdlib.h": "c",
 		"parse_build.h": "c",
-		"exec.h": "c"
+		"exec.h": "c",
+		"history.h": "c"
 	}
 }

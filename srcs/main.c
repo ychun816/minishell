@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/07 17:47:54 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 16:55:01 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,10 @@ int read_n_loop(t_shell *content)
 		line = readline(PROMPT);
 		if (!line)
 			break ;// Exit the loop to end the shell
-		if (strncmp(line, "exit", 4) == 0) //////////TESTER//////////
+		if (ft_strncmp(line, "exit", 4) == 0) //////////TESTER//////////
 			break ;
-		if (strncmp(line, "env", 3) == 0) //////////TESTER//////////
-			display_env(content->env);
+		if (ft_strncmp(line, "env", 3) == 0) //////////TESTER//////////
+			test_display_env(content->env);
 		else if (check_line_empty(line) == 0)// check if line valid
 		{
 			add_history(line);//add history //REMEMBER TO CLEAR 

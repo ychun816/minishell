@@ -6,7 +6,7 @@
 /* TEST INPUT
 [HACKMD] Test Input for Minishell (lexing/parsing/build for exec):
 https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/BJiOL9xEye
-*/
+
 int main(int ac, char *av[], char *env[])
 {
 	t_shell *content;
@@ -21,8 +21,8 @@ int main(int ac, char *av[], char *env[])
 	free_all_shell(content);
 	ft_putstr_fd("exit\n", 2);//or 1
 	return (EXIT_SUCCESS);
-
 }
+*/
 
 // //////////////////////////////////////
 // /// TEST: BUILD to EXEC            /// ///CHECKED!!

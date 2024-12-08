@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2024/12/07 17:57:06 by yilin            ###   ########.fr        #
+#    Updated: 2024/12/08 16:57:28 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,8 @@ TESTER_FL = $(addprefix $(TESTER_DIR)/, tester_functions.c  testers_build.c  tes
 #                              SRC & OBJ FILES                                 #
 # **************************************************************************** #
 
-SRCS = $(addprefix $(SRCS_DIR)/, $(BUILD_FL) $(BUILTIN_FL) $(EXEC_FL) $(LEX_FL) $(PRS_FL) $(MAIN_FL) $(TESTER_FL)) #######
+# CANNOT ADDPREFIX (MAYBE)
+SRCS = $(addprefix $(SRCS_DIR)/, $(BUILTIN_FL) $(BUILD_FL) $(EXEC_FL) $(LEX_FL) $(PRS_FL) $(MAIN_FL) $(TESTER_FL)) #######
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 # **************************************************************************** #

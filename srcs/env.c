@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/07 18:04:25 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 16:42:20 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,8 @@ void	env_del_one(t_env *env)
 		free(env->id);
 	if (env->value)
 		free(env->value);
-	if (env->raw)
-		free(env->raw);
+	if (env->env_line)
+		free(env->env_line);
 	free(env);
 }
 

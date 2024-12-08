@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 09:09:45 by tsuchen           #+#    #+#             */
-/*   Updated: 2024/12/07 17:59:30 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 15:40:27 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	bi_cd(t_shell *ctx, t_arg *args)
 	char	*cwd;
 	t_env	*home;
 
-	siz = arg_lstsize(args);
+	siz = ft_arg_lstsize(args);
 	if (siz > 1)
 		return (ft_putstr_fd("minishell: cd: too many arguments\n",
 				STDERR_FILENO), 1);
@@ -99,7 +99,7 @@ int	bi_exit(t_shell *ctx, t_arg *args)
 		exit_code = 2;
 	}
 	ft_close(ctx);
-	ms_free_all(ctx);
+	free_all_shell(ctx);
 	exit(exit_code);
 }
 
