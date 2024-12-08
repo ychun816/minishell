@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 16:58:08 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 19:04:18 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ extern t_signal g_signal;
 /*********************************/
 /*main (shell)*/ //CHECKED, TO DO: signal
 t_shell *init_shell(char *env[]);//initialize & dup env to supershell
+int	process_input(t_shell *content, char *line);
+int	init_exec(t_shell *content, t_token **token);
 int read_n_loop(t_shell *content);
 t_env *dup_env(char *env[]);
 int check_line_empty(char *line);
@@ -151,8 +153,7 @@ int		sig_event(void);
 /******************************/
 /*free /cleanup */
 void	free_all_shell(t_shell *content);
-
-
+void	free_after_process(t_shell *content, t_token *token);
 
 /******************************/
 /*********** TESTERS **********/

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 16:55:01 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 19:04:40 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,97 @@ t_shell *init_shell(char *env[])//initialize & dup env to supershell
 	return (content);
 }
 
+/** PROCESS INPUT
+ * Input → Lexing → Parsing → Execution Setup → Execution → Cleanup.
+ * STEP 1: LEXING:
+ * Convert the input string 'line' into tokens (words, operators, etc.)
+ * STEP 2: PARSING: 
+ * Check if the tokenized input has correct syntax and prepare it for execution
+ * STEP 3: EXECUTION SETUP PHASE
+ * Prepare the tokens for execution
+ * STEP 4: EXECUTION
+ * STEP 5: CLEANUP
+ */
+int	process_input(t_shell *content, char *line)
+{
+	t_token	*token;
+	
+	// 1. LEXING
+	token = lexing(content, line);
+	free(line);
+	if (!token)
+		return (SUCCESS); 
+	// 2. PARSING
+	if (parsing(&token) != 0)
+	{
+		token_free(token);
+		if (parsing(&token) == FAILURE_VOID)//void or special case
+			return (SUCCESS);//0
+		return (FAILURE);//1
+	}
+	// 3. BULD2EXEC
+	if (init_exec(content, &token) != 0)////TO CHECKKKKKKKKKKKKKKK!!!!
+		return (FAILURE);//1
+	// 4. EXEC
+	exec(content);
+	// 5. CLEAN
+	free_after_process(content, token);
+	return (SUCCESS);//0
+}
+
+/** INIT EXEC */ ///CHECK LATER
+int	init_exec(t_shell *content, t_token **token)
+{
+	content->exec = build_for_exec(*token);
+	token_free(*token);
+	*token = NULL; //Set the original token pointer to NULL to avoid dangling pointers
+	if (!content->exec)
+		return (FAILURE);//1
+	content->exec_count = ft_build_lstsize(content->exec); //Set the count of executions based on the size of the exec list
+	//Allocate memory for storing process IDs, one for each command to be executed, plus one extra slot
+	content->pids = malloc(sizeof(pid_t) * (content->exec_count + 1));
+	if (!content->pids)
+		return (FAILURE);//1
+	content->pid_count = 0; //Initialize the count of processes launched to 0
+	return (SUCCESS);//0
+}
+
+
+/** FREE AFTER PROCESS 
+ * (1) free token
+ * (2) free what's inside shell: free build, pid
+ * @note
+ * The pids array in the context (ctx) likely stores the process IDs of child processes that the shell has spawned
+ * Setting to NULL
+ * -> Preventing Dangling Pointers
+ * -> Safety in Future Operations
+ * -> Improving Debugging
+ * -> Avoiding Double Free Errors
+ * -> Preventing Unintended Access After Freeing
+ * 
+*/
+void	free_after_process(t_shell *content, t_token *token)
+{
+	if (token)
+		token_free(token);
+	if (content)
+	{
+		//exec
+		if (content->exec)
+		{
+			build_free_all(content->exec);
+			content->exec = NULL;
+		}
+		//pid
+		if (content->pids)
+		{
+			free(content->pids);
+			content->pids = NULL;
+		}
+	}
+}
+
+
 /** === OG READ N LOOP === */
 int read_n_loop(t_shell *content)
 {
@@ -85,22 +176,22 @@ int read_n_loop(t_shell *content)
 	line = NULL;
 	while (1)
 	{
-		// sig_init_signals(); // Set up signal handling for each loop iteration
+		sig_init_signals(); // Set up signal handling for each loop iteration
 		line = readline(PROMPT);
 		if (!line)
 			break ;// Exit the loop to end the shell
 		if (ft_strncmp(line, "exit", 4) == 0) //////////TESTER//////////
 			break ;
-		if (ft_strncmp(line, "env", 3) == 0) //////////TESTER//////////
-			test_display_env(content->env);
+		// if (ft_strncmp(line, "env", 3) == 0) //////////TESTER//////////
+		// 	test_display_env(content->env);
 		else if (check_line_empty(line) == 0)// check if line valid
 		{
 			add_history(line);//add history //REMEMBER TO CLEAR 
-			// if (process_pipeline(content, line) != 0)//process pipeline
-			// {
-			// 	ft_putstr_fd("Parcing Error\n", 2);
-			// 	content->exit_code = 2;
-			// }
+			if (process_input(content, line) != 0)//process pipeline ///////EXEC PART
+			{
+				ft_putstr_fd("Parcing Error\n", 2);
+				content->exit_code = 2;
+			}
 			line = NULL;//reset line
 		}
 		if (line)
@@ -115,8 +206,8 @@ void	free_all_shell(t_shell *content)
 	// Check if ctx (shell context) exists before freeing its contents
 	if (content)
 	{
-	//	if (content->exec)//exec
-	//		builder_free(content->exec);
+		if (content->exec)//exec
+			build_free_all(content->exec);
 		if (content->env)//env
 			env_free(content->env);
 		if (content->pids)//pids

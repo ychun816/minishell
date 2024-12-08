@@ -6,14 +6,14 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 19:15:24 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/05 17:02:24 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/08 19:03:23 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**build_listsize */
-int	build_listsize(t_exec *exec)
+int	ft_build_lstsize(t_exec *exec)
 {
 	int	len;
 
