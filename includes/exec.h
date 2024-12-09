@@ -15,13 +15,13 @@ void					ft_close(t_shell *ctx);
 int						open_pipes(int pipes_nb, int fd[pipes_nb][2]);
 void					close_fds(int pipes_nb, int (*fd)[2], int current_cmd,
 							bool is_final_close);
-int						size_linked_list(t_arg *args);
-void					create_args(t_exec *temp, int args_nb,
+int						ft_args_lstsize(t_arg *args);
+void					exec_args_create(t_exec *temp, int args_nb,
 							char *args[args_nb]);
 int						ft_char_count(char *str, char c);
 void					ft_free_all(char **arr);
 char					*find_path(char *cmd, t_env *env);
-int						size_env(t_env *env);
+int						ft_env_lstsize(t_env *env);
 char					**env_format(t_env *env);
 int						ft_execution(t_shell *ctx, t_exec *temp);
 void					child_process(t_shell *ctx, int (*fd)[2], int i,

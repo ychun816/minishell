@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:44:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/06 19:30:55 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/09 16:47:10 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,10 @@ char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
 	char	*new;
 
 	before_envvar = get_str_before_envvar(str, envvar_found);
-	printf("🎅 TEST BEFORE ENVAR: %s\n", get_str_before_envvar(str, envvar_found));////TESTER
 	if (!before_envvar)
 		return NULL;
 	envvar_value = get_envvar_value((envvar_found + 1), content);
-	printf("🎅 TEST ENVVAR VALUE: %s\n", get_envvar_value((envvar_found + 1), content));////TESTER
 	after_envvar = get_str_after_envvar(envvar_found);
-	printf("🎅 TEST AFTER ENVAR:%s\n", get_str_after_envvar(envvar_found));////TESTER
 	if (!after_envvar)
 		return (free(before_envvar), free(envvar_value), NULL);
 	new = prs_strjoin(before_envvar, envvar_value);

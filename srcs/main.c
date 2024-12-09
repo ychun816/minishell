@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 19:07:00 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/09 18:12:19 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,6 @@ void	free_after_process(t_shell *content, t_token *token)
 	}
 }
 
-
 /** === OG READ N LOOP === */
 int read_n_loop(t_shell *content)
 {
@@ -180,10 +179,6 @@ int read_n_loop(t_shell *content)
 		line = readline(PROMPT);
 		if (!line)
 			break ;// Exit the loop to end the shell
-		if (ft_strncmp(line, "exit", 4) == 0) //////////TESTER//////////
-			break ;
-		// if (ft_strncmp(line, "env", 3) == 0) //////////TESTER//////////
-		// 	test_display_env(content->env);
 		else if (check_line_empty(line) == 0)// check if line valid
 		{
 			add_history(line);//add history //REMEMBER TO CLEAR 

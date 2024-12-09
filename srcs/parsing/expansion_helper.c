@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/07 16:16:28 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/09 16:46:03 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	ft_envvar_len(char	*env_var)
 	int	i;
 
 	i = 0; 
-	printf("🤷‍♀️ TEST ft_envvar_len env_var: %s\n", env_var); ///TESTER
 	if (env_var[i] == '$') // Skip initial '$' ////TO CHECK LATER
         i++;
 	if (ft_isdigit(env_var[i]) == 1 || env_var[i] == '?' || env_var[i] == '$')
@@ -51,7 +50,6 @@ char	*get_envvar_name(char *env_var)
 	int	len;
 	char	*name;
 
-	printf("🦸‍♀️🦸‍♀️🦸‍♀️ENTER get_envvar_name🦸‍♀️🦸‍♀️🦸‍♀️\n");
 	len = ft_envvar_len(env_var);
 	name = ft_strndup(env_var, len);
 	return (name);
@@ -88,14 +86,8 @@ char	*get_str_after_envvar(char *env_var)
 	int		len;
 	char	*new;
 
-	
-	printf("🧙‍♂️🧙‍♂️🧙‍♂️ENTER get_str_after_envvar env_var🧙‍♂️🧙‍♂️🧙‍♂️\n"); ///TESTER
 	len = ft_envvar_len(env_var);
-	printf("🎅TEST get_str_after_envvar env_var: %s\n", env_var); ///TESTER
-	printf("🎅TEST get_str_after_envvar len: %d\n", len); ///TESTER
 	new = ft_strdup(env_var + len);
-	printf("🎅TEST new: get_str_after_envvar new: %s\n", new); ///TESTER
-
 	return (new);
 }
 
@@ -124,10 +116,7 @@ char	*get_envvar_value(char *env_var, t_shell *content)
 		return (result);
 	}
 	else if (path && ft_strcmp(path, "$") == 0)
-	{
-		printf("🎅TEST handle_dollar_pid(): %s\n", handle_dollar_pid()); ///TESTER
 		return (free(path), handle_dollar_pid());
-	}
 	env_variable = get_env(path, content->env);
 	if (path)
 		free(path);

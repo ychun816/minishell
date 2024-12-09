@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 19:07:00 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/09 17:21:48 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void	build_free_all(t_exec *exec);
 
 /*build - args*/
 int	bd_handle_args(t_exec *exec, t_token *token);
-t_arg	*arg_create(char *arg_value);
+t_arg	*bd_args_create(char *arg_value); //////SAME AS: void	exec_args_create(t_exec *temp, int args_nb, char *args[args_nb])
 int	arg_add_back(t_arg **head, t_arg *new);
 void	arg_free(t_arg *args);
 

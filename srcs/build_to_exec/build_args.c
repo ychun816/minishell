@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 18:31:05 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/05 17:02:07 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/09 17:11:55 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	bd_handle_args(t_exec *exec, t_token *token) //static int
 	new = NULL;
 	if (token->type == ARG) //handle current token, no need to check the next token
 	{
-		new = arg_create(token->value);
+		new = bd_args_create(token->value);
 		if (!new)
 			return (-1);
 		arg_add_back(&(exec->args), new);
@@ -33,7 +33,7 @@ int	bd_handle_args(t_exec *exec, t_token *token) //static int
 }
 
 /** BUILD - ARG CREATE */
-t_arg	*arg_create(char *arg_value)
+t_arg	*bd_args_create(char *arg_value)
 {
 	t_arg	*args;
 	char	*dup_arg;
@@ -86,4 +86,4 @@ void	arg_free(t_arg *args)
 	}
 }
 
-/** BUILD - ARG LISTSIZE */
+/** BUILD - ARG LISTSIZE => exec part */

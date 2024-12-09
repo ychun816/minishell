@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/08 16:41:10 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/09 18:13:42 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	close_fds(int pipes_nb, int (*fd)[2], int current_cmd,
 	}
 }
 
-int	size_linked_list(t_arg *args)
+int	ft_args_lstsize(t_arg *args)
 {
 	t_arg	*curr;
 	int		count;
@@ -75,7 +75,7 @@ int	size_linked_list(t_arg *args)
 	return (count);
 }
 
-void	create_args(t_exec *temp, int args_nb, char *args[args_nb])
+void	exec_args_create(t_exec *temp, int args_nb, char *args[args_nb])
 {
 	t_arg	*curr;
 	int		i;
@@ -152,7 +152,7 @@ char	*find_path(char *cmd, t_env *env)
 	return (ft_strdup(cmd));
 }
 
-int	size_env(t_env *env)
+int	ft_env_lstsize(t_env *env)
 {
 	int	count;
 
@@ -172,7 +172,7 @@ char	**env_format(t_env *env)
 	int		i;
 
 	i = 0;
-	size = size_env(env);
+	size = ft_env_lstsize(env);
 	env_arr = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!env)
 		return (NULL);
@@ -190,13 +190,13 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 {
 	int		args_nb;
 	char	*path;
-	char	*args[size_linked_list(temp->args) + 2];
+	char	*args[ft_args_lstsize(temp->args) + 2];
 	char	**env;
 
-	args_nb = size_linked_list(temp->args) + 2;
+	args_nb = ft_args_lstsize(temp->args) + 2;
 	// execve(path, comd, env);
 	// char	*args[] = {"/bin/ls", "-l", "/home", NULL};
-	create_args(temp, args_nb, args);
+	exec_args_create(temp, args_nb, args);
 	// int n = 0;
 	// while(args[n] != NULL)
 	// {
@@ -491,7 +491,7 @@ int	exec(t_shell *ctx)
 	set_std(ctx, 0);
 	// 1 command and its a builtin (no loop)
 	temp = ctx->exec;
-	if (ctx->exec_count == 1 && bi_is_builtin(temp->cmd))
+	if (ctx->exec_count == 1 && check_is_builtin(temp->cmd))
 	{
 		// if errors in redirections, exit
 		if (err_redirs(temp))
