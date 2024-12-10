@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 19:04:18 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/10 18:54:15 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,14 @@
 # define SUCCESS 0
 # define FAILURE 1
 # define FAILURE_VOID 2
-
 // # define BUILD_FAILURE -1
+//note: return 0 : success
+//note: return 1 : general error
+//note: return 2 : Incorrect Usage or Invalid Option
+
+# define IS_DIRECTORY 126
+# define CMD_NOT_FOUND 127
+# define SIGNAL_OFFSET 128
 
 # define PROMPT "\001\033[1;36m\002 supershell>$ \001\033[0m\002" //color setting
 # define DEFAULT_ENV "SHELL=supershell"
@@ -50,7 +56,7 @@ typedef struct s_shell
 {
 	int default_in;
 	int default_out;
-	unsigned int exit_code;
+	unsigned char exit_code;
 	pid_t *pids; //Pointer to an array of process IDs of child processes.
 	t_exec *exec; //Points to a structure holding command execution details.
 	int pid_count;
