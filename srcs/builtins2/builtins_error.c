@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:26:27 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/10 19:44:43 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/11 17:27:12 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,31 @@ void	error_exit(char *input_line)
 	ft_putstr_fd(input_line, stderr);
 	ft_putstr_fd(": numeric argument required\n", stderr);
 }
+
+/** ERROR CD 
+ * 
+ * 
+*/
+void	error_cd(int err_n, char *pathname)
+{
+	char	*err_msg;
+
+	err_msg = strerror(err_n);
+	if (pathname && ft_strcmp(pathname, "HOME") == 0)
+	{
+		ft_putstr_fd(P_NAME, stderr);
+		ft_putstr_fd(": cd: ", stderr);
+		ft_putstr_fd(pathname, stderr);
+		ft_putstr_fd(" not set\n", stderr);
+	}
+	else
+	{
+		ft_putstr_fd(P_NAME, stderr);
+		ft_putstr_fd(": cd: ", stderr);
+		ft_putstr_fd(pathname, stderr);
+		ft_putstr_fd(": ", stderr);
+		ft_putstr_fd(err_msg, stderr);
+		ft_putstr_fd("\n", stderr);
+	}
+}
+

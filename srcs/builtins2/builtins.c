@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:37:19 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/10 19:44:24 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/11 20:01:07 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,11 +225,109 @@ int	check_exitcode(char	*input_line)
 
 
 
-/** CD */
+/** CD (relative or absolute path)
+ * 1. Get the number of arguments passed to 'cd'
+ * 2. If more than 1 args -> "error: too many arguments"
+ * 3. Get the current working directory and store it in variable, if fail-> perror
+ * 4. Get the 'HOME' environment variable
+ * 5. 
+ * 
+ * 
+*/
 int	ft_cd(t_shell *content, t_arg *args)
 {
-	return (SUCCESS);
+	int	args_nb;
+	char	*cwd;
+	t_env	*home;
+	
+	args_nb = ft_arg_lstsize(args);
+	if (args_nb > 1)
+		return (ft_putstr_fd("minishell: cd: too many arguments\n",
+				STDERR_FILENO), 1);
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		perror("minishell: cd: error retrieving current directory");
+	home = get_env("HOME", content->env);
+	//take care of "--"
+	if ((!args_nb || !ft_strcmp(args->value, "--")) && home && home->value)
+		chdir(home->value);
+	else if ((!args_nb || !ft_strcmp(args->value, "--")) && (!home || !home->value))
+		return (error_cd(errno, "HOME"), free(cwd), 1);
+	else if (chdir(args->value) < 0)
+	{
+		error_cd(errno, args->value);
+		return (free(cwd), 1);
+	}
+	if (update_pwd(content, cwd))
+		return (free(cwd), 1);		
+	return (free(cwd), SUCCESS);
 }
+/** UPDATE PWD 
+ * updates the PWD (current working directory) and OLDPWD (previous working directory) 
+ * 
+ * @param
+ * - t_shell *content: A pointer to the shell's context structure containing the environment.
+ * - char *new_pwd: Directly holds the raw directory path returned by getcwd
+ * - t_env *old_pwd / pwd: interact wiht the environment
+ * 
+ * (1) Get the current working directory and store it in new_cwd
+ * (2) Retrieve the OLDPWD and PWD environment variables from the environment list.
+ * (3) If PWD exists and new_cwd (current working directory) is valid, 
+ * -> Create a new string in the format "PWD=<current_working_directory>".
+ * -> Check for memory allocation failure or failure to add the variable to the environment.
+ * -> Free the temporary string
+ * 
+*/
+int update_pwd(t_shell *content, char *oldpwd_value)
+{
+	t_env	*old_pwd;
+	t_env	*pwd;
+	char	*new_cwd;
+	char	*tmp_oldpwd;          // Temporary string for setting OLDPWD.
+	char	*tmp_pwd;         // Temporary string for setting PWD.
+
+	new_cwd = getcwd(NULL, 0);
+	
+	old_pwd = get_env("OLDPWD", content->env);
+	pwd = get_env("PWD", content->env);
+	
+	if (pwd && new_cwd)
+	{
+		
+	}
+
+	
+}
+
+/** ADD VAR   */ //TO DO!! 
+int	bi_add_var(char *value, t_env **env)
+{
+	char	*arg_id;
+	char	*arg_raw;
+	t_env	*tmp;
+
+	arg_id = get_env_id(value);
+	if (!arg_id || !bi_check_id(arg_id))
+		return (free(arg_id), bi_err_export(value));
+	arg_raw = ft_strdup(value);
+	if (!arg_raw)
+		return (free(arg_id), 1);
+	tmp = get_env(arg_id, *env);
+	if (!tmp)
+	{
+		tmp = bi_new_var(arg_id, arg_raw);
+		if (!tmp)
+			return (1);
+		env_add_back(env, tmp);
+	}
+	else
+	{
+		free(arg_id);
+		bi_update_var(tmp, arg_raw);
+	}
+	return (0);
+}
+
 
 
 /** EXPORT */
