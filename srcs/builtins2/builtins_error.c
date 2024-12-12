@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:19 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/12 17:43:21 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:53:01 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,9 @@ void	error_exit(char *input_line)
 	ft_putstr_fd(": numeric argument required\n", stderr);
 }
 
-<<<<<<< HEAD
-/** ERROR CD
- *
- *
-*/
-=======
 /** ERROR CD */
 //printf("%s: cd: %s not set\n", P_NAME, file);
 //printf("%s: cd: %s: %s\n", P_NAME, file, strerror(err_no));
->>>>>>> origin
 void	error_cd(int err_n, char *pathname)
 {
 	char	*err_msg;

@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/12 16:43:53 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/12 19:54:38 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,6 +345,30 @@ void	set_std(t_shell *ctx, int mode)
 	}
 }
 
+void	err_pipe(int err_no)
+{
+	int	temp_fd;
+
+	temp_fd = dup(STDOUT_FILENO);
+	dup2(STDERR_FILENO, STDOUT_FILENO);
+	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
+	dup2(temp_fd, STDOUT_FILENO);
+	exe_close(&(temp_fd));
+	exit(2);
+}
+
+int	err_fork(int err_no)
+{
+	int	temp_fd;
+
+	temp_fd = dup(STDOUT_FILENO);
+	dup2(STDERR_FILENO, STDOUT_FILENO);
+	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
+	dup2(temp_fd, STDOUT_FILENO);
+	close(temp_fd);
+	return(-1); //TODO voir les signaux
+}
+
 int	exec_parent(t_shell *ctx)
 {
 	t_exec	*temp;
@@ -352,27 +376,16 @@ int	exec_parent(t_shell *ctx)
 	pid_t	pid;
 
 	temp = ctx->exec;
-	// Open pipes
 	if (open_pipes(ctx->exec_count - 1, fd) == -1)
-	{
-		perror("Error opening pipes");
-		return (1);
-	}
-	// Create child processes
+		err_pipe(errno);
 	while (temp)
 	{
-		signal(SIGINT, sig_exec);
+		signal(SIGINT, sig_exec); // TODO
 		pid = fork();
 		if (pid == -1)
-		{
-			perror("Error creating process");
-			close_fds(ctx->exec_count - 1, fd, -1, true);
-			return (1);
-		}
+			return(err_fork(errno));
 		else if (pid == 0)
-		{
 			child_process(ctx, fd, ctx->pid_count, temp);
-		}
 		ctx->pids[ctx->pid_count] = pid;
 		ctx->pid_count++;
 		temp = temp->next;
@@ -382,35 +395,28 @@ int	exec_parent(t_shell *ctx)
 	set_std(ctx, 1);
 	// Wait for all child processes
 	exe_wait_all(ctx);
-	// unlink_all(ctx);
 	return (0);
-}
-
-void	exe_dup2_close(int fd1, int fd2)
-{
-	dup2(fd1, fd2);
-	// fprintf(stderr, "dup2\n");
-	exe_close(&fd1);
 }
 
 void	unlink_all(t_shell *ctx)
 {
 	t_exec		*exec;
-	t_filename	*temp;
+	t_filename	*redir;
 
 	exec = ctx->exec;
 	while (exec)
 	{
-		temp = exec->redirs;
-		while (temp)
+		redir = exec->redirs;
+		while (redir)
 		{
-			if (temp->type == NON_HEREDOC)
-				unlink(temp->path);
-			temp = temp->next;
+			if (redir->type == NON_HEREDOC)
+				unlink(redir->path);
+			redir = redir->next;
 		}
 		exec = exec->next;
 	}
 }
+
 // stores copy of STDOUT
 // redirects STDOUT to STDERR
 // printf can now write in STDERR
@@ -424,7 +430,7 @@ void	err_open(int err_no, char *file)
 	dup2(STDERR_FILENO, STDOUT_FILENO);
 	printf("%s: %s: %s\n", PROMPT_NAME, file, strerror(err_no));
 	dup2(temp_fd, STDOUT_FILENO);
-	close(temp_fd);
+	exe_close(&(temp_fd));
 }
 
 void	redirs_type(t_exec *exec, t_filename *file)
@@ -456,7 +462,7 @@ void	redirs_type(t_exec *exec, t_filename *file)
 }
 
 // goes through redirs list
-//fd_in and fd_out = -1 if open failed so no need to close
+// fd_in and fd_out = -1 if open failed so no need to close
 int	exec_redirs(t_exec *exec)
 {
 	t_filename	*redirs;
