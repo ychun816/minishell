@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_error.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:26:27 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/11 17:27:12 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/12 15:54:03 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	error_exit(char *input_line)
 	ft_putstr_fd(": numeric argument required\n", stderr);
 }
 
-/** ERROR CD 
- * 
- * 
+/** ERROR CD
+ *
+ *
 */
 void	error_cd(int err_n, char *pathname)
 {

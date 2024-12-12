@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/10 18:54:15 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/12 16:02:53 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <limits.h> 
+# include <limits.h>
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -47,11 +47,10 @@
 # define IS_DIRECTORY 126
 # define CMD_NOT_FOUND 127
 # define SIGNAL_OFFSET 128
+#define PROMPT_NAME "minishell"
 
 # define PROMPT "\001\033[1;36m\002 supershell>$ \001\033[0m\002" //color setting
 # define DEFAULT_ENV "SHELL=supershell"
-# define SIGNAL_OFFSET 0
-
 typedef struct s_shell
 {
 	int default_in;
@@ -100,7 +99,7 @@ typedef struct s_signal
 {
 	int	end_heredoc;
 	int	signal_code;
-	
+
 }	t_signal;
 
 extern t_signal g_signal;

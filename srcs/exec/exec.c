@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/09 18:13:42 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/12 16:43:53 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// fd : pointer to fd, if NULL it means no fd to close
+//*fd : if -1, invalid or uninitialized fd
 void	exe_close(int *fd)
 {
 	if (fd && *fd != -1)
 	{
 		close(*fd);
-		//fprintf(stderr, "close\n");
 		*fd = -1;
 	}
 }
@@ -235,13 +236,13 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 		if (i > 0)
 		{
 			dup2(fd[i - 1][0], STDIN_FILENO);
-			//fprintf(stderr, "dup2\n");
+			// fprintf(stderr, "dup2\n");
 			exe_close(&fd[i - 1][0]);
 		}
 		if (i < ctx->exec_count - 1)
 		{
 			dup2(fd[i][1], STDOUT_FILENO);
-			//fprintf(stderr, "dup2\n");
+			// fprintf(stderr, "dup2\n");
 			exe_close(&fd[i][1]);
 		}
 	}
@@ -260,15 +261,15 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 }
 void	exe_err_coredump(int pid) // TODO
 {
-	int	fd_tmp;
+	int fd_tmp;
 
 	fd_tmp = dup(STDOUT_FILENO);
-	//fprintf(stderr, "dup.c\n");
+	// fprintf(stderr, "dup.c\n");
 	dup2(STDERR_FILENO, STDOUT_FILENO);
-	//fprintf(stderr, "dup2\n");
+	// fprintf(stderr, "dup2\n");
 	printf("[%d]: Quit (core dumped)\n", pid);
 	dup2(fd_tmp, STDOUT_FILENO);
-	//fprintf(stderr, "dup2\n");
+	// fprintf(stderr, "dup2\n");
 	exe_close(&fd_tmp);
 }
 
@@ -320,28 +321,27 @@ int	open_pipes(int pipes_nb, int (*fd)[2])
 			}
 			return (-1); // Signal failure
 		}
-		//fprintf(stderr, "pipe\n");
+		// fprintf(stderr, "pipe\n");
 		i++;
 	}
 	return (0); // Signal success
 }
 
+// mode 0 : saves a copy of STDIN and STDOUT
+// mode 1 : restores STDIN and STDOUT + free the copy
 void	set_std(t_shell *ctx, int mode)
 {
 	if (!mode)
 	{
 		ctx->default_in = dup(STDIN_FILENO);
-		//fprintf(stderr, "dup.a\n");
 		ctx->default_out = dup(STDOUT_FILENO);
-		//fprintf(stderr, "dup.b\n");
 	}
 	else
 	{
 		dup2(ctx->default_in, STDIN_FILENO);
-		//fprintf(stderr, "dup2\n");
+		exe_close(&(ctx->default_in));
 		dup2(ctx->default_out, STDOUT_FILENO);
-		//fprintf(stderr, "dup2\n");
-		ft_close(ctx);
+		exe_close(&(ctx->default_out));
 	}
 }
 
@@ -389,7 +389,7 @@ int	exec_parent(t_shell *ctx)
 void	exe_dup2_close(int fd1, int fd2)
 {
 	dup2(fd1, fd2);
-	//fprintf(stderr, "dup2\n");
+	// fprintf(stderr, "dup2\n");
 	exe_close(&fd1);
 }
 
@@ -411,22 +411,32 @@ void	unlink_all(t_shell *ctx)
 		exec = exec->next;
 	}
 }
+// stores copy of STDOUT
+// redirects STDOUT to STDERR
+// printf can now write in STDERR
+// restores STDOUT
+// free the copy
+void	err_open(int err_no, char *file)
+{
+	int	temp_fd;
 
-int	redirs_type(t_exec *exec, t_filename *file)
+	temp_fd = dup(STDOUT_FILENO);
+	dup2(STDERR_FILENO, STDOUT_FILENO);
+	printf("%s: %s: %s\n", PROMPT_NAME, file, strerror(err_no));
+	dup2(temp_fd, STDOUT_FILENO);
+	close(temp_fd);
+}
+
+void	redirs_type(t_exec *exec, t_filename *file)
 {
 	if (file->type == INFILE || file->type == NON_HEREDOC)
 	{
 		if (exec->fd_in != STDIN_FILENO)
 			exe_close(&(exec->fd_in));
 		exec->fd_in = open(file->path, O_RDONLY);
-		//fprintf(stderr, "open");
 		if (exec->fd_in == -1)
-		{
-			printf("error with open"); // TODO
-			return (1);
-		}
+			err_open(errno, file->path);
 		dup2(exec->fd_in, STDIN_FILENO);
-		//fprintf(stderr, "dup2\n");
 		exe_close(&(exec->fd_in));
 	}
 	else
@@ -434,42 +444,35 @@ int	redirs_type(t_exec *exec, t_filename *file)
 		if (exec->fd_out != STDOUT_FILENO)
 			exe_close(&(exec->fd_out));
 		if (file->type == OUTFILE)
-		{
 			exec->fd_out = open(file->path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			//fprintf(stderr, "open");
-		}
 		else if (file->type == APPEND)
-		{
 			exec->fd_out = open(file->path, O_WRONLY | O_CREAT | O_APPEND,
 					0644);
-			//fprintf(stderr, "open");
-		}
 		if (exec->fd_out == -1)
-		{
-			printf("err1_open");
-			return (1);
-		}
+			err_open(errno, file->path);
 		dup2(exec->fd_out, STDOUT_FILENO);
-		//fprintf(stderr, "dup2\n");
 		exe_close(&(exec->fd_out));
 	}
-	return (0);
 }
 
+// goes through redirs list
+//fd_in and fd_out = -1 if open failed so no need to close
 int	exec_redirs(t_exec *exec)
 {
-	t_filename	*temp;
+	t_filename	*redirs;
 
-	temp = exec->redirs;
-	while (temp)
+	redirs = exec->redirs;
+	while (redirs)
 	{
-		if (redirs_type(exec, temp) == 1)
+		redirs_type(exec, redirs);
+		if (exec->fd_in == -1 || exec->fd_out == -1)
 			return (1);
-		temp = temp->next;
+		redirs = redirs->next;
 	}
 	return (0);
 }
 
+// goes through exec list
 int	err_redirs(t_exec *exec)
 {
 	while (exec)
@@ -481,19 +484,20 @@ int	err_redirs(t_exec *exec)
 	return (0);
 }
 
+// store STDIN & STDOUT
+// 1 command and its a builtin (no loop)
+// if errors in redirections, exit
+// unlink (close) all the N_HEREDOC(unlink in the else also)
 int	exec(t_shell *ctx)
 {
 	t_exec	*temp;
 
 	if (ctx->exec_count == 0)
 		return (0);
-	// store STDIN & STDOUT
 	set_std(ctx, 0);
-	// 1 command and its a builtin (no loop)
 	temp = ctx->exec;
-	if (ctx->exec_count == 1 && check_is_builtin(temp->cmd))
+	if (ctx->exec_count == 1 && bi_is_builtin(temp->cmd))
 	{
-		// if errors in redirections, exit
 		if (err_redirs(temp))
 		{
 			ctx->exit_code = 1;
@@ -501,10 +505,7 @@ int	exec(t_shell *ctx)
 		}
 		if (bi_is_builtin(temp->cmd) == 2)
 			ft_putstr_fd("exit\n", STDERR_FILENO);
-		// id exit, printf "exit" ?? (dans la bi_exit?)
-		// unlink (close) all the N_HEREDOC(unlik dans le else)
 		unlink_all(ctx);
-		// fonction used again in the else
 		ctx->exit_code = bi_do_builtin(ctx, temp->cmd, temp->args);
 		set_std(ctx, 1);
 		return (ctx->exit_code);
