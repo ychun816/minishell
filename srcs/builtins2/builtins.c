@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:37:19 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/11 20:01:07 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/12 16:30:43 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,72 +263,165 @@ int	ft_cd(t_shell *content, t_arg *args)
 	return (free(cwd), SUCCESS);
 }
 /** UPDATE PWD 
- * updates the PWD (current working directory) and OLDPWD (previous working directory) 
+ * Updates the PWD (current working directory) and OLDPWD (previous working directory) environment variables. * 
  * 
  * @param
  * - t_shell *content: A pointer to the shell's context structure containing the environment.
- * - char *new_pwd: Directly holds the raw directory path returned by getcwd
  * - t_env *old_pwd / pwd: interact wiht the environment
+ * - char *current_cwd: Directly holds the raw directory path returned by getcwd
+ * - char *pwd_path
+ * - char *oldpwd_path
  * 
  * (1) Get the current working directory and store it in new_cwd
  * (2) Retrieve the OLDPWD and PWD environment variables from the environment list.
- * (3) If PWD exists and new_cwd (current working directory) is valid, 
+ * (3) If PWD valid && current_cwd (current working directory) is valid, 
  * -> Create a new string in the format "PWD=<current_working_directory>".
  * -> Check for memory allocation failure or failure to add the variable to the environment.
  * -> Free the temporary string
+ * (4) If OLDPWD valid && OLDPWD value exists/provided
+ * -> Create a new string "OLDPWD=<previous_working_directory>". -> Check if fail -> Cleanup
  * 
 */
 int update_pwd(t_shell *content, char *oldpwd_value)
 {
 	t_env	*old_pwd;
 	t_env	*pwd;
-	char	*new_cwd;
-	char	*tmp_oldpwd;          // Temporary string for setting OLDPWD.
-	char	*tmp_pwd;         // Temporary string for setting PWD.
+	char	*current_cwd;
+	char	*pwd_path;
+	char	*oldpwd_path;
 
-	new_cwd = getcwd(NULL, 0);
+	current_cwd = getcwd(NULL, 0);
 	
 	old_pwd = get_env("OLDPWD", content->env);
 	pwd = get_env("PWD", content->env);
 	
-	if (pwd && new_cwd)
+	if (pwd && current_cwd)
 	{
-		
+		pwd_path = ft_strjoin("PWD=", current_cwd);
+		if (!pwd_path || add_envvar( pwd_path, &content->env) != 0)
+			return (free(current_cwd), FAILURE);
+		free (pwd_path);
 	}
-
-	
+	if (old_pwd && oldpwd_value)
+	{
+		oldpwd_path = ft_strjoin("OLDPWD=", oldpwd_value);
+		if (!oldpwd_path || add_envvar( oldpwd_path, &content->env) != 0)
+			return (free(current_cwd), FAILURE);
+		free(oldpwd_path);
+	}
+	free(current_cwd);
+	return (SUCCESS);//0
 }
 
-/** ADD VAR   */ //TO DO!! 
-int	bi_add_var(char *value, t_env **env)
+/** ADD ENVVAR
+ * Adds or updates an environment variable
+ * Ensures that the variable's name and value are valid
+ * Creates a new environment entry or updates an existing one.
+ * 
+ * @param
+ * char	*arg_id;         // The name/ID of the environment variable.
+ * char	*arg_value_dup;  // Duplicate of the value string.
+ * t_env	*tmp;        // Temporary pointer to find or create the variable.
+ * 
+ * (1) Extract the variable name(id) from the input string. -> Check if valid
+ * (2) Duplicate the entire "KEY=VALUE" string.
+ * (3) Check if the variable already exists in the environment.
+ * -> If fail OR env not exist => Create new one (initialize + add end-node)
+ * -> If env exit => Update the existing variable.
+ * 
+*/
+int	add_envvar(char *env_line, t_env **env_head)
 {
-	char	*arg_id;
-	char	*arg_raw;
-	t_env	*tmp;
+	char	*env_id;
+	char	*dup_envline;
+	t_env	*env;
+	
+	env_id = get_env_id(env_line);
+	if (!env_id || !check_envid_valid(env_id))
+		return (free(env_id), error_export(env_line));
 
-	arg_id = get_env_id(value);
-	if (!arg_id || !bi_check_id(arg_id))
-		return (free(arg_id), bi_err_export(value));
-	arg_raw = ft_strdup(value);
-	if (!arg_raw)
-		return (free(arg_id), 1);
-	tmp = get_env(arg_id, *env);
-	if (!tmp)
+	dup_envline = ft_strdup(env_line);
+	if (!dup_envline)
+		return (free(env_id), FAILURE);//1
+
+	env = get_env(env_line, *env_head);
+	if (!env)
 	{
-		tmp = bi_new_var(arg_id, arg_raw);
-		if (!tmp)
-			return (1);
-		env_add_back(env, tmp);
+		env = env_create(ft_strdup(env_id), ft_strdup(env_line), env_line);
+		if (!env)
+			return (free(env_line), free(env_id), 1);
+		env_add_back(env_head, env);	
 	}
 	else
 	{
-		free(arg_id);
-		bi_update_var(tmp, arg_raw);
+		free (env_id);
+		update_envvar(env, dup_envline);
 	}
-	return (0);
+	return (SUCCESS);//0
+}
+
+/** CHECK ENVID VALID 
+ * (1) Check if env_id empty
+ * (2) Check if env_id first character alpha or not '_'
+ * (3) Then loop to check if env_id rest of character numeric
+ * 
+ * @note
+ * - Valid: "HOME", "USER_NAME", "_PWD".
+ * - Invalid: "123ABC", "$PATH", "!VAR" (
+ * because the first character is not a letter or underscore).
+ * 
+*/
+int	check_envid_valid(char *env_id)
+{
+	int	i;
+
+	i = 0;
+	if (env_id[i] == '\0')
+    	return (0);
+	if (ft_isalpha(env_id[i]) == 0  && env_id[i] != '_')
+        return (0);
+	i++;
+	while (env_id[i])
+	{
+		if (ft_isalnum(env_id[i]) == 0 && env_id[i] != '_')
+			return (0);//invalid
+		i++;
+	}
+	return (1);//env_id is valid
 }
 
 
+/** UPDATE ENV VAR 
+ * Updates an existing environment variable node's value and its full line representation.
+ * It frees old memory for the value and line and assigns new ones.
+ * 
+ * (1) Retrieve the value associated with the raw environment string
+ * (2) If no valid value was found (arg_value is NULL), free the raw string -> exit
+ * (3) If the 'node (update_env)' has an existing value => free the old value memory.
+ * (4) If the 'node  (update_env)' has an existing environment line (raw string) => free old env_line
+ * (5) Assign the new value and environment line to the 'node' (update_env) structure.
+ * 
+*/
+void	update_envvar(t_env *update_env, char *env_line)
+{
+	char	*env_value;
+
+	env_value = get_env_value(env_line);
+	
+	if (!env_value)
+	{
+		free(env_value);
+		return ;
+	}
+	if (update_env->value)
+		free(update_env->value);
+	if (update_env->env_line)
+		free(update_env->env_line);
+	update_env->value = env_value;
+	update_env->env_line = env_line;
+}
+
+////////////////////////////////////////////////////
 
 /** EXPORT */
 int	ft_export(t_shell *content, t_arg *args)
