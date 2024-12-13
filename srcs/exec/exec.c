@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/12 19:54:38 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/13 22:16:30 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,7 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 	return (0);
 }
 
+//we can exit here because we are in a child process
 void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 {
 	int	exit_code;
@@ -236,13 +237,11 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 		if (i > 0)
 		{
 			dup2(fd[i - 1][0], STDIN_FILENO);
-			// fprintf(stderr, "dup2\n");
 			exe_close(&fd[i - 1][0]);
 		}
 		if (i < ctx->exec_count - 1)
 		{
 			dup2(fd[i][1], STDOUT_FILENO);
-			// fprintf(stderr, "dup2\n");
 			exe_close(&fd[i][1]);
 		}
 	}
@@ -252,6 +251,11 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 	{
 		ctx->exit_code = 1;
 		exit(ctx->exit_code);
+	}
+	if(bi_is_builtin(temp->cmd))
+	{
+		exit_code = bi_do_builtin(ctx, temp->cmd, temp->args);
+
 	}
 	if (ft_execution(ctx, temp) == -1)
 	{
@@ -345,16 +349,15 @@ void	set_std(t_shell *ctx, int mode)
 	}
 }
 
-void	err_pipe(int err_no)
+int	err_pipe(int err_no, t_shell *ctx)
 {
-	int	temp_fd;
-
-	temp_fd = dup(STDOUT_FILENO);
 	dup2(STDERR_FILENO, STDOUT_FILENO);
 	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
-	dup2(temp_fd, STDOUT_FILENO);
-	exe_close(&(temp_fd));
-	exit(2);
+	dup2(ctx->default_out, STDOUT_FILENO);
+	exe_close(&(ctx->default_out));
+	dup2(ctx->default_in, STDIN_FILENO);
+	exe_close(&(ctx->default_in));
+	return (-1);
 }
 
 int	err_fork(int err_no)
@@ -366,7 +369,7 @@ int	err_fork(int err_no)
 	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
 	dup2(temp_fd, STDOUT_FILENO);
 	close(temp_fd);
-	return(-1); //TODO voir les signaux
+	return (); //TODO voir les signaux
 }
 
 int	exec_parent(t_shell *ctx)
@@ -377,23 +380,24 @@ int	exec_parent(t_shell *ctx)
 
 	temp = ctx->exec;
 	if (open_pipes(ctx->exec_count - 1, fd) == -1)
-		err_pipe(errno);
+		return(err_pipe(errno, ctx));
 	while (temp)
 	{
-		signal(SIGINT, sig_exec); // TODO
+		signal(SIGINT, sig_exec); //TODO
 		pid = fork();
 		if (pid == -1)
-			return(err_fork(errno));
+		{
+			return (err_fork(errno));
+			break;
+		}
 		else if (pid == 0)
 			child_process(ctx, fd, ctx->pid_count, temp);
 		ctx->pids[ctx->pid_count] = pid;
 		ctx->pid_count++;
 		temp = temp->next;
 	}
-	// Close all pipes in the parent
 	close_fds(ctx->exec_count - 1, fd, -1, true);
 	set_std(ctx, 1);
-	// Wait for all child processes
 	exe_wait_all(ctx);
 	return (0);
 }
@@ -517,5 +521,5 @@ int	exec(t_shell *ctx)
 		return (ctx->exit_code);
 	}
 	exec_parent(ctx);
-	return (0);
+	return(0);
 }
