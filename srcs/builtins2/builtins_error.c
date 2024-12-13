@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_error.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 17:43:19 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/12 17:53:01 by varodrig         ###   ########.fr       */
+/*   Created: 2024/12/10 17:26:27 by yilin             #+#    #+#             */
+/*   Updated: 2024/12/13 23:23:40 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,16 @@ void	error_cd(int err_n, char *pathname)
 		ft_putstr_fd(err_msg, stderr);
 		ft_putstr_fd("\n", stderr);
 	}
+}
+
+/** ERROR EXPORT */
+//printf("%s: export: %s: not a valid identifier\n", P_NAME, var);
+void	error_export(env_line)
+{
+	ft_putstr_fd(P_NAME, stderr);
+	ft_putstr_fd(": export: ", stderr);
+	ft_putstr_fd(env_line, stderr);
+	ft_putstr_fd(" : not a valid identifier\n", stderr);
+	
 }
 
