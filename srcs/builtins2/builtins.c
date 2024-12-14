@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:37:19 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/13 23:10:31 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/14 15:50:18 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -539,7 +539,6 @@ char **sort_env_arrs(char **env_arrs)
 }
 
 
-
 /** UNSET (with no options)
  * unset VAR1 VAR2 VAR3
  * 
@@ -560,5 +559,55 @@ int	ft_unset(t_shell *content, t_arg *args)
 	return (SUCCESS);
 }
 
-/** delete env var */
+/** delete env var 
+ * BEFORE:
+ * HEAD -> [USER] -> [PATH] -> [SHELL] -> NULL
+ * AFTER:
+ * HEAD -> [USER=lin] -> [SHELL=/bin/bash] -> NULL
+ * 
+ * 
+ * (1) Find the node matching 'value' in the environment list
+ * (2) If the node to delete is the first node in the list,
+ * (3) Update the head of the list to skip the node to be deleted
+ * (4) 
+ * 
+ * - Before deletion:
+ * HEAD -> [id="USER", value="lin"] 
+        -> [id="PATH", value="/usr/bin"] 
+        -> [id="SHELL", value="/bin/bash"] 
+        -> NULL
+ * 
+ * - Function Call:
+ * delelte_env_var("PATH", &env);
+ * 
+ * - After deletion:
+ * HEAD -> [id="USER", value="lin"] 
+        -> [id="SHELL", value="/bin/bash"] 
+        -> NULL
+*/
 
+int	delete_env_var(char *env_value, t_env **env)
+{
+	t_env	*current;
+	t_env	*to_delete;
+	
+	current = get_env(env_value, *env);
+	if (!current)// If the node does not exist, return 0 (nothing to delete)
+		return (SUCCESS);//0
+		
+	if (*env == current)
+		*env = current->next;
+	else
+	{
+		to_delete = *env;
+		while(to_delete->next != current)
+		{
+			to_delete = to_delete->next;
+		}
+		
+		
+	}
+
+
+	return (SUCCESS);	
+}
