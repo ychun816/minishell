@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2024/12/14 18:21:41 by yilin            ###   ########.fr        #
+#    Updated: 2024/12/14 18:31:26 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJS_DIR = objs
 LIBFT_DIR = libft
 
 BUILD_DIR = build_to_exec
-#BUILTIN_DIR = builtins
+#BUILTIN_DIR = builtins (ref)
 BUILTIN_DIR2 = builtins2
 EXEC_DIR = exec
 LEX_DIR = lexing
@@ -36,7 +36,7 @@ TESTER_DIR = testers
 
 
 BUILD_FL = $(addprefix $(BUILD_DIR)/, build_args.c  build_filename.c  build_helper.c  build_to_exec.c)
-#BUILTIN_FL = $(addprefix $(BUILTIN_DIR)/, bi_check_utils.c  bi_err_utils.c  bi_func.c  bi_func_utils2.c  bi_func_utils.c  builtin.c)
+#BUILTIN_FL (ref) = $(addprefix $(BUILTIN_DIR)/, bi_check_utils.c  bi_err_utils.c  bi_func.c  bi_func_utils2.c  bi_func_utils.c  builtin.c)
 BUILTIN_FL2 = $(addprefix $(BUILTIN_DIR2)/, builtins_error.c  builtins_handler.c  ft_cd.c  ft_echo.c  ft_env_pwd.c  ft_exit.c  ft_export.c  ft_unset.c)
 
 EXEC_FL = $(addprefix $(EXEC_DIR)/, exec.c)
