@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 17:45:00 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/14 19:44:01 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,7 @@ int	init_exec(t_shell *content, t_token **token)
 		return (FAILURE);                                  // 1
 	content->exec_count = ft_build_lstsize(content->exec);
 		// Set the count of executions based on the size of the exec list
-	// Allocate memory for storing process IDs,
-		one for each command to be executed, plus one extra slot
+	// Allocate memory for storing process IDs, one for each command to be executed, plus one extra slot
 	content->pids = malloc(sizeof(pid_t) * (content->exec_count + 1));
 	if (!content->pids)
 		return (FAILURE);   // 1
@@ -196,7 +195,7 @@ int	read_n_loop(t_shell *content)
 			if (process_input(content, line) != 0) // process pipeline
 				///////EXEC PART
 			{
-				ft_putstr_fd("Parcing Error\n", 2);
+				ft_putstr_fd("Parsing Error\n", 2);
 				content->exit_code = 2;
 			}
 			line = NULL; // reset line

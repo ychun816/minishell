@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/13 22:16:30 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/14 19:34:33 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	exe_close(int *fd)
 		*fd = -1;
 	}
 }
-
+// only for child process
 void	ft_close(t_shell *ctx)
 {
 	if (ctx)
@@ -31,6 +31,7 @@ void	ft_close(t_shell *ctx)
 		exe_close(&(ctx->default_out));
 	}
 }
+// only for child process
 // we close useless fds OR
 // we close last fds when finished
 void	close_fds(int pipes_nb, int (*fd)[2], int current_cmd,
@@ -108,6 +109,7 @@ int	ft_char_count(char *str, char c)
 	}
 	return (count);
 }
+
 void	ft_free_all(char **arr)
 {
 	int	i;
@@ -120,6 +122,7 @@ void	ft_free_all(char **arr)
 	free(arr);
 }
 
+// access() returns 0 if OK
 char	*find_path(char *cmd, t_env *env)
 {
 	char	**paths;
@@ -128,7 +131,6 @@ char	*find_path(char *cmd, t_env *env)
 	t_env	*curr;
 	int		i;
 
-	// fprintf(stderr, "entered find_path\n");
 	curr = env;
 	while (curr && ft_strncmp("PATH=", curr->env_line, 5) != 0)
 		curr = curr->next;
@@ -150,7 +152,7 @@ char	*find_path(char *cmd, t_env *env)
 		i++;
 	}
 	ft_free_all(paths);
-	return (ft_strdup(cmd));
+	return (NULL);
 }
 
 int	ft_env_lstsize(t_env *env)
@@ -187,6 +189,28 @@ char	**env_format(t_env *env)
 	return (env_arr);
 }
 
+void	err_execve(char *path, int err_no)
+{
+	int			fd_tmp;
+	struct stat	stats;
+
+	fd_tmp = dup(STDOUT_FILENO);
+	dup2(STDERR_FILENO, STDOUT_FILENO);
+	if (err_no == 13 && stat(path, &stats) != -1)
+	{
+		if (S_ISDIR(stats.st_mode) == 1)
+			printf("%s: %s: Is a directory\n", P_NAME, path);
+		else
+			printf("%s: %s: %s\n", P_NAME, path, strerror(err_no));
+	}
+	else
+		printf("%s: %s: command not found\n", P_NAME, path);
+	dup2(fd_tmp, STDOUT_FILENO);
+	exe_close(&(fd_tmp));
+}
+
+// 126 : Command found but cannot be executed(due to permission issues)
+// 127 : Command not found(the file does not exist or is not in the PATH)
 int	ft_execution(t_shell *ctx, t_exec *temp)
 {
 	int		args_nb;
@@ -198,34 +222,32 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 	// execve(path, comd, env);
 	// char	*args[] = {"/bin/ls", "-l", "/home", NULL};
 	exec_args_create(temp, args_nb, args);
-	// int n = 0;
-	// while(args[n] != NULL)
-	// {
-	// 	//fprintf(stderr, "args[%d] : %s\n", n, args[n]);
-	// 	n++;
-	// }
 	env = env_format(ctx->env);
-	// fprintf(stderr, "envp copied\n");
+	if (!env)
+		return (4);
 	if (execve(temp->cmd, args, env) == -1)
 	{
-		// fprintf(stderr, "not absolute link\n");
 		path = find_path(temp->cmd, ctx->env);
-		// fprintf(stderr, "path found\n");
+		if (!path)
+		{
+			err_execve(temp->cmd, errno);
+			free(env);
+			return (4);
+		}
 		if (execve(path, args, env) == -1)
 		{
+			err_execve(path, errno);
 			free(path);
-			ft_free_all(env);
-			perror("Error with execve");
-			exit(1);
+			free(env);
+			return (-2);
 		}
 		free(path);
-		return (0);
 	}
-	ft_free_all(env);
+	free(env);
 	return (0);
 }
 
-//we can exit here because we are in a child process
+// we can exit here because we are in a child process
 void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 {
 	int	exit_code;
@@ -244,46 +266,45 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 			dup2(fd[i][1], STDOUT_FILENO);
 			exe_close(&fd[i][1]);
 		}
+		close_fds(ctx->exec_count - 1, fd, i, false);
 	}
 	ft_close(ctx);
-	close_fds(ctx->exec_count - 1, fd, i, false);
 	if (err_redirs(temp))
 	{
+		free_all_shell(ctx);
 		ctx->exit_code = 1;
 		exit(ctx->exit_code);
 	}
-	if(bi_is_builtin(temp->cmd))
+	if (bi_is_builtin(temp->cmd))
 	{
 		exit_code = bi_do_builtin(ctx, temp->cmd, temp->args);
-
+		free_all_shell(ctx);
+		exit(exit_code);
 	}
-	if (ft_execution(ctx, temp) == -1)
-	{
-		perror("Error executing command");
-		exit(1);
-	}
+	exit_code = ft_execution(ctx, temp);
+	free_all_shell(ctx);
+	if (exit_code == -2)
+		exit(126);
+	exit(127);
 }
 void	exe_err_coredump(int pid) // TODO
 {
 	int fd_tmp;
 
 	fd_tmp = dup(STDOUT_FILENO);
-	// fprintf(stderr, "dup.c\n");
 	dup2(STDERR_FILENO, STDOUT_FILENO);
-	// fprintf(stderr, "dup2\n");
 	printf("[%d]: Quit (core dumped)\n", pid);
 	dup2(fd_tmp, STDOUT_FILENO);
-	// fprintf(stderr, "dup2\n");
 	exe_close(&fd_tmp);
 }
 
-void	exe_wait_all(t_shell *ctx) // TODO
+void	exe_wait_all(int pid_count, t_shell *ctx) // TODO
 {
 	int status;
 	int i;
 
 	i = 0;
-	while (i < ctx->pid_count)
+	while (i < pid_count)
 	{
 		if (waitpid(ctx->pids[i], &(status), 0))
 		{
@@ -314,23 +335,20 @@ int	open_pipes(int pipes_nb, int (*fd)[2])
 	{
 		if (pipe(fd[i]) == -1)
 		{
-			perror("Error creating pipe");
-			// Close all previously opened pipes to avoid resource leaks
 			j = 0;
 			while (j < i)
 			{
-				exe_close(&fd[j][0]); // Close the read end
-				exe_close(&fd[j][1]); // Close the write end
+				exe_close(&fd[j][0]);
+				exe_close(&fd[j][1]);
 				j++;
 			}
-			return (-1); // Signal failure
+			return (-1);
 		}
-		// fprintf(stderr, "pipe\n");
 		i++;
 	}
-	return (0); // Signal success
+	return (0);
 }
-
+// only for parent process
 // mode 0 : saves a copy of STDIN and STDOUT
 // mode 1 : restores STDIN and STDOUT + free the copy
 void	set_std(t_shell *ctx, int mode)
@@ -348,57 +366,68 @@ void	set_std(t_shell *ctx, int mode)
 		exe_close(&(ctx->default_out));
 	}
 }
-
+// dup2 so printf can write in stderr
+// open_pipes already closed fds if error
 int	err_pipe(int err_no, t_shell *ctx)
 {
 	dup2(STDERR_FILENO, STDOUT_FILENO);
 	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
-	dup2(ctx->default_out, STDOUT_FILENO);
-	exe_close(&(ctx->default_out));
-	dup2(ctx->default_in, STDIN_FILENO);
-	exe_close(&(ctx->default_in));
-	return (-1);
+	set_std(ctx, 1);
+	ctx->exit_code = 2;
+	return (2);
 }
 
-int	err_fork(int err_no)
+int	err_fork(int err_no, t_shell *ctx, int fd[][2], int pipe_nb,
+		int fork_success)
 {
-	int	temp_fd;
-
-	temp_fd = dup(STDOUT_FILENO);
 	dup2(STDERR_FILENO, STDOUT_FILENO);
 	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
-	dup2(temp_fd, STDOUT_FILENO);
-	close(temp_fd);
-	return (); //TODO voir les signaux
+	close_all(pipe_nb, fd);
+	set_std(ctx, 1);
+	exe_wait_all(fork_success, ctx);
+	ctx->exit_code = 2;
+	return (2);
+}
+
+// only for parent process
+void	close_all(int pipe_nb, int (*fd)[2])
+{
+	int	i;
+
+	i = 0;
+	while (i < pipe_nb)
+	{
+		exe_close(&fd[i][0]);
+		exe_close(&fd[i][1]);
+		i++;
+	}
 }
 
 int	exec_parent(t_shell *ctx)
 {
 	t_exec	*temp;
-	int		fd[ctx->exec_count - 1][2];
+	int		fd[ctx->exec_count][2];
 	pid_t	pid;
 
 	temp = ctx->exec;
 	if (open_pipes(ctx->exec_count - 1, fd) == -1)
-		return(err_pipe(errno, ctx));
+		return (err_pipe(errno, ctx));
 	while (temp)
 	{
-		signal(SIGINT, sig_exec); //TODO
+		signal(SIGINT, sig_exec);
 		pid = fork();
 		if (pid == -1)
-		{
-			return (err_fork(errno));
-			break;
-		}
+			return (err_fork(errno, ctx, fd, ctx->pid_count - 1,
+					ctx->pid_count));
 		else if (pid == 0)
 			child_process(ctx, fd, ctx->pid_count, temp);
 		ctx->pids[ctx->pid_count] = pid;
 		ctx->pid_count++;
 		temp = temp->next;
 	}
-	close_fds(ctx->exec_count - 1, fd, -1, true);
+	close_all(ctx->exec_count - 1, fd);
 	set_std(ctx, 1);
-	exe_wait_all(ctx);
+	exe_wait_all(ctx->pid_count, ctx);
 	return (0);
 }
 
@@ -521,5 +550,5 @@ int	exec(t_shell *ctx)
 		return (ctx->exit_code);
 	}
 	exec_parent(ctx);
-	return(0);
+	return (0);
 }
