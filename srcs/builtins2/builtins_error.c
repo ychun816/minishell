@@ -6,38 +6,38 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:26:27 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/13 23:23:40 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/14 18:24:26 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "builtins.h"
 
 /** ERROR ENV */
 void	error_env(char *input_line)
 {
-	ft_putstr_fd("env: ", stderr);
-	ft_putstr_fd(input_line, stderr);
-	ft_putstr_fd(": No such file or directory\n", stderr);
+	ft_putstr_fd("env: ", STDERR_FILENO);
+	ft_putstr_fd(input_line, STDERR_FILENO);
+	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 }
 
 /** ERROR PWD */
-// fprintf(stderr, "%s: pwd: %s: invalid option\n", P_NAME, option);
+// fprintf(STDERR_FILENO, "%s: pwd: %s: invalid option\n", P_NAME, option);
 void	error_pwd(char	*option)
 {
-	ft_putstr_fd(P_NAME, stderr);
-	ft_putstr_fd(" pwd: ", stderr);
-	ft_putstr_fd(option, stderr);
-	ft_putstr_fd(": invalid option\n", stderr);
+	ft_putstr_fd(P_NAME, STDERR_FILENO);
+	ft_putstr_fd(" pwd: ", STDERR_FILENO);
+	ft_putstr_fd(option, STDERR_FILENO);
+	ft_putstr_fd(": invalid option\n", STDERR_FILENO);
 }
 
 /** ERROR EXIT */
 //printf("%s: exit: %s: numeric argument required\n", P_NAME, val);
 void	error_exit(char *input_line)
 {
-	ft_putstr_fd(P_NAME, stderr);
-	ft_putstr_fd(": exit: ", stderr);
-	ft_putstr_fd(input_line, stderr);
-	ft_putstr_fd(": numeric argument required\n", stderr);
+	ft_putstr_fd(P_NAME, STDERR_FILENO);
+	ft_putstr_fd(": exit: ", STDERR_FILENO);
+	ft_putstr_fd(input_line, STDERR_FILENO);
+	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 }
 
 /** ERROR CD */
@@ -50,30 +50,28 @@ void	error_cd(int err_n, char *pathname)
 	err_msg = strerror(err_n);
 	if (pathname && ft_strcmp(pathname, "HOME") == 0)
 	{
-		ft_putstr_fd(P_NAME, stderr);
-		ft_putstr_fd(": cd: ", stderr);
-		ft_putstr_fd(pathname, stderr);
-		ft_putstr_fd(" not set\n", stderr);
+		ft_putstr_fd(P_NAME, STDERR_FILENO);
+		ft_putstr_fd(": cd: ", STDERR_FILENO);
+		ft_putstr_fd(pathname, STDERR_FILENO);
+		ft_putstr_fd(" not set\n", STDERR_FILENO);
 	}
 	else
 	{
-		ft_putstr_fd(P_NAME, stderr);
-		ft_putstr_fd(": cd: ", stderr);
-		ft_putstr_fd(pathname, stderr);
-		ft_putstr_fd(": ", stderr);
-		ft_putstr_fd(err_msg, stderr);
-		ft_putstr_fd("\n", stderr);
+		ft_putstr_fd(P_NAME, STDERR_FILENO);
+		ft_putstr_fd(": cd: ", STDERR_FILENO);
+		ft_putstr_fd(pathname, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(err_msg, STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
 	}
 }
 
 /** ERROR EXPORT */
 //printf("%s: export: %s: not a valid identifier\n", P_NAME, var);
-void	error_export(env_line)
+void	error_export(char *env_line)
 {
-	ft_putstr_fd(P_NAME, stderr);
-	ft_putstr_fd(": export: ", stderr);
-	ft_putstr_fd(env_line, stderr);
-	ft_putstr_fd(" : not a valid identifier\n", stderr);
-	
+	ft_putstr_fd(P_NAME, STDERR_FILENO);
+	ft_putstr_fd(": export: ", STDERR_FILENO);
+	ft_putstr_fd(env_line, STDERR_FILENO);
+	ft_putstr_fd(" : not a valid identifier\n", STDERR_FILENO);
 }
-

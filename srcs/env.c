@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/12 15:35:47 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/14 16:43:43 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,18 +138,6 @@ void	env_free(t_env *env)
 		free(env);
 		env = tmp_next;
 	}
-}
-
-/* ENV DELETE ONE */ //ADDED EXTRA FOR BUILTIN, CHECK LATER
-void	env_del_one(t_env *env)
-{
-	if (env->id)
-		free(env->id);
-	if (env->value)
-		free(env->value);
-	if (env->env_line)
-		free(env->env_line);
-	free(env);
 }
 
 /*

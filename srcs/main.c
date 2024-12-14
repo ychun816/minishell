@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/13 22:01:48 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/14 17:45:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ t_env	*dup_env(char *env[])
 		// Variable to hold the identifier of the environment variable(the part before the =)
 	char *env_value;
 		// Variable to hold the value of the environment variable(environment variable’s contents,
-		after =)
 	i = 0;
 	res_env = set_default_env();
 	// Check if the environment pointer is NULL or points to an empty string

@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2024/12/08 16:57:28 by yilin            ###   ########.fr        #
+#    Updated: 2024/12/14 18:21:41 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ OBJS_DIR = objs
 LIBFT_DIR = libft
 
 BUILD_DIR = build_to_exec
-BUILTIN_DIR = builtins
+#BUILTIN_DIR = builtins
+BUILTIN_DIR2 = builtins2
 EXEC_DIR = exec
 LEX_DIR = lexing
 PRS_DIR = parsing
@@ -35,7 +36,9 @@ TESTER_DIR = testers
 
 
 BUILD_FL = $(addprefix $(BUILD_DIR)/, build_args.c  build_filename.c  build_helper.c  build_to_exec.c)
-BUILTIN_FL = $(addprefix $(BUILTIN_DIR)/, bi_check_utils.c  bi_err_utils.c  bi_func.c  bi_func_utils2.c  bi_func_utils.c  builtin.c)
+#BUILTIN_FL = $(addprefix $(BUILTIN_DIR)/, bi_check_utils.c  bi_err_utils.c  bi_func.c  bi_func_utils2.c  bi_func_utils.c  builtin.c)
+BUILTIN_FL2 = $(addprefix $(BUILTIN_DIR2)/, builtins_error.c  builtins_handler.c  ft_cd.c  ft_echo.c  ft_env_pwd.c  ft_exit.c  ft_export.c  ft_unset.c)
+
 EXEC_FL = $(addprefix $(EXEC_DIR)/, exec.c)
 LEX_FL = $(addprefix $(LEX_DIR)/, lexing.c  lexing_helper.c)
 PRS_FL = $(addprefix $(PRS_DIR)/, expansion.c  expansion_helper.c  parsing.c  parsing_helper.c  quotes.c)
@@ -48,7 +51,8 @@ TESTER_FL = $(addprefix $(TESTER_DIR)/, tester_functions.c  testers_build.c  tes
 # **************************************************************************** #
 
 # CANNOT ADDPREFIX (MAYBE)
-SRCS = $(addprefix $(SRCS_DIR)/, $(BUILTIN_FL) $(BUILD_FL) $(EXEC_FL) $(LEX_FL) $(PRS_FL) $(MAIN_FL) $(TESTER_FL)) #######
+# temporily take out $(BUILTIN_FL) frm SRCS
+SRCS = $(addprefix $(SRCS_DIR)/, $(BUILTIN_FL2) $(BUILD_FL) $(EXEC_FL) $(LEX_FL) $(PRS_FL) $(MAIN_FL) $(TESTER_FL)) #######
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 # **************************************************************************** #

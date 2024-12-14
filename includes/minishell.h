@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/13 23:23:36 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/14 17:19:57 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@
 
 # define PROMPT "\001\033[1;36m\002 supershell>$ \001\033[0m\002" //color setting
 # define DEFAULT_ENV "SHELL=supershell"
+
 typedef struct s_shell
 {
 	int default_in;
@@ -122,7 +123,7 @@ char *get_env_id(char *env_line); //If raw points to the beginning of the string
 char *get_env_value(char *env_line);
 int env_add_back(t_env **head, t_env *new);
 void	env_free(t_env *env);
-void	env_del_one(t_env *env);
+void	env_delete_1node(t_env *env);
 
 /********************************/
 /************ LEXING ************/
@@ -168,7 +169,7 @@ int test_read_n_loop(t_shell *content);
 void	test_display_env(t_env *env);
 void test_token_append(t_token **head, char *value, int n, t_token_type type, t_shell *content);
 void	test_print_tokens(t_token *head);
-t_token *test_tokenize_input(char *input, t_shell *shell);
+t_token *test_tokenize_input(char *input, t_shell *shell); //not neccessarily needed
 const char *test_tokentype_to_str(t_token_type type);
 /*exec*/
 void test_print_exec(t_exec *exec);
