@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 18:58:20 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/06 17:46:53 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/15 17:36:44 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 /** lex_tokenize_each_wd
  * - Extract and labels individual tokens
  * - Identifies a single token based on its type and length
- * 
+ *
  * Scope: lex_tokenize_each_wd is limited to handling one word or symbol at a time.
  * Analogy: As someone reading one word at a time from a sentence without worrying about the full sentence
  * @return single token
- * 
+ *
  */
 t_token	*lex_tokenize_each_wd(char *str, t_shell *content)
 {
 	t_token	*new_token;
 	t_token_type	token_type;
-	int	token_len;	
-	
+	int	token_len;
+
 	new_token = NULL;
 	token_type = lex_get_token_meta_type(str);
 	token_len = lex_ft_1tokenlen(str, token_type);
@@ -39,21 +39,21 @@ t_token	*lex_tokenize_each_wd(char *str, t_shell *content)
  * - Manages the entire line, using `lex_tokenize_each_wd` repeatedly to form a structured list of all tokens
  * - It reads through the entire line, calling lex_tokenize each time it encounters a meaningful word or symbol.
  * - Frees any tokens created so far and returns NULL to indicate an error.
- * 
- * @note 
+ *
+ * @note
  * lex_tokenize_each_wd(&(input_line[i]), content);
  * &(input_line[i]) instead of input_line: to iterate and process each character one by one
- * 
- * @return  a linked list of tokens, 
+ *
+ * @return  a linked list of tokens,
  * representing the entire line as a sequence of categorized words or symbols.
- * 
+ *
  */
 t_token	*lexing(t_shell *content, char *input_line)
 {
 	t_token	*token;
 	t_token	*current; //to store each token at current position
 	int	i;
-	
+
 	i = 0;
 	token = NULL;
 	while (input_line[i])
@@ -63,10 +63,10 @@ t_token	*lexing(t_shell *content, char *input_line)
 			i++;
 		else
 		{
-			current = lex_tokenize_each_wd(&(input_line[i]), content); //&(input_line[i]) ?? 
+			current = lex_tokenize_each_wd(&(input_line[i]), content); //&(input_line[i]) ??
 			if (!current) // If tokenize failed, free previously created tokens and exit
 			{
-				token_free(token);
+				token_free(current);
 				return (NULL);
 			}
 			token_add_back(&token, current); //&token: pointer to t_token

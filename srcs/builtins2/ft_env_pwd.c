@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_pwd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:37:19 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 18:26:40 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/15 17:50:18 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_env(t_shell *content, t_arg *args) //t_shell *content, t_arg *args
  * - If no argument -> absolute path name of the current directory that does not contain the file names
  * - pwd -L / pwd -P
  * @note
- * *(args->value) == '-' 
+ * *(args->value) == '-'
  * -> to check if the first character is '-' => valid option
  * -> Identify Flag Arguments
  * -> Prevent Invalid Arguments
@@ -51,7 +51,7 @@ int	ft_pwd(t_arg *args)
 {
 	char	*cwd; //currunt working directory
 	char	*option;
-	
+
 	option = args->value;
 	if (args && *(args->value) == '-' && ft_strcmp(args->value, "-L") && ft_strcmp(args->value, "-P"))
 	{
@@ -59,7 +59,7 @@ int	ft_pwd(t_arg *args)
 		return (2);
 	}
 	cwd = getcwd(NULL, 0);
-	if (!cwd) 
+	if (!cwd)
 	{
     	perror("minishell: pwd: error retrieving current directory");
 		return (1);

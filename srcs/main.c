@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 19:44:01 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/15 17:26:50 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,25 @@ t_env	*dup_env(char *env[])
 {
 	t_env	*res_env;
 	t_env	*tmp;
+	char	*env_id;
+	char	*env_value;
 
-	int i;           // Index for iterating through the environment variables
-	char *env_id;
-		// Variable to hold the identifier of the environment variable(the part before the =)
-	char *env_value;
-		// Variable to hold the value of the environment variable(environment variable’s contents,
+	int i; // Index for iterating through the environment variables
+	// Variable to hold the identifier of the environment variable(the part before the =)
+	// Variable to hold the value of the environment variable(environment variable’s contents,
 	i = 0;
 	res_env = set_default_env();
 	// Check if the environment pointer is NULL or points to an empty string
 	// if (!env || (env && *env == NULL))
-		//env points to a valid location; But the environment variable list is empty.
+	// env points to a valid location; But the environment variable list is empty.
 	// 	return (set_default_env());
 	while (env[i]) // Loop through each environment variable
 	{
 		env_id = get_env_id(env[i]);
-			// get identifier
-		env_value = get_env_value(env[i]);                      // get value
+		// get identifier
+		env_value = get_env_value(env[i]); // get value
 		tmp = env_create(env_id, env_value, ft_strdup(env[i]));
-			// Create a new environment variable structure (tmp)
+		// Create a new environment variable structure (tmp)
 		// if fail -> return NULL
 		if (!tmp)
 			return (NULL);
@@ -63,19 +63,19 @@ t_shell	*init_shell(char *env[]) // initialize & dup env to supershell
 	t_shell *content; // Declare a pointer to a context structure
 
 	content = malloc(sizeof(t_shell));
-		// Allocate memory for the context structure
+	// Allocate memory for the context structure
 	if (!content)
 		return (NULL);
 	content->env = dup_env(env);
-		// Duplicate the environment variables into the context
+	// Duplicate the environment variables into the context
 	if (!(content->env))
 	{
 		free(content);
 		return (NULL);
 	}
-	content->default_in = STDIN_FILENO;   // Set default input to standard input
+	content->default_in = STDIN_FILENO; // Set default input to standard input
 	content->default_out = STDOUT_FILENO;
-		// Set default output to standard output
+	// Set default output to standard output
 	content->pids = NULL;
 	content->exec = NULL;
 	content->pid_count = 0;
@@ -127,12 +127,11 @@ int	init_exec(t_shell *content, t_token **token)
 	content->exec = build_to_exec(*token);
 	token_free(*token);
 	*token = NULL;
-		// Set the original token pointer to NULL to avoid dangling pointers
+	// Set the original token pointer to NULL to avoid dangling pointers
 	if (!content->exec)
-		return (FAILURE);                                  // 1
+		return (FAILURE); // 1
 	content->exec_count = ft_build_lstsize(content->exec);
-		// Set the count of executions based on the size of the exec list
-	// Allocate memory for storing process IDs, one for each command to be executed, plus one extra slot
+	// Set the count of executions based on the size of the exec list
 	content->pids = malloc(sizeof(pid_t) * (content->exec_count + 1));
 	if (!content->pids)
 		return (FAILURE);   // 1
@@ -191,9 +190,9 @@ int	read_n_loop(t_shell *content)
 		else if (check_line_empty(line) == 0) // check if line valid
 		{
 			add_history(line);                     // add history
-				//REMEMBER TO CLEAR
+													// REMEMBER TO CLEAR
 			if (process_input(content, line) != 0) // process pipeline
-				///////EXEC PART
+													///////EXEC PART
 			{
 				ft_putstr_fd("Parsing Error\n", 2);
 				content->exit_code = 2;

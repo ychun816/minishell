@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:20 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 18:22:37 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/15 17:28:54 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-/** EXIT (no options) 
+/** EXIT (no options)
  * exit [n]
  * - If more than 1 argument -> error: too many arguments
- * - if 1 argument & is a valid exit code (it should be a number) -> exit with exit code
+ * - if 1 argument & is a valid exit code (it should be a number)
+	-> exit with exit code
  * - If 1 argument & is invalid -> error_exit()
  * In the end, close and free everything
-*/
+ */
 int	ft_exit(t_shell *content, t_arg *args)
 {
 	int	exit_code;
@@ -28,45 +29,46 @@ int	ft_exit(t_shell *content, t_arg *args)
 				STDERR_FILENO), 1);
 	exit_code = 0;
 	if (args && !check_exitcode(args->value))
-		exit_code = ft_atoi(args->value);  // If it's a valid exit code, convert the argument to an integer
+		exit_code = ft_atoi(args->value);
 	else if (args && check_exitcode(args->value))
 	{
 		error_exit(args->value);
 		exit_code = 2;
 	}
-	ft_close(content);
+	set_std(content, 1);
 	free_all_shell(content);
-	return (SUCCESS);	
+	exit(exit_code);
 }
 
-/** CHECK_EXIT_CODE 
- * 
+/** CHECK_EXIT_CODE
+ *
  * @note
- * char *char tmp : point to the provided value -> Preserving the Original Pointer
- * 
-*/
-int	check_exitcode(char	*input_line)
+ * char *char tmp : point to the provided value
+	-> Preserving the Original Pointer
+ *
+ */
+int	check_exitcode(char *input_line)
 {
-	char	*tmp;
-	long	exit_nb;
+	char *tmp;
+	long exit_nb;
 
 	tmp = input_line;
-	
+
 	// If the value starts with '+' or '-', skip the sign
 	if (((*tmp) == '+' || (*tmp) == '-') && *(tmp + 1))
 		tmp++;
 	// Iterate through each character in the value to check if it's a digit
 	while (*tmp)
 	{
-		if (!ft_isdigit(*tmp))//not digit
+		if (!ft_isdigit(*tmp)) // not digit
 			return (1);
-		tmp++;	
+		tmp++;
 	}
 	// Convert the value to a long integer using ft_atol
-	exit_nb= ft_atol(input_line);
+	exit_nb = ft_atol(input_line);
 	// Check if the number overflows or underflows the range of valid exit codes
-	if ((exit_nb > 0 && LONG_MAX / exit_nb < 1) 
-		|| (exit_nb < 0 && LONG_MIN / ft_atol(input_line) < 1))
+	if ((exit_nb > 0 && LONG_MAX / exit_nb < 1) || (exit_nb < 0 && LONG_MIN
+			/ ft_atol(input_line) < 1))
 		return (1);
-	 return (0);// Return 0 if the value is a valid exit code
+	return (0); // Return 0 if the value is a valid exit code
 }

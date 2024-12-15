@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/14 19:34:33 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/15 17:26:36 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,9 +275,9 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 		ctx->exit_code = 1;
 		exit(ctx->exit_code);
 	}
-	if (bi_is_builtin(temp->cmd))
+	if (check_is_builtin(temp->cmd))
 	{
-		exit_code = bi_do_builtin(ctx, temp->cmd, temp->args);
+		exit_code = exec_builtin(ctx, temp->cmd, temp->args);
 		free_all_shell(ctx);
 		exit(exit_code);
 	}
@@ -535,17 +535,17 @@ int	exec(t_shell *ctx)
 		return (0);
 	set_std(ctx, 0);
 	temp = ctx->exec;
-	if (ctx->exec_count == 1 && bi_is_builtin(temp->cmd))
+	if (ctx->exec_count == 1 && check_is_builtin(temp->cmd))
 	{
 		if (err_redirs(temp))
 		{
 			ctx->exit_code = 1;
 			return (ctx->exit_code);
 		}
-		if (bi_is_builtin(temp->cmd) == 2)
+		if (check_is_builtin(temp->cmd) == 2)
 			ft_putstr_fd("exit\n", STDERR_FILENO);
 		unlink_all(ctx);
-		ctx->exit_code = bi_do_builtin(ctx, temp->cmd, temp->args);
+		ctx->exit_code = exec_builtin(ctx, temp->cmd, temp->args);
 		set_std(ctx, 1);
 		return (ctx->exit_code);
 	}
