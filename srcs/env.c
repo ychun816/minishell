@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 16:43:43 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/16 20:07:42 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ char *get_env_id(char *env_line) //If raw points to the beginning of the string 
 		return (NULL);
 	equal = ft_strchr(env_line, '=');
 	if (!equal)
-		return (ft_strdup(env_line));
+	{
+		return (NULL);
+		// return (ft_strdup(env_line));
+	}
 	else if (equal - env_line == 0) //invalid id(= at first place)
 		return (NULL);
 	return (ft_strndup(env_line, equal - env_line)); //return substring uptil '='

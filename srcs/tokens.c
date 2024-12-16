@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:08:18 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/06 17:41:20 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/16 17:03:16 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ t_token	*token_create(char *token_value, int n, t_token_type type, t_shell *cont
 	dup_token_value = ft_strndup(token_value, n);
 	if (!dup_token_value)
 	{
-		free(new_token);
+		free(dup_token_value);
+		// free(new_token);
 		return (NULL);
 	}
 	new_token->value = dup_token_value;

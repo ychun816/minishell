@@ -6,21 +6,27 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:44 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 18:22:29 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/16 15:44:58 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-
-/** ECHO (with option -n)
+/** FT_ECHO (with option -n)
  * -n / -nnnnnn (followed only by character 'n') -> valid option => remove \n
  * -nP , -n-n, -nOPEK (followed by non 'n') -> invlaid
+ * @note use n_arg to flag when 'n' is found
 */
 int	ft_echo(t_arg *args)
 {
-	while (args && !check_echo_nflag(args->value)) //-n flag
-		args = args->next; //skip -n flag
+	int	n_arg;
+	
+	n_arg = 0;
+	while (args && check_echo_has_nargs(args->value) != 0)
+	{
+		n_arg = 1;
+		args = args->next;
+	}
 	while (args)
 	{
 		printf("%s", args->value);
@@ -28,23 +34,29 @@ int	ft_echo(t_arg *args)
 			printf(" ");
 		args = args->next;
 	}
-	// Print a newline if no -n flags were encountered
-	if (args)// This will be true if there are any remaining arguments
+	if (n_arg == 0)
 		printf("\n");
 	return (SUCCESS);
 }
 
-/** check echo nflag */
-int	check_echo_nflag(char *flag)
+/** CHECK ECHO HAS N ARGS 
+ * - return (0) if no n found
+ * - return (1) if n found -> valid n args
+ * @note Ensure has '-' in first character, then check rest
+*/
+int	check_echo_has_nargs(char *flag)
 {
 	int	i;
 
 	i = 0;
-	if (!ft_strncmp(flag, "-n", 2))
-		i += 2;
-	else
-		return (1); //NO, INVALID
-	if (flag[i + 1] != 'n')
-		return (1); //NO, INVALID
-	return (0);
+	if (!flag || flag[0] != '-')
+		return (0);
+	i += 1;
+	while (flag[i])
+	{
+		if (flag[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
 }

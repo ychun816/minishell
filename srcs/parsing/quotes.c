@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:04:39 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/06 18:08:40 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:16:25 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,6 @@ int	prs_handle_quotes_n_expand_env(t_token *token)
 
 	while (token != NULL)
 	{
-		prs_expand_env(input_str);
 		if (token->type == STR)
 		{
 			input_str = prs_quotes_to_tokens(token->value, token->content);

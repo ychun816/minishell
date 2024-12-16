@@ -33,6 +33,7 @@
 		"span": "c",
 		"streambuf": "c",
 		"utility": "c",
-		"vector": "c"
+		"vector": "c",
+		"builtins.h": "c"
 	}
 }

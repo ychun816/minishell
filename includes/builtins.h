@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:02:35 by okoca             #+#    #+#             */
-/*   Updated: 2024/12/14 17:12:43 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/16 15:03:03 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ft_pwd(t_arg *args);
 
 /* ft_echo*/
 int	ft_echo(t_arg *args);
-int	check_echo_nflag(char *flag);
+int	check_echo_has_nargs(char *flag);
 
 /* ft_exit*/
 int	ft_exit(t_shell *content, t_arg *args);

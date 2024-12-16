@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/15 17:26:50 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:07:15 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_env	*dup_env(char *env[])
 	while (env[i]) // Loop through each environment variable
 	{
 		env_id = get_env_id(env[i]);
-		// get identifier
+		// get identk, a memory erroifier
 		env_value = get_env_value(env[i]); // get value
 		tmp = env_create(env_id, env_value, ft_strdup(env[i]));
 		// Create a new environment variable structure (tmp)
@@ -142,9 +142,9 @@ int	init_exec(t_shell *content, t_token **token)
 /** FREE AFTER PROCESS
  * (1) free token
  * (2) free what's inside shell: free build, pid
+ * 
  * @note
-
-	* The pids array in the context (ctx) likely stores the process IDs of child processes that the shell has spawned
+ * The pids array in the context (ctx) likely stores the process IDs of child processes that the shell has spawned
  * Setting to NULL
  * -> Preventing Dangling Pointers
  * -> Safety in Future Operations
@@ -159,14 +159,12 @@ void	free_after_process(t_shell *content, t_token *token)
 		token_free(token);
 	if (content)
 	{
-		// exec
-		if (content->exec)
+		if (content->exec)// exec
 		{
 			build_free_all(content->exec);
 			content->exec = NULL;
 		}
-		// pid
-		if (content->pids)
+		if (content->pids)// pid
 		{
 			free(content->pids);
 			content->pids = NULL;

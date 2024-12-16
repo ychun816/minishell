@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:44:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/09 16:47:10 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:18:49 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	prs_handle_envvar_expansion(t_token *token)
 			break ;
 		current = token->value;
 		new = prs_exapnd_1envvar(token->value, envvar_found, token->content);
-		if (new && new[0] == '\0') //Only free if `new` is empty
+		if (new && new[0] == '\0')//Only free if `new` is empty
 		{
 			free(new);
 			new = NULL;

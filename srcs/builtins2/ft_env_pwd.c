@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_pwd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:37:19 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/15 17:50:18 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:44:08 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,14 @@
  * - If no argument -> print env (arrays of arrays)
  * - If there is argument -> output: env: '[input line]': No such file or directory
 */
-int	ft_env(t_shell *content, t_arg *args) //t_shell *content, t_arg *args
+int	ft_env(t_shell *content, t_arg *args)
 {
 	t_env	*env;
-	char	*input_line;
 
-	env = NULL;
-	input_line = args->value;
+	env = content->env;
 	if (args)
 	{
-		error_env(input_line);
+		error_env(args->value);
 		content->exit_code = CMD_NOT_FOUND;//comment not found=127
 	}
 	while (env)
@@ -40,31 +38,30 @@ int	ft_env(t_shell *content, t_arg *args) //t_shell *content, t_arg *args
 /** PWD (no options)
  * - If no argument -> absolute path name of the current directory that does not contain the file names
  * - pwd -L / pwd -P
+ * @param cwd: current working directory
  * @note
  * *(args->value) == '-'
  * -> to check if the first character is '-' => valid option
  * -> Identify Flag Arguments
- * -> Prevent Invalid Arguments
+ * -> Prevent Invalid Arguments: args->value != "-L" && args->value != "-P"
  * (Without this check, you would attempt to compare a non-flag argument (like L) against "-L", which would produce incorrect results.)
 */
 int	ft_pwd(t_arg *args)
 {
-	char	*cwd; //currunt working directory
-	char	*option;
+	char	*cwd;
 
-	option = args->value;
-	if (args && *(args->value) == '-' && ft_strcmp(args->value, "-L") && ft_strcmp(args->value, "-P"))
+	if (args && *(args->value) == '-' && ft_strcmp(args->value, "-L") != 0 && ft_strcmp(args->value, "-P") != 0)
 	{
-		error_pwd(option);
-		return (2);
+		error_pwd(args->value);
+		return (FAILURE_VOID);//2: Misuse of a command or syntax error (invalid option or argument)
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
     	perror("minishell: pwd: error retrieving current directory");
-		return (1);
+		return (FAILURE);//1
 	}
 	printf("%s\n", cwd);
 	free(cwd);
-	return (0);
+	return (SUCCESS);//0	
 }
