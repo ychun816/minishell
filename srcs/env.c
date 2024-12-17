@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 16:42:31 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 18:39:23 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,10 @@ t_env *env_create(char *env_id, char *env_value, char *env_line)
 	new = malloc(sizeof(t_env));//Malloc memory for new_env
 	if (!new)//Check if memory fail -> if fail -> free, return NULL
 		return (free(env_id), free(env_value), NULL);
-
 	//Set the ID, value, raw string, and next pointer for the new environment variable structure
 	new->id = env_id; // Set the variable ID (e.g., "PATH")
 	new->value = env_value;  // Set the variable value (e.g., "/usr/bin")
-	new->env_line = env_line; // Set the raw input string (e.g., "PATH=/usr/bin")
+	new->env_line = ft_strdup(env_line); // Set the raw input string (e.g., "PATH=/usr/bin")
 	new->next = NULL; // Initialize the 'next' pointer to NULL, as it's a new node
 	return (new);
 }

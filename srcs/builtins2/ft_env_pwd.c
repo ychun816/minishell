@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:37:19 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 17:44:08 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 18:26:24 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,24 @@ int	ft_env(t_shell *content, t_arg *args)
 	t_env	*env;
 
 	env = content->env;
+	if (!env)
+	{
+		if (env->next)
+			env = env->next;
+	}
 	if (args)
 	{
 		error_env(args->value);
 		content->exit_code = CMD_NOT_FOUND;//comment not found=127
 	}
-	while (env)
+	while (env->next)//
 	{
 		if (env->value)
 			printf("%s\n",env->env_line);
 		env = env->next;
 	}
+	if (env && env->next == NULL)
+		printf("%s\n",env->env_line);
 	return (SUCCESS);
 }
 

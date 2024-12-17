@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:56:29 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 16:48:49 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 18:39:17 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,12 @@ int update_pwd(t_shell *content, char *oldpwd_value)
 int	add_envvar(char *env_line, t_env **env_head)
 {
 	char	*env_id;
+	char	*env_value;
 	char	*dup_envline;
 	t_env	*env;
 	
-	env_id = get_env_id(env_line);	
+	env_id = get_env_id(env_line);
+	env_value = get_env_value(env_line);
 	if (!env_id || !check_envid_valid(env_id))
 		return (free(env_id), error_export(env_line), FAILURE);
 	dup_envline = ft_strdup(env_line);
@@ -133,16 +135,14 @@ int	add_envvar(char *env_line, t_env **env_head)
 	env = get_env(env_line, *env_head);
 	if (!env)
 	{
-		printf("111111envvarline ====  %s\n", dup_envline);
 		// env = env_create(env_id, ft_strdup(env_line), env_line);
-		env = env_create(env_id, dup_envline, env_line);
+		env = env_create(env_id, env_value, env_line);
 		if (!env)
 			return (free(env_line), free(env_id), FAILURE);//1
 		env_add_back(env_head, env);	
 	}
 	else
 	{
-		printf("envvarline ====  %s\n", dup_envline);
 		update_envvar(env, dup_envline);
 		free (env_id);
 	}

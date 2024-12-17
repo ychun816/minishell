@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:16:21 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/15 17:26:36 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:56:16 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ char	**env_format(t_env *env)
 	env_arr = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!env)
 		return (NULL);
-	while (i < size)
+	while (i < size && env)
 	{
 		env_arr[i] = env->env_line;
 		env = env->next;
