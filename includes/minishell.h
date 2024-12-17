@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 19:44:35 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:05:48 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// printf("🎅TEST current token value: %s\n", current); ///TESTER
+// printf("🔚🎅TEST current token value: %s\n", current); ///TESTER
 
 #ifndef MINISHELL_H
 # define MINISHELL_H

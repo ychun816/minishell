@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:02:35 by okoca             #+#    #+#             */
-/*   Updated: 2024/12/16 15:03:03 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 16:08:24 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_arg_lstsize(t_arg *args);
 
 /* ft_export */
 int	ft_export(t_shell *content, t_arg *args);
-void	export_print_ordered_env(t_env *env);
+int	export_print_ordered_env(t_env *env);
 char **sort_env_arrs(char **env_arrs);
 
 /* ft_unset */
@@ -64,7 +64,6 @@ void	error_pwd(char	*option);
 void	error_exit(char *input_line);
 void	error_cd(int err_n, char *pathname);
 void	error_export(char *env_line);
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////   REF    //////////////////////////

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:53:59 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 20:07:33 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 16:22:01 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,20 @@
 int	ft_export(t_shell *content, t_arg *args)
 {	
 	if (!args)
-		export_print_ordered_env(content->env);
+	{
+		if (export_print_ordered_env(content->env)!= 0)
+			return (FAILURE);	
+	}
 	else
 	{
 		while (args)
 		{
 			if (add_envvar(args->value, &(content->env)) != 0)
-			{
-				printf("🎅🎅🎅🎅🎅 add envvar FAIL CON 🎅🎅🎅🎅🎅\n");
 				return (FAILURE);//1
-			}
-			printf("🎅🎅🎅🎅🎅 add envvar HERE? 🎅🎅🎅🎅🎅\n");
 			args = args->next;
 		}
 	}
-	return (SUCCESS);
+	return (SUCCESS);//0
 }
 
 /** export_print_ordered_env 
@@ -50,7 +49,7 @@ int	ft_export(t_shell *content, t_arg *args)
  * @note tmp_value = ft_strchr(sorted[i], '=') + 1; -> +1 to get value after '='
  * 
 */
-void	export_print_ordered_env(t_env *env)
+int	export_print_ordered_env(t_env *env)
 {
 	char	**env_arrs;
 	char	**sorted;
@@ -58,74 +57,67 @@ void	export_print_ordered_env(t_env *env)
 	char	*tmp_id;
 	int	i;
 
-	i = 0;
 	env_arrs = env_format(env);
 	if (!env_arrs)
-		return ;
+		return (FAILURE);
+
 	sorted = sort_env_arrs(env_arrs);
+	// free(env_arrs);
 	if (!sorted)
-		return ;
-	while (sorted[i])
+		return (FAILURE);
+	i = -1;
+	while (sorted[++i])
 	{
 		printf("export ");
-		tmp_value = ft_strchr(sorted[i], '=') + 1;
+		tmp_value = ft_strchr(sorted[i], '=');
 		if (!tmp_value)
 			printf ("%s\n", sorted[i]);
 		else
 		{
+			tmp_value += 1;
 			tmp_id = get_env_id(sorted[i]);
-			printf("%s = %s\n", tmp_id, tmp_value);
+			printf("%s=\"%s\"\n", tmp_id, tmp_value);
 			free(tmp_id);
 		}
-		i++;
 	}
-	free(env_arrs);
-    free(sorted);
+	free(sorted);
+	return (SUCCESS);
 }
 
-/** sort_env_arrs */
+static void	ft_swap_ptr(char **a, char **b)
+{
+	char	*tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;	
+}
+
+/** sort_env_arrs
+ * (1) Count the len of arrs
+ * (2) copy env_arrs to reuslt, ft_strdup unsorted arrs
+ * (3) sort arrs 
+*/
 char **sort_env_arrs(char **env_arrs)
 {
 	char	**result;
 	int	i;
 	int	j;
-	int	len;
-	char	*swap;
-	
-	len = 0;
-	while (env_arrs[len])
-		len++;
-	// result = malloc(sizeof(char*) * (len));
-	result = malloc(sizeof(char*) * (len + 1));//save space for NULL
+
+	result = ft_arrsdup(env_arrs);
 	if (!result)
 		return (NULL);
-
-	//copy env_arrs to reuslt
 	i = 0;
-	while (i < len)
-	{
-		result[i] = ft_strdup(env_arrs[i]);
-		i++;
-	}
-	result[i] = NULL;
-
-	//sorting		
-	i = 0;
-	while(result[i])
+	while (result[i])
 	{
 		j = i + 1;
 		while (result[j])
 		{
 			if (ft_strcmp(result[i], result[j]) > 0)
-			{
-				swap = result[i];
-				result[i] = result[j];
-				result[j] = swap;
-			}
+				ft_swap_ptr(&result[i], &result[j]);
 			j++;
 		}
 		i++;
 	}
-	//free env_vars?
 	return (result);
 }

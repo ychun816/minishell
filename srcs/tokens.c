@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:08:18 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 17:03:16 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 14:36:09 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ t_token	*token_create(char *token_value, int n, t_token_type type, t_shell *cont
 	dup_token_value = ft_strndup(token_value, n);
 	if (!dup_token_value)
 	{
-		free(dup_token_value);
-		// free(new_token);
+		// free(dup_token_value);
+		free(new_token);
 		return (NULL);
 	}
 	new_token->value = dup_token_value;
@@ -82,16 +82,18 @@ int	token_add_back(t_token **head, t_token *new_token)
  * - (2) pointer to linked list
  * 
 */
-void	token_free(t_token *token)
+void	token_free(t_token *head)
 {
 	t_token	*current;
-
-	current = NULL;
+	t_token	*tmp_next;
+	
+	current = head; //current to tmperorily save token pointer
 	while (current != NULL)
 	{
-		current = token; //current to tmperorily save token pointer
-		current = token->next;
-		free(current->value);	
+		tmp_next = current->next;// Assign to save the next pointer first
+		if (current->value)
+			free(current->value);//free current token value
+		free(current);//free current token structure(container)
+		current = tmp_next;// Move current pointer to the next token
 	}
-	free(current);
 }

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 12:04:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/07 18:10:02 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 16:05:28 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,8 @@ int		ft_lstsize(t_list *lst);
 int	ft_strcmp(const char *s1, const char *s2);
 char	*ft_strndup(const char *str, int nb);
 long	ft_atol(const char *nptr);
-
+/*arrays*/
+char	**ft_arrsdup(char **src_arrs);
+void	arrs_free(char **arrs);
+int	ft_arrslen(char **arrs);
 #endif

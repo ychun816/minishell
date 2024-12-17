@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/17 11:22:23 by yilin             #+#    #+#              #
-#    Updated: 2024/12/07 17:42:28 by yilin            ###   ########.fr        #
+#    Updated: 2024/12/17 16:06:57 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,10 @@ ARRAY_DIR  = $(SRCS_DIR)ft_array/ft_split.c\
 			 $(SRCS_DIR)ft_array/ft_strcmp.c\
 			 $(SRCS_DIR)ft_array/ft_strndup.c
 
+ARRAYS_DIR  = $(SRCS_DIR)ft_arrays/arrs_free.c\
+			  $(SRCS_DIR)ft_arrays/ft_arrsdup.c\
+			  $(SRCS_DIR)ft_arrays/ft_arrslen.c
+
 IS_DIR     = $(SRCS_DIR)ft_is/ft_isalnum.c\
              $(SRCS_DIR)ft_is/ft_isalpha.c\
              $(SRCS_DIR)ft_is/ft_isascii.c\
@@ -102,7 +106,7 @@ PRINTF_DIR = $(SRCS_DIR)ft_printf/ft_printf.c\
 
 GNL_DIR    = $(SRCS_DIR)get_next_line/get_next_line.c
 
-SRCS       = $(ARRAY_DIR) $(IS_DIR) $(LST_DIR) $(MEM_DIR) $(PUTFD_DIR) $(TO_DIR) $(PRINTF_DIR) $(GNL_DIR)
+SRCS       = $(ARRAY_DIR) $(ARRAYS_DIR) $(IS_DIR) $(LST_DIR) $(MEM_DIR) $(PUTFD_DIR) $(TO_DIR) $(PRINTF_DIR) $(GNL_DIR)
 OBJS       = $(patsubst $(SRCS_DIR)%.c,$(OBJS_DIR)%.o,$(SRCS))
 
 # **************************************************************************** #

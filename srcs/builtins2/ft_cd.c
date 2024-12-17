@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:56:29 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 19:34:46 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 16:48:49 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,36 +124,28 @@ int	add_envvar(char *env_line, t_env **env_head)
 	char	*dup_envline;
 	t_env	*env;
 	
-	env_id = get_env_id(env_line);
-	printf("🎅 add_envvar | env_id: %s\n", env_id); ///TESTER
-	
+	env_id = get_env_id(env_line);	
 	if (!env_id || !check_envid_valid(env_id))
 		return (free(env_id), error_export(env_line), FAILURE);
-
 	dup_envline = ft_strdup(env_line);
-	printf("🎅 add_envvar | dup_envline: %s\n", dup_envline); ///TESTER
 	if (!dup_envline)
 		return (free(env_id), FAILURE);//1
-	
-	// dup_envline = ft_strchr(sorted[i], '=') + 1;
-	
-	// if (!tmp_value)
-	// 		printf ("%s\n", sorted[i]);
-
 	env = get_env(env_line, *env_head);
 	if (!env)
 	{
-		env = env_create(ft_strdup(env_id), ft_strdup(env_line), env_line);
+		printf("111111envvarline ====  %s\n", dup_envline);
+		// env = env_create(env_id, ft_strdup(env_line), env_line);
+		env = env_create(env_id, dup_envline, env_line);
 		if (!env)
-			return (free(env_line), free(env_id), 1);
+			return (free(env_line), free(env_id), FAILURE);//1
 		env_add_back(env_head, env);	
 	}
 	else
 	{
+		printf("envvarline ====  %s\n", dup_envline);
 		update_envvar(env, dup_envline);
 		free (env_id);
 	}
-	printf("🎅🎅🎅🎅🎅 add envvar END 🎅🎅🎅🎅🎅\n"); ///TESTER
 	return (SUCCESS);//0
 }
 

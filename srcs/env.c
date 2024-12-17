@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 20:07:42 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/17 16:42:31 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,10 @@ char *get_env_value(char *env_line)
 	if (!env_line)
 		return (NULL);
 	equal = ft_strchr(env_line, '=');
-	if (!equal)
-		return (NULL);
-	else if (equal - env_line == 0)
+	// if (!equal)
+	// 	return (NULL);
+	// else if (equal - env_line == 0)
+	if (equal - env_line == 0)
 		return (NULL);
 	return (ft_strdup(env_line + (equal - env_line + 1)));
 }
@@ -87,11 +88,8 @@ t_env *env_create(char *env_id, char *env_value, char *env_line)
 
 	new = malloc(sizeof(t_env));//Malloc memory for new_env
 	if (!new)//Check if memory fail -> if fail -> free, return NULL
-	{
-		free(env_id);
-		free(env_value);
-		return (NULL);
-	}
+		return (free(env_id), free(env_value), NULL);
+
 	//Set the ID, value, raw string, and next pointer for the new environment variable structure
 	new->id = env_id; // Set the variable ID (e.g., "PATH")
 	new->value = env_value;  // Set the variable value (e.g., "/usr/bin")
