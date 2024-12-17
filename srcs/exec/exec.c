@@ -466,32 +466,45 @@ void	err_open(int err_no, char *file)
 	exe_close(&(temp_fd));
 }
 
-void	redirs_type(t_exec *exec, t_filename *file)
+void	redirs_type(t_filename *file)
 {
-	if (file->type == INFILE || file->type == NON_HEREDOC)
-	{
-		if (exec->fd_in != STDIN_FILENO)
-			exe_close(&(exec->fd_in));
-		exec->fd_in = open(file->path, O_RDONLY);
-		if (exec->fd_in == -1)
-			err_open(errno, file->path);
-		dup2(exec->fd_in, STDIN_FILENO);
-		exe_close(&(exec->fd_in));
-	}
-	else
-	{
-		if (exec->fd_out != STDOUT_FILENO)
-			exe_close(&(exec->fd_out));
-		if (file->type == OUTFILE)
-			exec->fd_out = open(file->path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (file->type == APPEND)
-			exec->fd_out = open(file->path, O_WRONLY | O_CREAT | O_APPEND,
-					0644);
-		if (exec->fd_out == -1)
-			err_open(errno, file->path);
-		dup2(exec->fd_out, STDOUT_FILENO);
-		exe_close(&(exec->fd_out));
-	}
+    int fd = -1;
+    int target_fd = STDOUT_FILENO;
+    int flags = O_WRONLY | O_CREAT | O_TRUNC;
+
+    fprintf(stderr, "entered redirs_type\n");
+
+    // Déterminer les flags et le descripteur cible
+    if (file->type == INFILE || file->type == NON_HEREDOC)
+    {
+        target_fd = STDIN_FILENO;
+        flags = O_RDONLY;
+    }
+    else if (file->type == APPEND)
+    {
+        flags = O_WRONLY | O_CREAT | O_APPEND;
+    }
+
+    // Ouvrir le fichier
+    fd = open(file->path, flags, 0644);
+    if (fd == -1)
+    {
+        err_open(errno, file->path);
+        return;
+    }
+
+    // Rediriger
+    if (dup2(fd, target_fd) == -1)
+    {
+        err_open(errno, file->path);
+        close(fd);
+        return;
+    }
+
+    // Fermer explicitement le descripteur de fichier
+    close(fd);
+
+    fprintf(stderr, "redirs_type successful\n");
 }
 
 // goes through redirs list
@@ -503,7 +516,7 @@ int	exec_redirs(t_exec *exec)
 	redirs = exec->redirs;
 	while (redirs)
 	{
-		redirs_type(exec, redirs);
+		redirs_type(redirs);
 		if (exec->fd_in == -1 || exec->fd_out == -1)
 			return (1);
 		redirs = redirs->next;

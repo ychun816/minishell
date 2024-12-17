@@ -34,7 +34,7 @@ void						set_std(t_shell *ctx, int mode);
 void						unlink_all(t_shell *ctx);
 int							err_redirs(t_exec *exec);
 int							exec_redirs(t_exec *exec);
-void						redirs_type(t_exec *exec, t_filename *file);
+void						redirs_type(t_filename *file);
 int							err_pipe(int err_no, t_shell *ctx);
 int							err_fork(int err_no, t_shell *ctx, int fd[][2],
 								int pipe_nb, int fork_success);
