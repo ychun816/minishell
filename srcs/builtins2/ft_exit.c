@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:20 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/15 17:28:54 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:53:02 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ int	ft_exit(t_shell *content, t_arg *args)
 		error_exit(args->value);
 		exit_code = 2;
 	}
+	// Cleanup tokens if they exist => TO CHECK IF HAVE LEAK!
+	// if (token)
+	// 	token_free(token);
 	set_std(content, 1);
 	free_all_shell(content);
 	exit(exit_code);

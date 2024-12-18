@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:15 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 17:07:15 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/18 17:44:30 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,10 @@ int	process_input(t_shell *content, char *line)
 {
 	t_token	*token;
 
-	// 1. LEXING
 	token = lexing(content, line);
 	free(line);
 	if (!token)
 		return (SUCCESS);
-	// 2. PARSING
 	if (parsing(&token) != 0)
 	{
 		token_free(token);
@@ -111,12 +109,9 @@ int	process_input(t_shell *content, char *line)
 			return (SUCCESS);                // 0
 		return (FAILURE);                    // 1
 	}
-	// 3. BULD2EXEC
-	if (init_exec(content, &token) != 0) ////TO CHECKKKKKKKKKKKKKKK!!!!
-		return (FAILURE);                // 1
-	// 4. EXEC
+	if (init_exec(content, &token) != 0)
+		return (FAILURE);
 	exec(content);
-	// 5. CLEAN
 	free_after_process(content, token);
 	return (SUCCESS); // 0
 }
@@ -190,7 +185,6 @@ int	read_n_loop(t_shell *content)
 			add_history(line);                     // add history
 													// REMEMBER TO CLEAR
 			if (process_input(content, line) != 0) // process pipeline
-													///////EXEC PART
 			{
 				ft_putstr_fd("Parsing Error\n", 2);
 				content->exit_code = 2;
