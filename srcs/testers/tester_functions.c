@@ -25,7 +25,7 @@ void test_token_append(t_token **head, char *value, int n, t_token_type type, t_
     t_token *new_token = token_create(value, n, type, content);
     if (!new_token) 
 	{
-        fprintf(stderr, "Failed to create token for value: %s\n", value);
+        //fprintf(stderr, "Failed to create token for value: %s\n", value);
         return;
     }
     // If the list is empty, set the new token as the head

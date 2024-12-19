@@ -66,7 +66,7 @@ t_token	*lexing(t_shell *content, char *input_line)
 			current = lex_tokenize_each_wd(&(input_line[i]), content); //&(input_line[i]) ??
 			if (!current) // If tokenize failed, free previously created tokens and exit
 			{
-				token_free(current);
+				token_free(token);
 				return (NULL);
 			}
 			token_add_back(&token, current); //&token: pointer to t_token

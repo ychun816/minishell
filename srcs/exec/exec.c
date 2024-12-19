@@ -472,7 +472,7 @@ void	redirs_type(t_filename *file)
     int target_fd = STDOUT_FILENO;
     int flags = O_WRONLY | O_CREAT | O_TRUNC;
 
-    fprintf(stderr, "entered redirs_type\n");
+    //fprintf(stderr, "entered redirs_type\n");
 
     // Déterminer les flags et le descripteur cible
     if (file->type == INFILE || file->type == NON_HEREDOC)
@@ -504,7 +504,7 @@ void	redirs_type(t_filename *file)
     // Fermer explicitement le descripteur de fichier
     close(fd);
 
-    fprintf(stderr, "redirs_type successful\n");
+    //fprintf(stderr, "redirs_type successful\n");
 }
 
 // goes through redirs list

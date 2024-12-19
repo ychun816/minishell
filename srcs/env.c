@@ -66,10 +66,9 @@ char *get_env_value(char *env_line)
 	if (!env_line)
 		return (NULL);
 	equal = ft_strchr(env_line, '=');
-	// if (!equal)
-	// 	return (NULL);
-	// else if (equal - env_line == 0)
-	if (equal - env_line == 0)
+	if (!equal)
+	 	return (NULL);
+	else if (equal - env_line == 0)
 		return (NULL);
 	return (ft_strdup(env_line + (equal - env_line + 1)));
 }

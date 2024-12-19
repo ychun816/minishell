@@ -97,15 +97,17 @@ t_shell	*init_shell(char *env[]) // initialize & dup env to supershell
 int	process_input(t_shell *content, char *line)
 {
 	t_token	*token;
+	int pars;
 
 	token = lexing(content, line);
 	free(line);
 	if (!token)
 		return (SUCCESS);
-	if (parsing(&token) != 0)
+	pars = parsing(&token);
+	if (pars)
 	{
 		token_free(token);
-		if (parsing(&token) == FAILURE_VOID) // void or special case
+		if (pars == FAILURE_VOID) // void or special case
 			return (SUCCESS);                // 0
 		return (FAILURE);                    // 1
 	}
