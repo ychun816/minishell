@@ -74,9 +74,9 @@ char	*get_str_before_envvar(char *full_str, char *env_var)
 	char	*front_str;
 
 	front_strlen = env_var - full_str;
-	front_str = ft_strndup(full_str, front_strlen);
 	if (front_strlen == 0)
 		return (ft_strdup(""));
+	front_str = ft_strndup(full_str, front_strlen);
 	return (front_str);
 }
 

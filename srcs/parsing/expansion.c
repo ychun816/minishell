@@ -46,7 +46,8 @@ int	prs_count_dollar_sign(char *input_str)
  * @note REMEMBER TO FREE USED / INVALID POINTERS!
  * -> strjoin/append [befor_env & env_var] & [after_env] ; free afteruse or invalid
  * @return String with $VAR replaced with its value.
- */
+ **/
+
 char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
 {
 	char	*before_envvar;
@@ -65,7 +66,7 @@ char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
 	if (!new)
 		return (free(after_envvar), NULL);
 	new = prs_strjoin(new, after_envvar);
-	if (!envvar_value)
+	if (envvar_value)
 		free(envvar_value);
 	return (free(after_envvar), new);
 }

@@ -94,6 +94,8 @@ t_env *env_create(char *env_id, char *env_value, char *env_line)
 	new->value = env_value;  // Set the variable value (e.g., "/usr/bin")
 	new->env_line = ft_strdup(env_line); // Set the raw input string (e.g., "PATH=/usr/bin")
 	new->next = NULL; // Initialize the 'next' pointer to NULL, as it's a new node
+	
+	free(env_line);
 	return (new);
 }
 
