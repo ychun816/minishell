@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 14:20:45 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/19 17:34:44 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,5 @@ int	bd_handle_redirs(t_exec *exec, t_token *token);
 t_filename *filename_create(char *pathname, t_token_type type);
 int	filename_add_back(t_filename **head, t_filename *new);
 void	filename_free(t_filename *filename);
-
-
-
 
 #endif
