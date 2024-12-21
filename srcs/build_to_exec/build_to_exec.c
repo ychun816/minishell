@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-/**	init_build();
- */
 t_exec	*init_build(void)
 {
 	t_exec	*new;
@@ -43,22 +41,21 @@ int	bd_handle_pipe(t_exec *exec, t_token *token)
 {
 	if (token->type == PIPE)
 	{
-		exec->next = build_to_exec(token->next); //recursive
-		return (FAILURE);//1
+		exec->next = build_to_exec(token->next);
+		return (FAILURE);
 	}
-	return (SUCCESS);//0
+	return (SUCCESS);
 }
 
-/** BD- HANDLE COMMAND */
 int	bd_handle_cmd(t_exec *exec, t_token *token)
 {
 	if (token->type == COMMAND)
 	{
 		exec->cmd = ft_strdup(token->value);
 		if (!exec->cmd)
-			return (FAILURE);//1
+			return (FAILURE);
 	}
-	return (SUCCESS);//0		
+	return (SUCCESS);	
 }
 
 /** build_to_exec

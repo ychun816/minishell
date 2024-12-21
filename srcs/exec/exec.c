@@ -22,6 +22,7 @@ void	exe_close(int *fd)
 		*fd = -1;
 	}
 }
+
 // only for child process
 void	ft_close(t_shell *ctx)
 {
@@ -31,6 +32,7 @@ void	ft_close(t_shell *ctx)
 		exe_close(&(ctx->default_out));
 	}
 }
+
 // only for child process
 // we close useless fds OR
 // we close last fds when finished
@@ -46,17 +48,17 @@ void	close_fds(int pipes_nb, int (*fd)[2], int current_cmd,
 		{
 			if (j != current_cmd - 1)
 			{
-				exe_close(&fd[j][0]); // Close read ends except the one needed
+				exe_close(&fd[j][0]);
 			}
 			if (j != current_cmd)
 			{
-				exe_close(&fd[j][1]); // Close write ends except the one needed
+				exe_close(&fd[j][1]);
 			}
 		}
 		else
 		{
-			exe_close(&fd[j][0]); // Close all read ends
-			exe_close(&fd[j][1]); // Close all write ends
+			exe_close(&fd[j][0]);
+			exe_close(&fd[j][1]);
 		}
 		j++;
 	}
@@ -189,7 +191,7 @@ char	**env_format(t_env *env)
 	return (env_arr);
 }
 
-void	err_execve(char *path, int err_no)
+void	err_execve(char *path, int err_no) //TODO
 {
 	int			fd_tmp;
 	struct stat	stats;
@@ -211,6 +213,8 @@ void	err_execve(char *path, int err_no)
 
 // 126 : Command found but cannot be executed(due to permission issues)
 // 127 : Command not found(the file does not exist or is not in the PATH)
+// execve(path, comd, env);
+// char	*args[] = {"/bin/ls", "-l", "/home", NULL};
 int	ft_execution(t_shell *ctx, t_exec *temp)
 {
 	int		args_nb;
@@ -219,8 +223,6 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 	char	**env;
 
 	args_nb = ft_args_lstsize(temp->args) + 2;
-	// execve(path, comd, env);
-	// char	*args[] = {"/bin/ls", "-l", "/home", NULL};
 	exec_args_create(temp, args_nb, args);
 	env = env_format(ctx->env);
 	if (!env)
@@ -348,6 +350,7 @@ int	open_pipes(int pipes_nb, int (*fd)[2])
 	}
 	return (0);
 }
+
 // only for parent process
 // mode 0 : saves a copy of STDIN and STDOUT
 // mode 1 : restores STDIN and STDOUT + free the copy
@@ -366,6 +369,7 @@ void	set_std(t_shell *ctx, int mode)
 		exe_close(&(ctx->default_out));
 	}
 }
+
 // dup2 so printf can write in stderr
 // open_pipes already closed fds if error
 int	err_pipe(int err_no, t_shell *ctx)
@@ -431,7 +435,7 @@ int	exec_parent(t_shell *ctx)
 	return (0);
 }
 
-void	unlink_all(t_shell *ctx)
+void	unlink_all(t_shell *ctx) //TODO
 {
 	t_exec		*exec;
 	t_filename	*redir;
@@ -466,45 +470,32 @@ void	err_open(int err_no, char *file)
 	exe_close(&(temp_fd));
 }
 
-void	redirs_type(t_filename *file)
+void	redirs_type(t_filename *file) //TODO
 {
     int fd = -1;
     int target_fd = STDOUT_FILENO;
     int flags = O_WRONLY | O_CREAT | O_TRUNC;
 
-    //fprintf(stderr, "entered redirs_type\n");
-
-    // Déterminer les flags et le descripteur cible
     if (file->type == INFILE || file->type == NON_HEREDOC)
     {
         target_fd = STDIN_FILENO;
         flags = O_RDONLY;
     }
     else if (file->type == APPEND)
-    {
         flags = O_WRONLY | O_CREAT | O_APPEND;
-    }
-
-    // Ouvrir le fichier
     fd = open(file->path, flags, 0644);
     if (fd == -1)
     {
         err_open(errno, file->path);
         return;
     }
-
-    // Rediriger
     if (dup2(fd, target_fd) == -1)
     {
         err_open(errno, file->path);
         close(fd);
         return;
     }
-
-    // Fermer explicitement le descripteur de fichier
     close(fd);
-
-    //fprintf(stderr, "redirs_type successful\n");
 }
 
 // goes through redirs list

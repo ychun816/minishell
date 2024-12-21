@@ -18,12 +18,13 @@
  * - Calls get_env_id() and get_env_value() to extract the ID and value of the default environment variable.
  * - Calls env_create() to allocate memory for a new t_env structure, initializing it with the extracted ID, value, and a duplicate of the raw string.
  * - Returns the newly created environment variable structure.
+ * def_content : pointer to hold the new environment variable structure
  */
 t_env	*set_default_env(void)
 {
 	char *env_id;
 	char *env_value;
-	t_env *def_content; // Pointer to hold the new environment variable structure
+	t_env *def_content;
 
 	env_id = get_env_id(DEFAULT_ENV);
 	env_value = get_env_value(DEFAULT_ENV);
@@ -34,7 +35,7 @@ t_env	*set_default_env(void)
 /** GET NEV ID 
  * //USER_ZDOTDIR=/home/yilin
 */
-char *get_env_id(char *env_line) //If raw points to the beginning of the string (index 0)
+char *get_env_id(char *env_line)
 {
 	char *equal;
 
@@ -46,9 +47,9 @@ char *get_env_id(char *env_line) //If raw points to the beginning of the string 
 		return (NULL);
 		// return (ft_strdup(env_line));
 	}
-	else if (equal - env_line == 0) //invalid id(= at first place)
+	else if (equal - env_line == 0)
 		return (NULL);
-	return (ft_strndup(env_line, equal - env_line)); //return substring uptil '='
+	return (ft_strndup(env_line, equal - env_line));
 }
 
 /** GET ENV VALUE
@@ -85,15 +86,13 @@ t_env *env_create(char *env_id, char *env_value, char *env_line)
 {
 	t_env *new;
 
-	new = malloc(sizeof(t_env));//Malloc memory for new_env
-	if (!new)//Check if memory fail -> if fail -> free, return NULL
+	new = malloc(sizeof(t_env));
+	if (!new)
 		return (free(env_id), free(env_value), NULL);
-	//Set the ID, value, raw string, and next pointer for the new environment variable structure
-	new->id = env_id; // Set the variable ID (e.g., "PATH")
-	new->value = env_value;  // Set the variable value (e.g., "/usr/bin")
-	new->env_line = ft_strdup(env_line); // Set the raw input string (e.g., "PATH=/usr/bin")
-	new->next = NULL; // Initialize the 'next' pointer to NULL, as it's a new node
-	
+	new->id = env_id;
+	new->value = env_value;
+	new->env_line = ft_strdup(env_line);
+	new->next = NULL;
 	free(env_line);
 	return (new);
 }
@@ -115,9 +114,9 @@ int env_add_back(t_env **head, t_env *new)
 	else
 	{
 		current = *head;
-		while (current->next != NULL) //if not the last node
-			current = current->next; //keep looping
-		current->next = new; //add to the last
+		while (current->next != NULL)
+			current = current->next;
+		current->next = new;
 	}
 	return (SUCCESS);
 }

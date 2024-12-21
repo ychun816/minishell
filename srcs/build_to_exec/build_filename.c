@@ -23,12 +23,9 @@
  * - The current token type is a redirection type (APPEND, HEREDOC, INFILE, OUTFILE)
  * (2) Create a new redirection file structure using the next token's value (the next token of the redir sign)
  * (3) Add to redirs list
- * 
- * @note
- * 
- * 
  */
-int	bd_handle_redirs(t_exec *exec, t_token *token) //static int
+
+int	bd_handle_redirs(t_exec *exec, t_token *token)
 {
 	t_filename	*tmp;
 
@@ -36,11 +33,11 @@ int	bd_handle_redirs(t_exec *exec, t_token *token) //static int
 	{
 		tmp = filename_create(token->next->value, token->type);
 		if (!tmp)
-			return (-1); //FAILURE_VOID (defined as 2) -> Specific failure: memory allocation
+			return (-1); //FAILURE_VOID ? //TODO
 		filename_add_back(&(exec->redirs), tmp);
-		return (1); //FAILURE -> Indicating success in handling redirection
+		return (1);
 	}	
-	return (0); //SUCCESS -> no action taken
+	return (0);
 }
 
 /** BUILD- FILENAME CREATE
@@ -55,7 +52,7 @@ int	bd_handle_redirs(t_exec *exec, t_token *token) //static int
  * 
  * For > output.txt:
  * Call filename_create("output.txt", OUTFILE) to create a structure with the file path "output.txt" and type OUTFILE.
- * 
+ * Initialize the next pointer to NULL (this will link to the next t_filename structure in a linked list, if needed)
  */
 t_filename *filename_create(char *pathname, t_token_type type)
 {
@@ -69,7 +66,6 @@ t_filename *filename_create(char *pathname, t_token_type type)
 	filename->path = dup_path;
 	filename->type = type;
 	filename->next = NULL;
-	// Initialize the next pointer to NULL (this will link to the next t_filename structure in a linked list, if needed)
 	return (filename);
 }
 
@@ -82,7 +78,7 @@ int	filename_add_back(t_filename **head, t_filename *new)
 	t_filename *current;
 	
 	if (!new)
-		return (FAILURE); //1
+		return (FAILURE);
 	if (*head == NULL)
 		*head = new;
 	else
@@ -90,12 +86,11 @@ int	filename_add_back(t_filename **head, t_filename *new)
 		current = *head;
 		while (current->next != NULL)
 			current = current->next;
-		current->next = new;// Add the new node after the last node
+		current->next = new;
 	}	
-	return (SUCCESS); //0
+	return (SUCCESS);
 }
 
-/** BUULD - FILENAME FREE */
 void	filename_free(t_filename *filename)
 {
 	t_filename	*tmp;
@@ -109,5 +104,3 @@ void	filename_free(t_filename *filename)
 		free(tmp);
 	}
 }
-
-/** BUILD - FILENAME LISTSIZE */

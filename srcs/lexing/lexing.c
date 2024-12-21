@@ -30,7 +30,7 @@ t_token	*lex_tokenize_each_wd(char *str, t_shell *content)
 	new_token = NULL;
 	token_type = lex_get_token_meta_type(str);
 	token_len = lex_ft_1tokenlen(str, token_type);
-	new_token = token_create(str, token_len, token_type, content); // Create a new token with the identified properties
+	new_token = token_create(str, token_len, token_type, content);
 	return (new_token);
 }
 
@@ -46,30 +46,29 @@ t_token	*lex_tokenize_each_wd(char *str, t_shell *content)
  *
  * @return  a linked list of tokens,
  * representing the entire line as a sequence of categorized words or symbols.
- *
+ * If the character is not a space or tab, process it as a token
  */
 t_token	*lexing(t_shell *content, char *input_line)
 {
 	t_token	*token;
-	t_token	*current; //to store each token at current position
+	t_token	*current;
 	int	i;
 
 	i = 0;
 	token = NULL;
 	while (input_line[i])
 	{
-		// If the character is not a space or tab, process it as a token
 		if (input_line[i] == ' ' || input_line[i] == '\t')
 			i++;
 		else
 		{
-			current = lex_tokenize_each_wd(&(input_line[i]), content); //&(input_line[i]) ??
-			if (!current) // If tokenize failed, free previously created tokens and exit
+			current = lex_tokenize_each_wd(&(input_line[i]), content);
+			if (!current)
 			{
 				token_free(token);
 				return (NULL);
 			}
-			token_add_back(&token, current); //&token: pointer to t_token
+			token_add_back(&token, current);
 			i += ft_strlen(current->value);
 		}
 	}

@@ -24,6 +24,14 @@ int	check_line_empty(char *line)
 /** DUP ENV
  * inside dup_edit_env:
  * TODO : if env exists => edit the value, otherwise create it
+ * Index for iterating through the environment variables
+ * Variable to hold the identifier of the environment variable(the part before the =)
+ * Variable to hold the value of the environment variable(environment variable’s contents
+ * Check if the environment pointer is NULL or points to an empty string
+ * if (!env || (env && *env == NULL))
+ * env points to a valid location; But the environment variable list is empty.
+ * return (set_default_env());
+ * 
  */
 t_env	*dup_env(char *env[])
 {
@@ -32,23 +40,14 @@ t_env	*dup_env(char *env[])
 	char	*env_id;
 	char	*env_value;
 
-	int i; // Index for iterating through the environment variables
-	// Variable to hold the identifier of the environment variable(the part before the =)
-	// Variable to hold the value of the environment variable(environment variable’s contents,
+	int i;
 	i = 0;
 	res_env = set_default_env();
-	// Check if the environment pointer is NULL or points to an empty string
-	// if (!env || (env && *env == NULL))
-	// env points to a valid location; But the environment variable list is empty.
-	// 	return (set_default_env());
-	while (env[i]) // Loop through each environment variable
+	while (env[i])
 	{
 		env_id = get_env_id(env[i]);
-		// get identk, a memory erroifier
-		env_value = get_env_value(env[i]); // get value
+		env_value = get_env_value(env[i]);
 		tmp = env_create(env_id, env_value, ft_strdup(env[i]));
-		// Create a new environment variable structure (tmp)
-		// if fail -> return NULL
 		if (!tmp)
 			return (NULL);
 		env_add_back(&res_env, tmp);
@@ -57,25 +56,22 @@ t_env	*dup_env(char *env[])
 	return (res_env);
 }
 
-/* INIT SHELL*/
-t_shell	*init_shell(char *env[]) // initialize & dup env to supershell
+/* INIT SHELL */
+t_shell	*init_shell(char *env[]) 
 {
-	t_shell *content; // Declare a pointer to a context structure
+	t_shell *content;
 
 	content = malloc(sizeof(t_shell));
-	// Allocate memory for the context structure
 	if (!content)
 		return (NULL);
 	content->env = dup_env(env);
-	// Duplicate the environment variables into the context
 	if (!(content->env))
 	{
 		free(content);
 		return (NULL);
 	}
-	content->default_in = STDIN_FILENO; // Set default input to standard input
+	content->default_in = STDIN_FILENO;
 	content->default_out = STDOUT_FILENO;
-	// Set default output to standard output
 	content->pids = NULL;
 	content->exec = NULL;
 	content->pid_count = 0;
@@ -107,33 +103,31 @@ int	process_input(t_shell *content, char *line)
 	if (pars)
 	{
 		token_free(token);
-		if (pars == FAILURE_VOID) // void or special case
-			return (SUCCESS);                // 0
-		return (FAILURE);                    // 1
+		if (pars == FAILURE_VOID)
+			return (SUCCESS);
+		return (FAILURE);
 	}
 	if (init_exec(content, &token) != 0)
 		return (FAILURE);
 	exec(content);
 	free_after_process(content, token);
-	return (SUCCESS); // 0
+	return (SUCCESS);
 }
 
-/** INIT EXEC */ /// CHECK LATER
+/** INIT EXEC */ 
 int	init_exec(t_shell *content, t_token **token)
 {
 	content->exec = build_to_exec(*token);
 	token_free(*token);
 	*token = NULL;
-	// Set the original token pointer to NULL to avoid dangling pointers
 	if (!content->exec)
-		return (FAILURE); // 1
+		return (FAILURE);
 	content->exec_count = ft_build_lstsize(content->exec);
-	// Set the count of executions based on the size of the exec list
 	content->pids = malloc(sizeof(pid_t) * (content->exec_count + 1));
 	if (!content->pids)
-		return (FAILURE);   // 1
-	content->pid_count = 0; // Initialize the count of processes launched to 0
-	return (SUCCESS);       // 0
+		return (FAILURE);
+	content->pid_count = 0;
+	return (SUCCESS);
 }
 
 /** FREE AFTER PROCESS
@@ -156,12 +150,12 @@ void	free_after_process(t_shell *content, t_token *token)
 		token_free(token);
 	if (content)
 	{
-		if (content->exec)// exec
+		if (content->exec)
 		{
 			build_free_all(content->exec);
 			content->exec = NULL;
 		}
-		if (content->pids)// pid
+		if (content->pids)
 		{
 			free(content->pids);
 			content->pids = NULL;
@@ -178,40 +172,38 @@ int	read_n_loop(t_shell *content)
 	line = NULL;
 	while (1)
 	{
-		sig_init_signals(); // Set up signal handling for each loop iteration
+		sig_init_signals();
 		line = readline(PROMPT);
 		if (!line)
-			break ;                            // Exit the loop to end the shell
-		else if (check_line_empty(line) == 0) // check if line valid
+			break ;
+		else if (check_line_empty(line) == 0)
 		{
-			add_history(line);                     // add history
-													// REMEMBER TO CLEAR
-			if (process_input(content, line) != 0) // process pipeline
+			add_history(line);
+			if (process_input(content, line) != 0)
 			{
 				ft_putstr_fd("Parsing Error\n", 2);
 				content->exit_code = 2;
 			}
-			line = NULL; // reset line
+			line = NULL;
 		}
 		if (line)
 			free(line);
 	}
-	return (0); // return if loop end ((i.e., on EOF or NULL input))
+	return (0);
 }
 
 /* FREE ALL SHELL*/
 void	free_all_shell(t_shell *content)
 {
-	// Check if ctx (shell context) exists before freeing its contents
 	if (content)
 	{
-		if (content->exec) // exec
+		if (content->exec)
 			build_free_all(content->exec);
-		if (content->env) // env
+		if (content->env)
 			env_free(content->env);
-		if (content->pids) // pids
+		if (content->pids)
 			free(content->pids);
-		free(content); // content
+		free(content);
 	}
 }
 
@@ -222,12 +214,12 @@ int	main(int ac, char *av[], char *env[])
 	content = NULL;
 	(void)ac;
 	(void)av;
-	content = init_shell(env); // initialize everthing to 0/NULL
+	content = init_shell(env);
 	if (!content)
 		return (EXIT_FAILURE);
-	read_n_loop(content); // strat loop -> readline(PROMPT)
+	read_n_loop(content);
 	free_all_shell(content);
 	rl_clear_history();
-	ft_putstr_fd("exit\n", 2); // or 1
+	ft_putstr_fd("exit\n", 2);
 	return (EXIT_SUCCESS);
 }

@@ -22,9 +22,7 @@
 
 #include "builtins.h"
 
-/** CHECK IS BUILTIN (bi_is_builtin)
- * builtin: echo / cd / pwd / export / unset / env / exit
-*/
+/** CHECK IS BUILTIN **/
 int	check_is_builtin(char* input_cmd)
 {
 	if (!input_cmd)
@@ -47,9 +45,7 @@ int	check_is_builtin(char* input_cmd)
 		return (0);
 }
 
-/** EXEC BUILTIN (bi_is_builtin)
- * builtin: echo / cd / pwd / export / unset / env / exit
-*/
+/** EXEC BUILTIN **/
 int	exec_builtin(t_shell *content, char* input_cmd, t_arg *args)
 {
 	if (ft_strcmp(input_cmd, "echo") == 0)

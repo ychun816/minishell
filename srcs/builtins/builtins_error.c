@@ -21,7 +21,6 @@ void	error_env(char *input_line)
 }
 
 /** ERROR PWD */
-// fprintf(STDERR_FILENO, "%s: pwd: %s: invalid option\n", P_NAME, option);
 void	error_pwd(char	*option)
 {
 	ft_putstr_fd(P_NAME, STDERR_FILENO);
@@ -31,7 +30,6 @@ void	error_pwd(char	*option)
 }
 
 /** ERROR EXIT */
-//printf("%s: exit: %s: numeric argument required\n", P_NAME, val);
 void	error_exit(char *input_line)
 {
 	ft_putstr_fd(P_NAME, STDERR_FILENO);
@@ -41,8 +39,6 @@ void	error_exit(char *input_line)
 }
 
 /** ERROR CD */
-//printf("%s: cd: %s not set\n", P_NAME, file);
-//printf("%s: cd: %s: %s\n", P_NAME, file, strerror(err_no));
 void	error_cd(int err_n, char *pathname)
 {
 	char	*err_msg;
@@ -67,7 +63,6 @@ void	error_cd(int err_n, char *pathname)
 }
 
 /** ERROR EXPORT */
-//printf("%s: export: %s: not a valid identifier\n", P_NAME, var);
 void	error_export(char *env_line)
 {
 	ft_putstr_fd(P_NAME, STDERR_FILENO);

@@ -79,16 +79,13 @@ int ft_token_str_len(char *str)
 	int	total_len;
 
 	len = 0;
-	total_len = ft_strlen(str); //the whole string len
+	total_len = ft_strlen(str);
 	while (len < total_len)
 	{
-		//single quote
 		if (str[len] == '\'')
-			len += ft_quotes_len(&(str[len]), '\''); //str
-		//double quote
+			len += ft_quotes_len(&(str[len]), '\'');
 		else if (str[len] == '\"')
-			len += ft_quotes_len(&(str[len]), '\"'); //str
-		//break if meet a meta character
+			len += ft_quotes_len(&(str[len]), '\"');
 		else if (check_meta_char(str[len]) || str[len] == '\t' || str[len] == ' ')
 			break ;
 		len++;
@@ -100,7 +97,7 @@ int ft_token_str_len(char *str)
  * - Calculates the length of a quoted substring.
  * - It starts after the opening quote and continues until it finds the matching closing quote.
 */
-int ft_quotes_len(char *str, char sd_quote) //single, double quote
+int ft_quotes_len(char *str, char sd_quote)
 {
 	int	len;
 
@@ -116,7 +113,6 @@ int ft_quotes_len(char *str, char sd_quote) //single, double quote
  */
 int check_meta_char(char c)
 {
-	//Stop at the closing single quote ('
 	int	found;
 
 	found = 0;

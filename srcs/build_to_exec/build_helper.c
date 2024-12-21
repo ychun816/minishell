@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-/**build_listsize */
 int	ft_build_lstsize(t_exec *exec)
 {
 	int	len;
@@ -26,7 +25,6 @@ int	ft_build_lstsize(t_exec *exec)
 	return (len);
 }
 
-/**build_free all*/
 void	build_free_all(t_exec *exec)
 {
 	t_exec	*current;

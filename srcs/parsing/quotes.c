@@ -40,8 +40,8 @@ int	prs_check_quotes_valid(t_token *token)
 			str = token->value;
 			while (str[i])
 			{
-				if (str[i] == '\'' || str[i] == '\"') // If a quote is found, process it
-					i += ft_quotes_len(&(str[i]), str[i]);//incremet i to the end of unquote
+				if (str[i] == '\'' || str[i] == '\"')
+					i += ft_quotes_len(&(str[i]), str[i]);
 				if (str[i] == '\0')
 					return (FAILURE);
 				i++;
@@ -72,7 +72,7 @@ t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content)
 	t_token	*new_token;
 	t_token_type	type;
 	
-	if (!input_str || ft_quotes_len(input_str, c) <= 1) // ADDED to Handle unmatched or empty quotes
+	if (!input_str || ft_quotes_len(input_str, c) <= 1)
         return (NULL);
 	len = ft_quotes_len(input_str, c) - 1; 
 	new_token = NULL;
@@ -130,24 +130,22 @@ t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 	new_token = NULL;
 	while (input_str[i])
 	{
-		while (input_str[i] == ' ') //ADD to skip space??
+		while (input_str[i] == ' ')
 			i++;
 		if (input_str[i] == '\'' || input_str[i] == '\"')
 		{
 			new_token =  prs_get_quoted_str(&(input_str[i]), input_str[i], content);
-			if (!new_token) //Added for protection
+			if (!new_token)
 					return (NULL);
 			i += ft_strlen(new_token->value) + 1;
 		}
 		else
 		{
 			new_token = token_create(&(input_str[i]), ft_rogue_len(&(input_str[i])), STR, content);
-			if (!new_token) //Added for protection
+			if (!new_token)
 				return (NULL);
 			i += ft_strlen(new_token->value) - 1;
 		}
-		// if (!new_token)
-		// 	return (NULL);
 		token_add_back(&token, new_token);
 		i++;
 	}

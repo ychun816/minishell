@@ -17,12 +17,12 @@
  * Creates and appends each argument to the exec->args list.
  * 
  */
-int	bd_handle_args(t_exec *exec, t_token *token) //static int
+int	bd_handle_args(t_exec *exec, t_token *token)
 {
 	t_arg	*new;
 	
 	new = NULL;
-	if (token->type == ARG) //handle current token, no need to check the next token
+	if (token->type == ARG)
 	{
 		new = bd_args_create(token->value);
 		if (!new)
@@ -58,7 +58,7 @@ int	arg_add_back(t_arg **head, t_arg *new)
 	t_arg	*current;
 	
 	if (new == NULL)
-		return (FAILURE); //1
+		return (FAILURE);
 	if (*head == NULL)
 		*head = new;
 	else
@@ -68,7 +68,7 @@ int	arg_add_back(t_arg **head, t_arg *new)
 			current = current->next;
 		current->next = new;
 	}
-	return (SUCCESS);//0
+	return (SUCCESS);
 }
 
 /** BUILD - ARG FREE */
@@ -85,5 +85,3 @@ void	arg_free(t_arg *args)
 		free(tmp);
 	}
 }
-
-/** BUILD - ARG LISTSIZE => exec part */

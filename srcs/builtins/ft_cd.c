@@ -19,9 +19,7 @@
  * 3. Get the current working directory and store it in variable, if fail-> perror
  * 4. Get the 'HOME' environment variable
  * 5. 
- * 
- * 
-*/
+**/
 int	ft_cd(t_shell *content, t_arg *args)
 {
 	int	args_nb;
@@ -36,7 +34,6 @@ int	ft_cd(t_shell *content, t_arg *args)
 	if (!cwd)
 		perror("minishell: cd: error retrieving current directory");
 	home = get_env("HOME", content->env);
-	//take care of "--"
 	if ((!args_nb || !ft_strcmp(args->value, "--")) && home && home->value)
 		chdir(home->value);
 	else if ((!args_nb || !ft_strcmp(args->value, "--")) && (!home || !home->value))
@@ -98,7 +95,7 @@ int update_pwd(t_shell *content, char *oldpwd_value)
 		free(oldpwd_path);
 	}
 	free(current_cwd);
-	return (SUCCESS);//0
+	return (SUCCESS);
 }
 
 /** ADD ENVVAR
@@ -131,14 +128,13 @@ int	add_envvar(char *env_line, t_env **env_head)
 		return (free(env_id), error_export(env_line), FAILURE);
 	dup_envline = ft_strdup(env_line);
 	if (!dup_envline)
-		return (free(env_id), FAILURE);//1
+		return (free(env_id), FAILURE);
 	env = get_env(env_line, *env_head);
 	if (!env)
 	{
-		// env = env_create(env_id, ft_strdup(env_line), env_line);
 		env = env_create(env_id, env_value, env_line);
 		if (!env)
-			return (free(env_line), free(env_id), FAILURE);//1
+			return (free(env_line), free(env_id), FAILURE);
 		env_add_back(env_head, env);	
 	}
 	else
@@ -146,7 +142,7 @@ int	add_envvar(char *env_line, t_env **env_head)
 		update_envvar(env, dup_envline);
 		free (env_id);
 	}
-	return (SUCCESS);//0
+	return (SUCCESS);
 }
 
 /** CHECK ENVID VALID 
@@ -173,10 +169,10 @@ int	check_envid_valid(char *env_id)
 	while (env_id[i])
 	{
 		if (ft_isalnum(env_id[i]) == 0 && env_id[i] != '_')
-			return (0);//invalid
+			return (0);
 		i++;
 	}
-	return (1);//env_id is valid
+	return (1);
 }
 
 /** UPDATE ENV VAR 
@@ -209,7 +205,6 @@ void	update_envvar(t_env *update_env, char *env_line)
 	update_env->env_line = env_line;
 }
 
-/* arg lstsize*/
 int	ft_arg_lstsize(t_arg *args)
 {
 	int	i;

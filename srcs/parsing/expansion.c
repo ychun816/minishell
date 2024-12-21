@@ -101,7 +101,7 @@ int	prs_handle_envvar_expansion(t_token *token)
 			break ;
 		current = token->value;
 		new = prs_exapnd_1envvar(token->value, envvar_found, token->content);
-		if (new && new[0] == '\0')//Only free if `new` is empty
+		if (new && new[0] == '\0')
 		{
 			free(new);
 			new = NULL;

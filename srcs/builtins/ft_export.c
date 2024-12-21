@@ -33,11 +33,11 @@ int	ft_export(t_shell *content, t_arg *args)
 		while (args)
 		{
 			if (add_envvar(args->value, &(content->env)) != 0)
-				return (FAILURE);//1
+				return (FAILURE);
 			args = args->next;
 		}
 	}
-	return (SUCCESS);//0
+	return (SUCCESS);
 }
 
 /** export_print_ordered_env 
@@ -61,7 +61,6 @@ int	export_print_ordered_env(t_env *env)
 	if (!env_arrs)
 		return (FAILURE);
 	sorted = sort_env_arrs(env_arrs);
-	// free(env_arrs);
 	if (!sorted)
 		return (FAILURE);
 	i = -1;

@@ -30,7 +30,7 @@ int	prs_handle_redir(t_token *token)
 		{
 			if (token->next == NULL || token->next->type != STR)
 				return (FAILURE);
-			token->next->type = FILENAME; // Change the type of the next token to FILENAME (it represents a file name)
+			token->next->type = FILENAME;
 		}
 		else if (token->type == PIPE && token->next == NULL)
 			return (FAILURE);
@@ -97,13 +97,12 @@ int	prs_handle_heredoc(t_token *token)
 		if (token->type == HEREDOC)
 		{
 			// filename = NULL;
-			filename = "/tmp/heredoc_file"; ///TESTER
+			filename = "/tmp/heredoc_file"; //TODO
 			// filename = ms_generate_random(token->next->value); //generate random -> generate random file
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)
 				return (FAILURE);
-			// printf("I CAN GO HERE??\n");
-			if (prs_init_heredoc(fd, token->next->value) != 0)//FAILURE
+			if (prs_init_heredoc(fd, token->next->value) != 0)
 				end = 1;
 			close (fd);
 			free(token->next->value);
@@ -134,7 +133,7 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
 	char	*line; 
 	
-	signal(SIGINT, sig_heredoc);/// RECHECK
+	signal(SIGINT, sig_heredoc);
 	while (1) 
 	{
 		line = readline("heredoc>");
@@ -155,9 +154,9 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 	if (g_signal.end_heredoc == 1)
 	{
 		g_signal.end_heredoc = 0;
-		return (FAILURE); //1
+		return (FAILURE);
 	}
-	return (SUCCESS); //0
+	return (SUCCESS);
 }
 
 
@@ -188,11 +187,11 @@ int	prs_remove_node_null(t_token **head)
 		if (token->next->value == NULL)
 		{
 			current = token->next;
-			token->next = token->next->next; // Bypass the node with NULL value, linking to the following node.
+			token->next = token->next->next;
 			free(current);
 		}
 		else
-			token = token->next; // Move to the next node only if no deletion occurred.
+			token = token->next;
 	}
 	return (SUCCESS);
 }
@@ -209,10 +208,10 @@ int	prs_check_allnodes_null(t_token *token)
 	while (token)
 	{
 		if (token->value)
-			return (SUCCESS);//0
+			return (SUCCESS);
 		token = token->next;
 	}
-	return (FAILURE_VOID);//2
+	return (FAILURE_VOID);
 }
 
 /** UNLINK ERROR
@@ -241,22 +240,22 @@ int	parsing(t_token **token)
 	int	return_code;
 
 	return_code = 0;
-	if (prs_check_quotes_valid(*token) != 0)//!=0 FAILURE
-		return_code = FAILURE;//1
+	if (prs_check_quotes_valid(*token) != 0)
+		return_code = FAILURE;
 	else if (prs_handle_quotes_n_expand_env(*token) != 0)
-		return_code = FAILURE;//1
+		return_code = FAILURE;
 	else if (prs_remove_node_null(token) != 0)
-		return_code = FAILURE;//1
+		return_code = FAILURE;
 	else if (prs_check_allnodes_null(*token) != 0)
-		return_code = FAILURE_VOID;//2
+		return_code = FAILURE_VOID;
 	else if (prs_handle_redir(*token) != 0)
-		return_code = FAILURE;//1
+		return_code = FAILURE;
 	else if (prs_handle_cmd(*token) != 0)
-		return_code = FAILURE;//1
+		return_code = FAILURE;
 	else if (prs_handle_heredoc(*token) != 0)
 	{
 		prs_unlink_error(*token);
-		return_code = FAILURE_VOID;//2
+		return_code = FAILURE_VOID;
 	}
 	return (return_code);
 }

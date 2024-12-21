@@ -21,7 +21,7 @@ int	ft_unset(t_shell *content, t_arg *args)
 	if (!content->env || ft_env_lstsize(content->env) == 0)
 		return (SUCCESS);
 	if (!args)
-		return (SUCCESS);//0
+		return (SUCCESS);
 	else
 	{
 		while (args)
@@ -58,8 +58,7 @@ int	delete_env_var(char *env_value, t_env **env)
 	if (!(*env))
 		return (SUCCESS);
 	if (!current)
-		return (SUCCESS);//0
-
+		return (SUCCESS);
 	// if (*env == current)
 	// 	*env = current->next;
 	// else

@@ -13,12 +13,10 @@
 #include "minishell.h"
 
 /**FOR PASING- GET ENV
- * Search for an environment variable by its name (path) in a linked list of environment variables (env).
- * 
+ * Search for an environment variable by its name (path) in a linked list of environment variables (env). 
 */
 t_env	*get_env(char *pathname, t_env *env)
 {
-	//chek if either is NULL
 	if (pathname == NULL || env == NULL)
 		return (NULL);
 	while (env != NULL)
@@ -29,7 +27,6 @@ t_env	*get_env(char *pathname, t_env *env)
 	}
 	return (NULL);
 }
-
 
 /** PARSE- EXPAND ENV
  * Iterates through all tokens in a list and applies ps_handle_env to process $VAR expansions.

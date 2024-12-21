@@ -29,9 +29,9 @@ int	ft_env(t_shell *content, t_arg *args)
 	if (args)
 	{
 		error_env(args->value);
-		content->exit_code = CMD_NOT_FOUND;//comment not found=127
+		content->exit_code = CMD_NOT_FOUND;
 	}
-	while (env->next)//
+	while (env->next)
 	{
 		if (env->value)
 			printf("%s\n",env->env_line);
@@ -60,15 +60,15 @@ int	ft_pwd(t_arg *args)
 	if (args && *(args->value) == '-' && ft_strcmp(args->value, "-L") != 0 && ft_strcmp(args->value, "-P") != 0)
 	{
 		error_pwd(args->value);
-		return (FAILURE_VOID);//2: Misuse of a command or syntax error (invalid option or argument)
+		return (FAILURE_VOID);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
     	perror("minishell: pwd: error retrieving current directory");
-		return (FAILURE);//1
+		return (FAILURE);
 	}
 	printf("%s\n", cwd);
 	free(cwd);
-	return (SUCCESS);//0	
+	return (SUCCESS);
 }

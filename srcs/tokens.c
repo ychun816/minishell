@@ -40,12 +40,11 @@ t_token	*token_create(char *token_value, int n, t_token_type type, t_shell *cont
 	dup_token_value = ft_strndup(token_value, n);
 	if (!dup_token_value)
 	{
-		// free(dup_token_value);
 		free(new_token);
 		return (NULL);
 	}
 	new_token->value = dup_token_value;
-	new_token->type = type;	// Assign the context `content` to the token’s context field
+	new_token->type = type;
 	new_token->content = content;
 	new_token->next = NULL;
 	return (new_token);
@@ -70,8 +69,8 @@ int	token_add_back(t_token **head, t_token *new_token)
 	{
 		current = *head;
 		while (current->next)
-			current = current->next; //loop til end
-		current->next = new_token; // Add the new token at the end
+			current = current->next;
+		current->next = new_token;
 	}
 	return (SUCCESS);
 }
@@ -87,13 +86,13 @@ void	token_free(t_token *head)
 	t_token	*current;
 	t_token	*tmp_next;
 	
-	current = head; //current to tmperorily save token pointer
+	current = head;
 	while (current != NULL)
 	{
-		tmp_next = current->next;// Assign to save the next pointer first
+		tmp_next = current->next;
 		if (current->value)
-			free(current->value);//free current token value
-		free(current);//free current token structure(container)
-		current = tmp_next;// Move current pointer to the next token
+			free(current->value);
+		free(current);
+		current = tmp_next;
 	}
 }
