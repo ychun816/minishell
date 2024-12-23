@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:02:35 by okoca             #+#    #+#             */
-/*   Updated: 2024/12/17 16:08:24 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/23 14:30:01 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,45 +17,45 @@
 
 # define P_NAME "minishell"
 
-typedef struct s_shell	t_shell;
-typedef struct s_env	t_env;
+typedef struct s_shell		t_shell;
+typedef struct s_env		t_env;
 typedef enum e_token_type	t_token_type;
-typedef struct s_token	t_token;
-typedef struct s_arg	t_arg;
+typedef struct s_token		t_token;
+typedef struct s_arg		t_arg;
 typedef struct s_filename	t_filename;
 
 /* Builtins handler*/
-int	check_is_builtin(char* input_cmd);
-int	exec_builtin(t_shell *content, char* input_cmd, t_arg *args);
+int		check_is_builtin(char *input_cmd);
+int		exec_builtin(t_shell *content, char *input_cmd, t_arg *args);
 
 /** ft_env / ft_pwd */
-int	ft_env(t_shell *content, t_arg *args);
-int	ft_pwd(t_arg *args);
+int		ft_env(t_shell *content, t_arg *args);
+int		ft_pwd(t_arg *args);
 
 /* ft_echo*/
-int	ft_echo(t_arg *args);
-int	check_echo_has_nargs(char *flag);
+int		ft_echo(t_arg *args);
+int		check_echo_has_nargs(char *flag);
 
 /* ft_exit*/
-int	ft_exit(t_shell *content, t_arg *args);
-int	check_exitcode(char	*input_line);
+int		ft_exit(t_shell *content, t_arg *args);
+int		check_exitcode(char	*input_line);
 
 /* ft_cd */
-int	ft_cd(t_shell *content, t_arg *args);
-int update_pwd(t_shell *content, char *oldpwd_value);
-int	add_envvar(char *env_line, t_env **env_head);
-int	check_envid_valid(char *env_id);
+int		ft_cd(t_shell *content, t_arg *args);
+int		update_pwd(t_shell *content, char *oldpwd_value);
+int		add_envvar(char *env_line, t_env **env_head);
+int		check_envid_valid(char *env_id);
 void	update_envvar(t_env *update_env, char *env_line);
-int	ft_arg_lstsize(t_arg *args);
+int		ft_arg_lstsize(t_arg *args);
 
 /* ft_export */
-int	ft_export(t_shell *content, t_arg *args);
-int	export_print_ordered_env(t_env *env);
-char **sort_env_arrs(char **env_arrs);
+int		ft_export(t_shell *content, t_arg *args);
+int		export_print_ordered_env(t_env *env);
+char	**sort_env_arrs(char **env_arrs);
 
 /* ft_unset */
-int	ft_unset(t_shell *content, t_arg *args);
-int	delete_env_var(char *env_value, t_env **env);
+int		ft_unset(t_shell *content, t_arg *args);
+int		delete_env_var(char *env_value, t_env **env);
 void	env_delete_1node(t_env *env);
 
 /** builtins error */
@@ -96,7 +96,6 @@ void	error_export(char *env_line);
 // int		bi_err_export(char *var);
 // void	bi_err_exit(char *val);
 // void	bi_err_env(char *file);
-
 
 // /* ADDED HELPER FUNC*/ //CHECK LATER
 // void	ft_advanced_sort_string_tab(char **tab,

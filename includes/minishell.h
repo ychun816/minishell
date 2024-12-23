@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 15:05:48 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/23 14:54:49 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// printf("🔚🎅TEST current token value: %s\n", current); ///TESTER
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -55,8 +53,8 @@ typedef struct s_shell
 	int				default_in;
 	int				default_out;
 	unsigned char	exit_code;
-	pid_t *pids;  // Pointer to an array of process IDs of child processes.
-	t_exec *exec; // Points to a structure holding command execution details.
+	pid_t			*pids;
+	t_exec			*exec;
 	int				pid_count;
 	int				exec_count;
 	t_env			*env;
@@ -70,30 +68,6 @@ typedef struct s_env
 	t_env			*next;
 }					t_env;
 
-// typedef enum e_token_type
-// {
-// 	INFILE, //0
-// 	OUTFILE, //1
-// 	HEREDOC, //2 <<
-// 	NON_HEREDOC, //3
-// 	APPEND,//4
-// 	PIPE,//5
-// 	STR,//6
-// 	SGL_QUOTE,//7
-// 	DBL_QUOTE,//8
-// 	COMMAND,//9
-// 	FILENAME,//10
-// 	ARG,//11
-// } t_token_type;
-
-// typedef struct s_token
-// {
-// 	char	*value;
-// 	t_shell	*content;
-// 	t_token_type	type;
-// 	t_token	*next;
-// }	t_token;
-
 typedef struct s_signal
 {
 	int				end_heredoc;
@@ -106,70 +80,70 @@ extern t_signal		g_signal;
 /*******************************/
 /************ MAIN *************/
 /*********************************/
-/*main (shell)*/                  // CHECKED, TO DO: signal
-t_shell	*init_shell(char *env[]); // initialize & dup env to supershell
-int					process_input(t_shell *content, char *line);
-int					init_exec(t_shell *content, t_token **token);
-int					read_n_loop(t_shell *content);
-t_env				*dup_env(char *env[]);
-int					check_line_empty(char *line);
+/*main (shell)*/
+t_shell			*init_shell(char *env[]);
+int				process_input(t_shell *content, char *line);
+int				init_exec(t_shell *content, t_token **token);
+int				read_n_loop(t_shell *content);
+t_env			*dup_env(char *env[]);
+int				check_line_empty(char *line);
 
 /*env*/ //CHECKED
-t_env *env_create(char *env_id, char *env_value, char *env_line);
-t_env	*set_default_env(void);
-char *get_env_id(char *env_line); //If raw points to the beginning of the string (index 0)
-char *get_env_value(char *env_line);
-int env_add_back(t_env **head, t_env *new);
-void	env_free(t_env *env);
-void	env_delete_1node(t_env *env);
+t_env			*env_create(char *env_id, char *env_value, char *env_line);
+t_env			*set_default_env(void);
+char			*get_env_id(char *env_line);
+char			*get_env_value(char *env_line);
+int				env_add_back(t_env **head, t_env *new);
+void			env_free(t_env *env);
+void			env_delete_1node(t_env *env);
 
 /********************************/
 /************ LEXING ************/
 /*********************************/
 /*lexing*/ // CHECKED
-t_token				*lex_tokenize_each_wd(char *str, t_shell *content);
-t_token				*lexing(t_shell *content, char *input_line);
+t_token			*lex_tokenize_each_wd(char *str, t_shell *content);
+t_token			*lexing(t_shell *content, char *input_line);
 
 /*lexing helper*/ // CHECKED
-t_token_type		lex_get_token_meta_type(char *str);
-int					lex_ft_1tokenlen(char *str, t_token_type type);
-int					ft_token_str_len(char *str);
-int					ft_quotes_len(char *str, char sd_quote);
-int					check_meta_char(char c);
+t_token_type	lex_get_token_meta_type(char *str);
+int				lex_ft_1tokenlen(char *str, t_token_type type);
+int				ft_token_str_len(char *str);
+int				ft_quotes_len(char *str, char sd_quote);
+int				check_meta_char(char c);
 
 /*token*/ // CHECKED
-t_token				*token_create(char *token_value, int n, t_token_type type,
-						t_shell *content);
-int					token_add_back(t_token **head, t_token *new_token);
-void				token_free(t_token *token);
+t_token			*token_create(char *token_value, int n, t_token_type type,
+					t_shell *content);
+int				token_add_back(t_token **head, t_token *new_token);
+void			token_free(t_token *token);
 
 /*********************************/
 /************ SIGNALS ************/
 /*********************************/
-void				sig_int_handler(int status);
-void				sig_init_signals(void);
-void				sig_heredoc(int status);
-void				sig_exec(int status);
-int					sig_event(void);
+void			sig_int_handler(int status);
+void			sig_init_signals(void);
+void			sig_heredoc(int status);
+void			sig_exec(int status);
+int				sig_event(void);
 
 /*******************************/
 /************ FREE ************/
 /******************************/
 /*free /cleanup */
-void				free_all_shell(t_shell *content);
-void				free_after_process(t_shell *content, t_token *token);
+void			free_all_shell(t_shell *content);
+void			free_after_process(t_shell *content, t_token *token);
 
 /******************************/
 /*********** TESTERS **********/
 /******************************/
 /*parsing*/
-int test_read_n_loop(t_shell *content);
-void	test_display_env(t_env *env);
-void test_token_append(t_token **head, char *value, int n, t_token_type type, t_shell *content);
-void	test_print_tokens(t_token *head);
-t_token *test_tokenize_input(char *input, t_shell *shell); //not neccessarily needed
-const char *test_tokentype_to_str(t_token_type type);
-/*exec*/
-void				test_print_exec(t_exec *exec);
+int				test_read_n_loop(t_shell *content);
+void			test_display_env(t_env *env);
+void			test_token_append(t_token **head, char *value, int n, t_token_type type, t_shell *content);
+void			test_print_tokens(t_token *head);
+t_token			*test_tokenize_input(char *input, t_shell *shell);
+const char		*test_tokentype_to_str(t_token_type type);
+/*exec test*/
+void			test_print_exec(t_exec *exec);
 
 #endif

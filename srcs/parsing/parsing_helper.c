@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:48:18 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 16:05:20 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/23 16:06:25 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,7 @@ t_env	*get_env(char *pathname, t_env *env)
 	return (NULL);
 }
 
-/** PARSE- EXPAND ENV
- * Iterates through all tokens in a list and applies ps_handle_env to process $VAR expansions.
- * 
- * 
- * Loops through a list of tokens and expands environment variables in tokens of type STRING or DOUBLEQUOTE.
- * It calls (ps_handle_env) to handle the expansion for each token that requires it.
- * 
- * @return Tokens updated with $VAR expansions.
- * 
- */
-int	prs_expand_env(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == STR || token->type == DBL_QUOTE)
-		{
-			prs_handle_envvar_expansion(token);
-		}
-		token = token->next;
-	}
-	return (SUCCESS);
-}
+
 
 /** PRS TOKENS COMBINE 
  * 
@@ -62,7 +41,7 @@ int	prs_expand_env(t_token *token)
 char	*prs_tokens_combine(t_token *token)
 {
 	char	*result;
-	
+
 	result = ft_strdup("");
 	while (token != NULL)
 	{
@@ -75,4 +54,42 @@ char	*prs_tokens_combine(t_token *token)
 		token = token->next;
 	}
 	return (result);
+}
+
+/** CHECK ALL NODES NULL
+ * Checks if all nodes in the linked list have NULL values, 
+ * 
+ * @return 1 if found NULL value
+ * @return 0 if found non-NULL value.
+ * 
+ */
+int	prs_check_allnodes_null(t_token *token)
+{
+	while (token)
+	{
+		if (token->value)
+			return (SUCCESS);
+		token = token->next;
+	}
+	return (FAILURE_VOID);
+}
+
+// UNLINK ERROR
+//  * Iterates through a linked list of t_token nodes,
+//  * When it encounters a node with a specific type (NON_HEREDOC), 
+//  * It unlinks (deletes) a file whose path is stored
+//  * 		in the value field of the next node. 
+//  * 
+//  * @note 
+//  * unlink(): 
+//  * - Delete temporary files associated with here-documents.
+//  * - Ensures that these temporary files are properly removed.
+void	prs_unlink_error(t_token *token)
+{	
+	while (token)
+	{
+		if (token->type == NON_HEREDOC)
+			unlink(token->next->value);
+		token = token->next;
+	}
 }

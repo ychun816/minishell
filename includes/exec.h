@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/23 14:55:19 by varodrig          #+#    #+#             */
+/*   Updated: 2024/12/23 15:27:48 by varodrig         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXEC_H
 # define EXEC_H
 
@@ -34,7 +46,7 @@ void						set_std(t_shell *ctx, int mode);
 void						unlink_all(t_shell *ctx);
 int							err_redirs(t_exec *exec);
 int							exec_redirs(t_exec *exec);
-void						redirs_type(t_filename *file);
+void						redirs_type(t_exec *exec, t_filename *file);
 int							err_pipe(int err_no, t_shell *ctx);
 int							err_fork(int err_no, t_shell *ctx, int fd[][2],
 								int pipe_nb, int fork_success);

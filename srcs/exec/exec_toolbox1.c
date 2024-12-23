@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_toolbox1.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/23 14:11:54 by varodrig          #+#    #+#             */
+/*   Updated: 2024/12/23 15:29:32 by varodrig         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // fd : pointer to fd, if NULL it means no fd to close
@@ -51,4 +63,3 @@ void	close_fds(int pipes_nb, int (*fd)[2], int current_cmd,
 		j++;
 	}
 }
-

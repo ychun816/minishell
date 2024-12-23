@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:54:39 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 18:23:09 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/23 15:53:03 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_unset(t_shell *content, t_arg *args)
 		while (args)
 		{
 			if (delete_env_var(args->value, &(content->env)) != 0)
-				return (FAILURE);			
+				return (FAILURE);
 			args = args->next;
 		}
 	}
@@ -52,16 +52,13 @@ int	delete_env_var(char *env_value, t_env **env)
 {
 	t_env	*current;
 	t_env	*to_delete;
-	
+
 	to_delete = get_env(env_value, *env);
 	current = *env;
 	if (!(*env))
 		return (SUCCESS);
 	if (!current)
 		return (SUCCESS);
-	// if (*env == current)
-	// 	*env = current->next;
-	// else
 	if (to_delete == *env)
 	{
 		if (current->next)
@@ -73,14 +70,13 @@ int	delete_env_var(char *env_value, t_env **env)
 	else
 	{
 		current = *env;
-		while(current->next != to_delete)
+		while (current->next != to_delete)
 			current = current->next;
 		if (current->next->next)
 			current->next = current->next->next;
 		else
 			current->next = NULL;
 	}
-	
 	env_delete_1node(to_delete);
 	return (SUCCESS);
 }

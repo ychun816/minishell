@@ -3,30 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 16:01:24 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/23 16:05:31 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/** REDIR
- * - Check if the first token is PIPE -> ERROR
- * - Loop List, Check if token valid (INFILE, OUTFILE, HEREDOC, APPEND)
- * - Ensure the next token exists and is of type STRING (representing a filename
- * 
- * Ensures that a valid filename follows each redirection operator
- * Handles an error if the redirection is improperly formed (e.g., missing filename after redirection operator or misplaced PIPE).
- */
+// REDIR
+//  * - Check if the first token is PIPE -> ERROR
+//  * - Loop List, Check if token valid (INFILE, OUTFILE, HEREDOC, APPEND)
+//  * Ensures that a valid filename follows each redirection operator
+//  * Handles an error if the redirection is improperly formed (e.g., 
+//  * 		missing filename after redirection operator or misplaced PIPE).
 int	prs_handle_redir(t_token *token)
 {
 	if (token && token->type == PIPE)
 		return (FAILURE);
 	while (token)
 	{
-		if (token->type == INFILE || token->type == OUTFILE || token->type == HEREDOC || token->type == APPEND)
+		if (token->type == INFILE || token->type == OUTFILE
+			|| token->type == HEREDOC || token->type == APPEND)
 		{
 			if (token->next == NULL || token->next->type != STR)
 				return (FAILURE);
@@ -71,25 +70,24 @@ int	prs_handle_cmd(t_token *token)
 	return (SUCCESS);
 }
 
-/** HANDLE HEREDOC 
- * @param char *filename; Variable to store the name of the generated file
- * @param int fd; File descriptor for the temporary file
- * @param int end; Flag to indicate an error (if set to 1)
- * (1) Initialize the error flag to 0 (no error)
- * (2) Loop token list -> check if it's HEREDOC
- * -1  Generate a unique filename based on the heredoc content
- * -2  open() //6: 4+2 (Owner can read and write) ; 4: Group can read ; 4: Group can read
- * -3  Initialize the heredoc file with the input content (if error -> end = 1)
- * -4  close(fd); + free() (Free the original value of the next token and replace it with the generated filename)
- * -5  Mark this token as NON_TERM_HEREDOC to indicate it has been processed
- * (3) Return end, which is 0 if successful or 1 if an error occurred
- * 
-*/
+// HANDLE HEREDOC 
+//  * @param char *filename; Variable to store the name of the generated file
+//  * @param int fd; File descriptor for the temporary file
+//  * @param int end; Flag to indicate an error (if set to 1)
+//  * (1) Initialize the error flag to 0 (no error)
+//  * (2) Loop token list -> check if it's HEREDOC
+//  * -1  Generate a unique filename based on the heredoc content
+//  * -2  open() //6: 4+2(Owner can read + write); 4: Group can read
+//  * -3  Initialize the heredoc file with input content (if error -> end = 1)
+//  * -4  close(fd); + free() (Free the original value of next token and replace
+//  * 		it with the generated filename)
+//  * -5  Mark this token as NON_TERM_HEREDOC to indicate it has been processed
+//  * (3) Return end, which is 0 if successful or 1 if an error occurred
 int	prs_handle_heredoc(t_token *token)
 {
 	char	*filename;
-	int	fd;
-	int	end;
+	int		fd;
+	int		end;
 
 	end = 0;
 	while (token != NULL && end == 0)
@@ -131,8 +129,8 @@ int	prs_handle_heredoc(t_token *token)
  */
 int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
-	char	*line; 
-	
+	char	*line;
+
 	signal(SIGINT, sig_heredoc);
 	while (1) 
 	{
@@ -159,7 +157,6 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 	return (SUCCESS);
 }
 
-
 /** REMOVE NODE NULL
  * (1) Initialize 'token' to point to the head of the list
  * (2) Loop & handle NULL values at the beginning of the list: Loop and delete
@@ -173,7 +170,7 @@ int	prs_remove_node_null(t_token **head)
 {
 	t_token	*current;
 	t_token	*token;
-	
+
 	token = (*head);
 	while (token != NULL && token->value == NULL)
 	{
@@ -194,44 +191,6 @@ int	prs_remove_node_null(t_token **head)
 			token = token->next;
 	}
 	return (SUCCESS);
-}
-
-/** CHECK ALL NODES NULL
- * Checks if all nodes in the linked list have NULL values, 
- * 
- * @return 1 if found NULL value
- * @return 0 if found non-NULL value.
- * 
- */
-int	prs_check_allnodes_null(t_token *token)
-{
-	while (token)
-	{
-		if (token->value)
-			return (SUCCESS);
-		token = token->next;
-	}
-	return (FAILURE_VOID);
-}
-
-/** UNLINK ERROR
- * Iterates through a linked list of t_token nodes,
- * When it encounters a node with a specific type (NON_HEREDOC), 
- * It unlinks (deletes) a file whose path is stored in the value field of the next node. 
- * 
- * @note 
- * unlink(): 
- * - Delete temporary files associated with here-documents.
- * - Ensures that these temporary files are properly removed.
- */
-void	prs_unlink_error(t_token *token)
-{	
-	while (token)
-	{
-		if (token->type == NON_HEREDOC)
-			unlink(token->next->value);
-		token = token->next;
-	}
 }
 
 /** PARSING */

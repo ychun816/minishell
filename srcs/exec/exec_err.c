@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_err.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/23 14:12:05 by varodrig          #+#    #+#             */
+/*   Updated: 2024/12/23 15:33:08 by varodrig         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // stores copy of STDOUT
@@ -39,9 +51,9 @@ int	err_fork(int err_no, t_shell *ctx, int fd[][2], int pipe_nb,
 	return (2);
 }
 
-void    exe_err_coredump(int pid) // TODO
+void	exe_err_coredump(int pid)
 {
-	int fd_tmp;
+	int	fd_tmp;
 
 	fd_tmp = dup(STDOUT_FILENO);
 	dup2(STDERR_FILENO, STDOUT_FILENO);
@@ -50,7 +62,8 @@ void    exe_err_coredump(int pid) // TODO
 	exe_close(&fd_tmp);
 }
 
-void	err_execve(char *path, int err_no) //TODO
+//TODO
+void	err_execve(char *path, int err_no)
 {
 	int			fd_tmp;
 	struct stat	stats;
