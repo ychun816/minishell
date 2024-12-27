@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:08 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 18:39:23 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/27 20:40:16 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,15 @@ t_env *env_create(char *env_id, char *env_value, char *env_line)
 		return (free(env_id), free(env_value), NULL);
 	new->id = env_id;
 	new->value = env_value;
-	new->env_line = ft_strdup(env_line);
+	printf("env_line: %s\n", env_line);
+	new->env_line = env_line;
+	// new->env_line = env_line;
+	// if (env_line)
+	// else
+	// 	env_line = NULL;
+	// free(env_line);
+	// env_line = NULL;
 	new->next = NULL;
-	free(env_line);
 	return (new);
 }
 

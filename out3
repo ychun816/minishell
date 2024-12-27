@@ -1,0 +1,14 @@
+includes
+libft
+Makefile
+minishell
+minishell_tester
+objs
+out1
+out2
+out3
+readline.supp
+run.sh
+shell_goodman.sh
+srcs
+test_commands.txt

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 18:31:05 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/09 17:11:55 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/27 20:45:42 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,10 @@ void	arg_free(t_arg *args)
 	{
 		tmp = args;
 		if (args->value)
+		{
 			free(args->value);
+			args->value = NULL;
+		}
 		args = args->next;
 		free(tmp);
 	}

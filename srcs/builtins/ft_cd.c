@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:56:29 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 18:39:17 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/27 20:56:05 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,12 +129,12 @@ int	add_envvar(char *env_line, t_env **env_head)
 	dup_envline = ft_strdup(env_line);
 	if (!dup_envline)
 		return (free(env_id), FAILURE);
-	env = get_env(env_line, *env_head);
+	env = get_env(dup_envline, *env_head);//env_line
 	if (!env)
 	{
-		env = env_create(env_id, env_value, env_line);
+		env = env_create(env_id, env_value, dup_envline);//env_line
 		if (!env)
-			return (free(env_line), free(env_id), FAILURE);
+			return (free(dup_envline), free(env_id), FAILURE);//env_line
 		env_add_back(env_head, env);	
 	}
 	else
@@ -142,6 +142,7 @@ int	add_envvar(char *env_line, t_env **env_head)
 		update_envvar(env, dup_envline);
 		free (env_id);
 	}
+	// free(dup_envline);//debug
 	return (SUCCESS);
 }
 
