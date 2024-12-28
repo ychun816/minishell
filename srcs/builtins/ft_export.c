@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:53:59 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/27 20:59:58 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/28 19:37:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,29 +40,12 @@ int	ft_export(t_shell *content, t_arg *args)
 	return (SUCCESS);
 }
 
-/** export_print_ordered_env 
- * (1) Transform env list to env arrays
- * (2) Sort env arrays by alphabetic orders
- * (3) Print arrays (export USER="lin"), 'export' + 'VAR=VALUE'
- * (4) Free the original environment array
- * (5) Free the sorted array
- * @note tmp_value = ft_strchr(sorted[i], '=') + 1; -> +1 to get value after '='
- * 
-*/
-int	export_print_ordered_env(t_env *env)
+static void	print_all_export(char **sorted)
 {
-	char	**env_arrs;
-	char	**sorted;
+	int	i;
 	char	*tmp_value;
 	char	*tmp_id;
-	int	i;
 
-	env_arrs = env_format(env);
-	if (!env_arrs)
-		return (FAILURE);
-	sorted = sort_env_arrs(env_arrs);
-	if (!sorted)
-		return (FAILURE);
 	i = -1;
 	while (sorted[++i])
 	{
@@ -78,7 +61,49 @@ int	export_print_ordered_env(t_env *env)
 			free(tmp_id);
 		}
 	}
-	free(sorted);
+}
+
+/** export_print_ordered_env 
+ * (1) Transform env list to env arrays
+ * (2) Sort env arrays by alphabetic orders
+ * (3) Print arrays (export USER="lin"), 'export' + 'VAR=VALUE'
+ * (4) Free the original environment array
+ * (5) Free the sorted array
+ * @note tmp_value = ft_strchr(sorted[i], '=') + 1; -> +1 to get value after '='
+ * 
+*/
+int	export_print_ordered_env(t_env *env)
+{
+	char	**env_arrs;
+	char	**sorted;
+	// char	*tmp_value;
+	// char	*tmp_id;
+	// int	i;
+
+	env_arrs = env_format(env);
+	if (!env_arrs)
+		return (FAILURE);
+	sorted = sort_env_arrs(env_arrs);
+	if (!sorted)
+		return (arrs_free(env_arrs), FAILURE);
+	print_all_export(sorted);
+	// i = -1;
+	// while (sorted[++i])
+	// {
+	// 	printf("export ");
+	// 	tmp_value = ft_strchr(sorted[i], '=');
+	// 	if (!tmp_value)
+	// 		printf ("%s\n", sorted[i]);
+	// 	else
+	// 	{
+	// 		tmp_value += 1;
+	// 		tmp_id = get_env_id(sorted[i]);
+	// 		printf("%s=\"%s\"\n", tmp_id, tmp_value);
+	// 		free(tmp_id);
+	// 	}
+	// }
+	arrs_free(sorted);
+	arrs_free(env_arrs);
 	return (SUCCESS);
 }
 
@@ -104,9 +129,9 @@ char **sort_env_arrs(char **env_arrs)
 
 	result = ft_arrsdup(env_arrs);
 	if (!result)
-		return (NULL);
-	i = 0;
-	while (result[i])
+		return (arrs_free(result), NULL);
+	i = -1;
+	while (result[++i])
 	{
 		j = i + 1;
 		while (result[j])
@@ -115,7 +140,6 @@ char **sort_env_arrs(char **env_arrs)
 				ft_swap_ptr(&result[i], &result[j]);
 			j++;
 		}
-		i++;
 	}
 	return (result);
 }

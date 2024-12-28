@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_execution.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:01 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/23 14:12:42 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:27:04 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,20 @@ char	**env_format(t_env *env)
 	int		size;
 	int		i;
 
-	i = 0;
 	size = ft_env_lstsize(env);
 	env_arr = (char **)malloc(sizeof(char *) * (size + 1));
-	if (!env)
+	if (!env_arr)//env
 		return (NULL);
+	i = 0;
 	while (i < size && env)
 	{
-		env_arr[i] = env->env_line;
+		env_arr[i] = ft_strdup(env->env_line);
+		// env_arr[i] = env->env_line;
+		if (!env_arr[i])
+		{
+			arrs_free(env_arr);// Free already-allocated memory if duplication fails
+			return (NULL);
+		}
 		env = env->next;
 		i++;
 	}

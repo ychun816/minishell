@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:48:56 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 16:07:40 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/28 18:30:51 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**ft_arrsdup(char **src_arrs)
 		result[i] = ft_strdup(src_arrs[i]);
 		if (!result[i])
 		{
-			arrs_free(result);
+			arrs_free(result);  // Free everything allocated so far
 			return (NULL);
 		}
 		i++;
