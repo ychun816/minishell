@@ -28,8 +28,6 @@ t_env	*get_env(char *pathname, t_env *env)
 	return (NULL);
 }
 
-
-
 /** PRS TOKENS COMBINE 
  * 
  * (1) Duplicate an empty string ("")(Initialize `value` as an empty string to start the concatenation process.)

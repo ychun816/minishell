@@ -70,6 +70,29 @@ int	prs_handle_cmd(t_token *token)
 	return (SUCCESS);
 }
 
+static char	*generate_random_filename(char *str)
+{
+    char *new;
+    int i;
+    unsigned long rand;
+    
+    if (!str) return NULL;
+    new = malloc(17 * sizeof(char));
+    if (!new) return NULL;
+    
+    for (i = 0; i < 8; i++) {
+        new[i] = "/tmp/hd_"[i];
+    }
+    
+    rand = (unsigned long)str;
+    for (i = 8; i < 16; i++) {
+        rand = rand * 1103515245 + 12345;  // Linear congruential generator
+        new[i] = 'a' + (rand % 26);
+    }
+    new[16] = '\0';
+    return new;
+}
+
 // HANDLE HEREDOC 
 //  * @param char *filename; Variable to store the name of the generated file
 //  * @param int fd; File descriptor for the temporary file
@@ -95,8 +118,8 @@ int	prs_handle_heredoc(t_token *token)
 		if (token->type == HEREDOC)
 		{
 			// filename = NULL;
-			filename = "/tmp/heredoc_file"; //TODO
-			// filename = ms_generate_random(token->next->value); //generate random -> generate random file
+			// filename = "/tmp/heredoc_file"; //TODO
+			filename = generate_random_filename(token->next->value); //generate random -> generate random file
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)
 				return (FAILURE);
