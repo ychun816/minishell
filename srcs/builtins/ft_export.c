@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:53:59 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/28 19:37:00 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/30 16:32:21 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,6 @@ int	export_print_ordered_env(t_env *env)
 {
 	char	**env_arrs;
 	char	**sorted;
-	// char	*tmp_value;
-	// char	*tmp_id;
-	// int	i;
 
 	env_arrs = env_format(env);
 	if (!env_arrs)
@@ -87,21 +84,6 @@ int	export_print_ordered_env(t_env *env)
 	if (!sorted)
 		return (arrs_free(env_arrs), FAILURE);
 	print_all_export(sorted);
-	// i = -1;
-	// while (sorted[++i])
-	// {
-	// 	printf("export ");
-	// 	tmp_value = ft_strchr(sorted[i], '=');
-	// 	if (!tmp_value)
-	// 		printf ("%s\n", sorted[i]);
-	// 	else
-	// 	{
-	// 		tmp_value += 1;
-	// 		tmp_id = get_env_id(sorted[i]);
-	// 		printf("%s=\"%s\"\n", tmp_id, tmp_value);
-	// 		free(tmp_id);
-	// 	}
-	// }
 	arrs_free(sorted);
 	arrs_free(env_arrs);
 	return (SUCCESS);

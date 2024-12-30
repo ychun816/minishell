@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/23 16:05:31 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/30 15:45:46 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,27 +70,45 @@ int	prs_handle_cmd(t_token *token)
 	return (SUCCESS);
 }
 
+/** GENERATE RANDOM FILENAME
+ * 1. Function takes a string pointer
+ * 2. Generates a filename in format "/tmp/hd_xxxxxxxx" 
+ * where x are random lowercase letters a-z
+ * 
+ * @note
+ * - Uses Linear Congruential Generator formula:
+ *   rand = rand * 1103515245 + 12345
+ * 	(Linear congruential generator)
+ * - Starting seed is the input string pointer value cast to unsigned long
+ * *Security note: Not cryptographically secure due to predictable randomness
+*/
 static char	*generate_random_filename(char *str)
 {
-    char *new;
-    int i;
-    unsigned long rand;
-    
-    if (!str) return NULL;
-    new = malloc(17 * sizeof(char));
-    if (!new) return NULL;
-    
-    for (i = 0; i < 8; i++) {
+    char	*new;
+    int	i;
+    unsigned long	rand;
+
+    if (!str)
+		return NULL;
+    new = malloc(sizeof(char) * 17);
+    if (!new)
+		return NULL;
+	i = 0;
+	while (i < 8) 
+	{
         new[i] = "/tmp/hd_"[i];
+		i++;
     }
-    
     rand = (unsigned long)str;
-    for (i = 8; i < 16; i++) {
-        rand = rand * 1103515245 + 12345;  // Linear congruential generator
+	i = 8;
+	while (i < 16) 
+	{
+        rand = rand * 1103515245 + 12345;
         new[i] = 'a' + (rand % 26);
+		i++;
     }
     new[16] = '\0';
-    return new;
+    return (new);
 }
 
 // HANDLE HEREDOC 
@@ -117,8 +135,6 @@ int	prs_handle_heredoc(t_token *token)
 	{
 		if (token->type == HEREDOC)
 		{
-			// filename = NULL;
-			// filename = "/tmp/heredoc_file"; //TODO
 			filename = generate_random_filename(token->next->value); //generate random -> generate random file
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)

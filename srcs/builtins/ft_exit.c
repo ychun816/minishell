@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:20 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/18 17:53:02 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:56:52 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,18 @@ int	ft_exit(t_shell *content, t_arg *args)
  * Convert the value to a long integer using ft_atol
  * Check if the number overflows or underflows the range of valid exit codes
  * Return 0 if the value is a valid exit code
+ * 
+ * @note 2-step casting:
+ * exit_status = (unsigned char *)exit_nb;
+ * -> Ensures the value is constrained to 8 bits (0–255).
+ * (long)exit_status != exit_nb;
+ * -> Compare the modified value with og value to detect discrepancies.
  */
 int	check_exitcode(char *input_line)
 {
 	char *tmp;
 	long exit_nb;
+	unsigned char	*exit_status;
 
 	tmp = input_line;
 	if (((*tmp) == '+' || (*tmp) == '-') && *(tmp + 1))
@@ -66,8 +73,8 @@ int	check_exitcode(char *input_line)
 		tmp++;
 	}
 	exit_nb = ft_atol(input_line);
-	if ((exit_nb > 0 && LONG_MAX / exit_nb < 1) || (exit_nb < 0 && LONG_MIN
-			/ ft_atol(input_line) < 1))
+	exit_status = (unsigned char *)exit_nb;
+	if ((long)exit_status != exit_nb)
 		return (1);
 	return (0);
 }

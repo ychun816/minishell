@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:01 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/28 19:27:04 by yilin            ###   ########.fr       */
+/*   Updated: 2024/12/30 18:55:53 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,18 +107,18 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 		if (!path)
 		{
 			err_execve(temp->cmd, errno);
-			free(env);
+			arrs_free(env);
 			return (4);
 		}
 		if (execve(path, args, env) == -1)
 		{
 			err_execve(path, errno);
 			free(path);
-			free(env);
+			arrs_free(env);//og: free(env);
 			return (-2);
 		}
 		free(path);
 	}
-	free(env);
+	free(env);//arrs_free(env)?
 	return (0);
 }
