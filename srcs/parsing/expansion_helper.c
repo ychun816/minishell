@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/23 15:50:14 by varodrig         ###   ########.fr       */
+/*   Updated: 2024/12/30 21:02:03 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,10 +153,10 @@ char	*handle_qmark_exit_status(t_shell *content)
 /** HANDLE DOLLAR SIGN PID ($$)*/
 char	*handle_dollar_pid(void)
 {
-	return (ft_strdup("program_pid"));
-	//int	pid;
-	//pid = getpid();
-	//return (ft_itoa(pid));
+	// return (ft_strdup("program_pid"));
+	int	pid;
+	pid = getpid();
+	return (ft_itoa(pid));
 }
 
 /** prs_strjoin*/
