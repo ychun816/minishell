@@ -15,13 +15,16 @@
 
 static unsigned int	ft_nblen(int nb)
 {
-	int	nblen;
+	unsigned int	nblen;
 
 	nblen = 0;
 	if (nb == 0)
 		return (1);
 	if (nb < 0)
+	{
 		nblen += 1;
+		//nb *= -1;
+	}
 	while (nb != 0)
 	{
 		nb /= 10;
@@ -30,14 +33,14 @@ static unsigned int	ft_nblen(int nb)
 	return (nblen);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int n)//
 {
 	unsigned int	nb;
 	unsigned int	nblen;
 	char			*str;
 
-nblen = ft_nblen(n);
-str = (char *)malloc((nblen + 1) * sizeof(*str));
+	nblen = ft_nblen(n);
+	str = (char *)malloc((nblen + 1) * sizeof(*str));
 	if (!str)
 		return (NULL);
 	if (n < 0)

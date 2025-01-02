@@ -39,13 +39,13 @@
 // note: return 1 : general error
 // note: return 2 : Incorrect Usage or Invalid Option
 
+# define PROMPT_NAME "minishell"
+
 # define IS_DIRECTORY 126
 # define CMD_NOT_FOUND 127
 # define SIGNAL_OFFSET 128
-# define PROMPT_NAME "minishell"
 
 # define PROMPT "\001\033[1;36m\002 supershell>$ \001\033[0m\002"
-	// color setting
 # define DEFAULT_ENV "SHELL=supershell"
 
 typedef struct s_shell

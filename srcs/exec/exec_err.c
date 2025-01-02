@@ -73,12 +73,12 @@ void	err_execve(char *path, int err_no)
 	if (err_no == 13 && stat(path, &stats) != -1)
 	{
 		if (S_ISDIR(stats.st_mode) == 1)
-			printf("%s: %s: Is a directory\n", P_NAME, path);
+			printf("%s: %s: Is a directory\n", PROMPT_NAME, path);
 		else
-			printf("%s: %s: %s\n", P_NAME, path, strerror(err_no));
+			printf("%s: %s: %s\n", PROMPT_NAME, path, strerror(err_no));
 	}
 	else
-		printf("%s: %s: command not found\n", P_NAME, path);
+		printf("%s: %s: command not found\n", PROMPT_NAME, path);
 	dup2(fd_tmp, STDOUT_FILENO);
 	exe_close(&(fd_tmp));
 }

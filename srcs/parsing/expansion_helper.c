@@ -113,7 +113,7 @@ char	*get_envvar_value(char *env_var, t_shell *content)
 	path = get_envvar_name(env_var);
 	if (path && ft_strcmp(path, "?") == 0)
 	{
-		result = handle_qmark_exit_status(content);
+		result = handle_qmark_exit_status(content);//
 		free(path);
 		return (result);
 	}
@@ -147,7 +147,7 @@ char	*handle_qmark_exit_status(t_shell *content)
 		g_signal.signal_code = 0;
 		return (ft_itoa(status_code));
 	}
-	return (ft_itoa(content->exit_code));
+	return (ft_itoa(content->exit_code));//exit code is not correctly set
 }
 //TODO
 /** HANDLE DOLLAR SIGN PID ($$)*/

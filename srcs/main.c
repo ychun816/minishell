@@ -76,8 +76,10 @@ t_shell	*init_shell(char *env[])
 	content->exec = NULL;
 	content->pid_count = 0;
 	content->exec_count = 0;
+	content->exit_code = 0;
 	return (content);
 }
+//memset for initializing
 
 /** PROCESS INPUT
  * Input → Lexing → Parsing → Execution Setup → Execution → Cleanup.
@@ -181,7 +183,7 @@ int	read_n_loop(t_shell *content)
 			add_history(line);
 			if (process_input(content, line) != 0)
 			{
-				ft_putstr_fd("Parsing Error\n", 2);
+				ft_putstr_fd("Syntax Error\n", 2);//Parsing Error
 				content->exit_code = 2;
 			}
 			line = NULL;
