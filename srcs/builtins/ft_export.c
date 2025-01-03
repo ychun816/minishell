@@ -23,21 +23,32 @@
 */
 int	ft_export(t_shell *content, t_arg *args)
 {	
+	int	exit_code;
+
+	exit_code = 0;
 	if (!args)
 	{
 		if (export_print_ordered_env(content->env)!= 0)
-			return (FAILURE);	
+		{
+			exit_code = 1;
+			//return (FAILURE);	
+		}
 	}
 	else
 	{
 		while (args)
 		{
+			printf("HERE??\n");
 			if (add_envvar(args->value, &(content->env)) != 0)
-				return (FAILURE);
+			{
+				exit_code = 1;
+				//return (FAILURE);
+			}
 			args = args->next;
 		}
 	}
-	return (SUCCESS);
+	return (exit_code);
+	// return (SUCCESS);
 }
 
 static void	print_all_export(char **sorted)

@@ -72,6 +72,7 @@ RM = rm -rf
 
 ### Build Targets ###
 all: $(NAME)
+	@cat supershell_flag.txt
 
 ### NAME Create the executable ###
 $(NAME): $(OBJS) $(LIBFT_A)
@@ -120,7 +121,8 @@ re: fclean all
 #                              PHONY TARGETS                                   #
 # **************************************************************************** #
 
-.PHONY: all clean fclean re libft archives
+#.PHONY: all clean fclean re libft archives
+.PHONY: all clean fclean re libft archives print-text print-art
 
 # **************************************************************************** #
 #                              COLOR SETTING                                   #

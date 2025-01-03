@@ -104,6 +104,7 @@ char	*get_str_after_envvar(char *env_var)
 //		of the last command executed.
 //  * $$ : expands to the process ID (PID) of the shell
 //		that is executing the script or command.
+
 char	*get_envvar_value(char *env_var, t_shell *content)
 {
 	char	*path;
@@ -111,9 +112,10 @@ char	*get_envvar_value(char *env_var, t_shell *content)
 	char	*result;
 
 	path = get_envvar_name(env_var);
-	if (path && ft_strcmp(path, "?") == 0)
+	// if (path && ft_strcmp(path, "?") == 0)
+	if (path && ft_strncmp(path, "?", 1) == 0)
 	{
-		result = handle_qmark_exit_status(content);//
+		result = handle_qmark_exit_status(content);
 		free(path);
 		return (result);
 	}
@@ -140,20 +142,21 @@ char	*handle_qmark_exit_status(t_shell *content)
 {
 	int	status_code;
 
-	status_code = 0;
+	// status_code = 0;
 	if (g_signal.signal_code != 0)
 	{
 		status_code = g_signal.signal_code;
 		g_signal.signal_code = 0;
 		return (ft_itoa(status_code));
 	}
-	return (ft_itoa(content->exit_code));//exit code is not correctly set
+	return (ft_itoa(content->exit_code));
 }
 //TODO
 /** HANDLE DOLLAR SIGN PID ($$)*/
 char	*handle_dollar_pid(void)
 {
-	// return (ft_strdup("program_pid"));
+	/* Using a constant string instead of actual PID for consistent behavior */
+    // return (ft_strdup("program_pid"));
 	int	pid;
 	pid = getpid();
 	return (ft_itoa(pid));
