@@ -115,34 +115,37 @@ int update_pwd(t_shell *content, char *oldpwd_value)
  * -> If env exit => Update the existing variable.
  * 
 */
-int	add_envvar(char *env_line, t_env **env_head)
+int	add_envvar(char *input_line, t_env **env_head)
 {
 	char	*env_id;
 	char	*env_value;
-	char	*dup_envline;
+	char	*dup_inputline;
 	t_env	*env;
 	
-	env_id = get_env_id(env_line);
-	env_value = get_env_value(env_line);
+	env_id = get_env_id(input_line);
+	env_value = get_env_value(input_line);
+	if (!env_value)
+		return (free(env_value),"", SUCCESS);
 	if (!env_id || !check_envid_valid(env_id))
-		return (printf("HERE2??\n"), free(env_id), error_export(env_line), FAILURE);
+		return (free(env_id), error_export(env_line), FAILURE);
 	dup_envline = ft_strdup(env_line);
 	if (!dup_envline)
 		return (free(env_id), FAILURE);
-	env = get_env(dup_envline, *env_head);//env_line
+
+	env = get_env(dup_inputline, *env_head);//input_line
 	if (!env)
 	{
-		env = env_create(env_id, env_value, dup_envline);//env_line
+		env = env_create(env_id, env_value, dup_inputline);//input_line
 		if (!env)
-			return (free(dup_envline), free(env_id), FAILURE);//env_line
+			return (free(dup_inputline), free(env_id), FAILURE);//input_line
 		env_add_back(env_head, env);	
 	}
 	else
 	{
-		update_envvar(env, dup_envline);
+		update_envvar(env, dup_inputline);
 		free (env_id);
 	}
-	// free(dup_envline);//debug
+	// free(dup_inputline);//debug
 	return (SUCCESS);
 }
 

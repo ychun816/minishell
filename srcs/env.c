@@ -35,21 +35,23 @@ t_env	*set_default_env(void)
 /** GET NEV ID 
  * //USER_ZDOTDIR=/home/yilin
 */
-char *get_env_id(char *env_line)
+char *get_env_id(char *input_line)
 {
-	char *equal;
+	char *at_equal;
 
-	if (!env_line)
+	if (!input_line)
 		return (NULL);
-	equal = ft_strchr(env_line, '=');
-	if (!equal)
+	at_equal = ft_strchr(input_line, '=');
+	//printf("at_equal: %s\n", at_equal);
+	if (!at_equal)
 	{
 		return (NULL);
-		// return (ft_strdup(env_line));
+		//return (ft_strdup(input_line));
 	}
-	else if (equal - env_line == 0)
+	else if (at_equal - input_line == 0)
 		return (NULL);
-	return (ft_strndup(env_line, equal - env_line));
+	//printf("|||at_equal - input_line: %ld\n", at_equal - input_line);
+	return (ft_strndup(input_line, at_equal - input_line));
 }
 
 /** GET ENV VALUE
@@ -60,18 +62,18 @@ env_line:    V  A  R  =  v  a  l  u  e
         	 ^
        		equal 0
 */
-char *get_env_value(char *env_line)
+char *get_env_value(char *input_line)
 {
-	char *equal;
-	
-	if (!env_line)
+	char *at_equal;
+
+	if (!input_line)
 		return (NULL);
-	equal = ft_strchr(env_line, '=');
-	if (!equal)
-	 	return (NULL);
-	else if (equal - env_line == 0)
+	at_equal = ft_strchr(input_line, '=');
+	if (!at_equal)
 		return (NULL);
-	return (ft_strdup(env_line + (equal - env_line + 1)));
+	else if (at_equal - input_line == 0)
+		return (NULL);
+	return (ft_strdup(input_line + (at_equal - input_line + 1)));
 }
 
 /** ENV CREATE
