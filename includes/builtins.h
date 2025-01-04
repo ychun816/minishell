@@ -64,6 +64,7 @@ void	error_pwd(char	*option);
 void	error_exit(char *input_line);
 void	error_cd(int err_n, char *pathname);
 void	error_export(char *env_line);
+void	error_unset(char *input_line);
 
 ///////////////////////////////////////////////////////////
 ///////////////////////   REF    //////////////////////////

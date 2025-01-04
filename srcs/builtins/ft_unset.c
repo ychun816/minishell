@@ -18,8 +18,8 @@
 */
 int	ft_unset(t_shell *content, t_arg *args)
 {
-	if (!content->env || ft_env_lstsize(content->env) == 0)
-		return (SUCCESS);
+	// if (!content->env || ft_env_lstsize(content->env) == 0)
+	// 	return (SUCCESS);
 	if (!args)
 		return (SUCCESS);
 	else
@@ -48,6 +48,7 @@ int	ft_unset(t_shell *content, t_arg *args)
  * => Skip to unlink the node
  * 
 */
+/*OG
 int	delete_env_var(char *env_value, t_env **env)
 {
 	t_env	*current;
@@ -78,6 +79,28 @@ int	delete_env_var(char *env_value, t_env **env)
 			current->next = NULL;
 	}
 	env_delete_1node(to_delete);
+	return (SUCCESS);
+}
+*/
+/* modified delete env_var*/
+int	delete_env_var(char *env_value, t_env **env)
+{
+	t_env	*head;
+	t_env	*to_delete;
+
+	head = get_env(env_value, *env);
+	if (!head)
+		return (SUCCESS);
+	if (*env == head)
+		*env = head->next;
+	else //*env !=head
+	{
+		to_delete = *env;
+		while (to_delete->next != head)
+			to_delete = to_delete->next;
+		to_delete->next = head->next;
+	}
+	env_delete_1node(head);
 	return (SUCCESS);
 }
 

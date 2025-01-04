@@ -70,3 +70,12 @@ void	error_export(char *input_line)
 	ft_putstr_fd(input_line, STDERR_FILENO);
 	ft_putstr_fd(" : not a valid identifier\n", STDERR_FILENO);
 }
+
+/** ERROR UNSET */
+void	error_unset(char *input_line)
+{
+	ft_putstr_fd(P_NAME, STDERR_FILENO);
+	ft_putstr_fd(": unset: ", STDERR_FILENO);
+	ft_putstr_fd(input_line, STDERR_FILENO);
+	ft_putstr_fd(" : not a valid identifier\n", STDERR_FILENO);
+}
