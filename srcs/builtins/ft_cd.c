@@ -125,13 +125,12 @@ int	add_envvar(char *input_line, t_env **env_head)
 	env_id = get_env_id(input_line);
 	env_value = get_env_value(input_line);
 	if (!env_value)
-		return (free(env_value),"", SUCCESS);
+		return (free(env_value), SUCCESS);
 	if (!env_id || !check_envid_valid(env_id))
-		return (free(env_id), error_export(env_line), FAILURE);
-	dup_envline = ft_strdup(env_line);
-	if (!dup_envline)
+		return (free(env_id), error_export(input_line), FAILURE);
+	dup_inputline = ft_strdup(input_line);
+	if (!dup_inputline)
 		return (free(env_id), FAILURE);
-
 	env = get_env(dup_inputline, *env_head);//input_line
 	if (!env)
 	{
