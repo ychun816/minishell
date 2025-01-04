@@ -45,7 +45,7 @@
 # define CMD_NOT_FOUND 127
 # define SIGNAL_OFFSET 128
 
-# define PROMPT "\001\033[1;36m\002 supershell>$ \001\033[0m\002"
+# define PROMPT "\001\033[1;36m\002supershell>$ \001\033[0m\002"
 # define DEFAULT_ENV "SHELL=supershell"
 
 typedef struct s_shell

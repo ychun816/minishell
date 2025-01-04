@@ -63,10 +63,10 @@ void	error_cd(int err_n, char *pathname)
 }
 
 /** ERROR EXPORT */
-void	error_export(char *env_line)
+void	error_export(char *input_line)
 {
 	ft_putstr_fd(P_NAME, STDERR_FILENO);
 	ft_putstr_fd(": export: ", STDERR_FILENO);
-	ft_putstr_fd(env_line, STDERR_FILENO);
+	ft_putstr_fd(input_line, STDERR_FILENO);
 	ft_putstr_fd(" : not a valid identifier\n", STDERR_FILENO);
 }

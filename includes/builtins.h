@@ -27,6 +27,9 @@ typedef struct s_filename	t_filename;
 /* Builtins handler*/
 int		check_is_builtin(char *input_cmd);
 int		exec_builtin(t_shell *content, char *input_cmd, t_arg *args);
+int		add_envvar(char *env_line, t_env **env_head);
+int		check_envid_valid(char *env_id);
+void	update_envvar(t_env *update_env, char *env_line);
 
 /** ft_env / ft_pwd */
 int		ft_env(t_shell *content, t_arg *args);
@@ -43,9 +46,6 @@ int		check_exitcode(char	*input_line);
 /* ft_cd */
 int		ft_cd(t_shell *content, t_arg *args);
 int		update_pwd(t_shell *content, char *oldpwd_value);
-int		add_envvar(char *env_line, t_env **env_head);
-int		check_envid_valid(char *env_id);
-void	update_envvar(t_env *update_env, char *env_line);
 int		ft_arg_lstsize(t_arg *args);
 
 /* ft_export */

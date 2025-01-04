@@ -178,7 +178,7 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 }
 */
 
-/* DEBUG TRY V2*/
+/* DEBUG TRY V2 */
 int ft_execution(t_shell *ctx, t_exec *temp)
 {
     int args_nb;

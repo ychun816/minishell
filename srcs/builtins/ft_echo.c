@@ -29,6 +29,7 @@ int	ft_echo(t_arg *args)
 	}
 	while (args)
 	{
+		// printf("DB: IM HERE?\n");
 		printf("%s", args->value);
 		if (args->next)
 			printf(" ");

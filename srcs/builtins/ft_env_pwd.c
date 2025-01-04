@@ -16,6 +16,7 @@
  * - If no argument -> print env (arrays of arrays)
  * - If there is argument -> output: env: '[input line]': No such file or directory
 */
+/* OG 
 int	ft_env(t_shell *content, t_arg *args)
 {
 	t_env	*env;
@@ -40,7 +41,37 @@ int	ft_env(t_shell *content, t_arg *args)
 	if (env && env->next == NULL)
 		printf("%s\n",env->env_line);
 	return (SUCCESS);
+}*/
+
+/* modified trying */
+int	ft_env(t_shell *content, t_arg *args)
+{
+	t_env	*env;
+
+	env = content->env;
+	if (args)
+	{
+		error_env(args->value);
+		content->exit_code = CMD_NOT_FOUND;
+		// return (FAILURE);
+	}
+    // Check if env list exists
+    if (!env)
+        return (SUCCESS);  // Empty environment is valid
+
+    // Loop through all environment variables
+    while (env)
+    {
+        // Only print if variable has a value
+        if (env->value)
+            printf("%s\n", env->env_line);
+        env = env->next;
+    }
+	// if (env && env->next == NULL)
+	// 	printf("%s\n",env->env_line);
+    return (SUCCESS);
 }
+
 
 /** PWD (no options)
  * - If no argument -> absolute path name of the current directory that does not contain the file names

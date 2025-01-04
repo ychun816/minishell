@@ -42,15 +42,13 @@ char *get_env_id(char *input_line)
 	if (!input_line)
 		return (NULL);
 	at_equal = ft_strchr(input_line, '=');
-	//printf("at_equal: %s\n", at_equal);
 	if (!at_equal)
 	{
-		return (NULL);
-		//return (ft_strdup(input_line));
+		//return (NULL);
+		return (ft_strdup(input_line));
 	}
 	else if (at_equal - input_line == 0)
 		return (NULL);
-	//printf("|||at_equal - input_line: %ld\n", at_equal - input_line);
 	return (ft_strndup(input_line, at_equal - input_line));
 }
 

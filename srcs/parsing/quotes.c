@@ -79,7 +79,7 @@ t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content)
 	new_token = NULL;
 	type = DBL_QUOTE;
 	if (c == '\'')
-		type = SGL_QUOTE;	
+		type = SGL_QUOTE;
 	if (len > 0)
 		new_token = token_create(input_str + 1, len, type, content);
 	else
@@ -120,6 +120,7 @@ int	ft_rogue_len(char	*str)
  * (3) Add the newly created token to the list of tokens
  * @return result (newly created token)
  */
+ /*OG
 t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 {
 	int		i;
@@ -147,6 +148,42 @@ t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 				return (NULL);
 			i += ft_strlen(new_token->value) - 1;
 		}
+		token_add_back(&token, new_token);
+		i++;
+	}
+	return (token);
+}*/
+/* DEBUG prs_quotes_to_tokens*/
+t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
+{
+	int		i;
+	t_token	*token;
+	t_token	*new_token;
+
+	i = 0;
+	token = NULL;
+	new_token = NULL;
+	while (input_str[i])
+	{
+		if (input_str[i] == '\'' || input_str[i] == '\"')
+		{
+			new_token =  prs_get_quoted_str(&(input_str[i]), input_str[i], content);
+            if (!new_token)  // Add NULL check
+            {
+                // Handle empty quotes
+                new_token = token_create("", 0, STR, content);
+                i += 1;  // Skip the quote
+            }
+            else
+                i += ft_strlen(new_token->value) + 1;
+		}
+		else
+		{
+			new_token = token_create(&(input_str[i]), ft_rogue_len(&(input_str[i])), STR, content);
+			i += ft_strlen(new_token->value) - 1;
+		}
+		if (!new_token)
+			return (NULL);
 		token_add_back(&token, new_token);
 		i++;
 	}

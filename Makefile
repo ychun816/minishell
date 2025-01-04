@@ -72,6 +72,7 @@ RM = rm -rf
 
 ### Build Targets ###
 all: $(NAME)
+	$(print_flag)
 
 ### NAME Create the executable ###
 $(NAME): $(OBJS) $(LIBFT_A)
@@ -121,7 +122,7 @@ re: fclean all
 # **************************************************************************** #
 
 #.PHONY: all clean fclean re libft archives
-.PHONY: all clean fclean re libft archives print-text print-art
+.PHONY: all clean fclean re libft archives
 
 # **************************************************************************** #
 #                              COLOR SETTING                                   #
@@ -135,7 +136,26 @@ BLUEB = \033[1;34m
 BABEBLUEB = \033[1;38;5;153m
 GREENB = \033[1;38;5;85m
 PURPLEB = \033[1;38;5;55m
+PSTL_YELLOWB = \033[1;38;2;255;253;208m
+PSTL_ORGB = \033[1;38;2;255;179;102m
+PSTL_PURPLEB =\033[1;38;2;204;153;255m
+
 GREEN_BBG = \033[1;42m
 BLUE_BBG = \033[1;44m
 YELLOW_BBG = \033[1;43m
 ORANGE_BBG = \033[1;48;5;214m
+
+# **************************************************************************** #
+#                               PRINT FLAG                                     #
+# **************************************************************************** #
+
+define print_flag
+	@echo "$(PSTL_PURPLEB).☆.｡.:*・°･.｡*･.｡* .☆.｡.:*.☆.｡.:*・°･.｡*･.｡*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*$(COLOR_RESET)"
+	@echo "$(ROSEB)"
+	@cat ascii_art.txt
+	@echo "$(COLOR_RESET)"
+	@echo "$(BABEBLUEB)"
+	@cat ascii_txt.txt
+	@echo "$(COLOR_RESET)"
+	@echo "$(PSTL_PURPLEB).☆.｡.:*・°･.｡*･.｡* .☆.｡.:*.☆.｡.:*・°･.｡*･.｡*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*.☆.｡.:*$(COLOR_RESET)"
+endef

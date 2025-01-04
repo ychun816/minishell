@@ -61,7 +61,6 @@ void	exe_err_coredump(int pid)
 	dup2(fd_tmp, STDOUT_FILENO);
 	exe_close(&fd_tmp);
 }
-
 //TODO
 void	err_execve(char *path, int err_no)
 {

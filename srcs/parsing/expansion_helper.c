@@ -112,8 +112,7 @@ char	*get_envvar_value(char *env_var, t_shell *content)
 	char	*result;
 
 	path = get_envvar_name(env_var);
-	// if (path && ft_strcmp(path, "?") == 0)
-	if (path && ft_strncmp(path, "?", 1) == 0)
+	if (path && ft_strncmp(path, "?", 1) == 0)// if (path && ft_strcmp(path, "?") == 0)
 	{
 		result = handle_qmark_exit_status(content);
 		free(path);
