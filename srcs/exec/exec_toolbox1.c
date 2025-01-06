@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:54 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/23 17:46:54 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 16:07:39 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,17 @@ void	close_fds(int pipes_nb, int (*fd)[2], int current_cmd,
 		}
 		j++;
 	}
+}
+
+int	ft_env_lstsize(t_env *env)
+{
+	int	count;
+
+	count = 0;
+	while (env)
+	{
+		count++;
+		env = env->next;
+	}
+	return (count);
 }

@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:57 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/23 17:40:50 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:44:41 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 /*void	redirs_type(t_exec *exec, t_filename *file)
 {
+	int	fd;
+	int	target_fd;
+	int	flags;
+
 	if (file->type == INFILE || file->type == NON_HEREDOC)
 	{
 		if (exec->fd_in != STDIN_FILENO)
@@ -40,32 +44,34 @@
 		exe_close(&exec->fd_out);
 	}
 }*/
-
-void	redirs_type(t_filename *file)
+//link between redir file and cmd done with dup2
+int	redirs_type(t_filename *file)
 {
-    int fd = -1;
-    int target_fd = STDOUT_FILENO;
-    int flags = O_WRONLY | O_CREAT | O_TRUNC;
-    if (file->type == INFILE || file->type == NON_HEREDOC)
-    {
-        target_fd = STDIN_FILENO;
-        flags = O_RDONLY;
-    }
-    else if (file->type == APPEND)
-        flags = O_WRONLY | O_CREAT | O_APPEND;
-    fd = open(file->path, flags, 0644);
-    if (fd == -1)
-    {
-        err_open(errno, file->path);
-        return;
-    }
-    if (dup2(fd, target_fd) == -1)
-    {
-        err_open(errno, file->path);
-        exe_close(&fd);
-        return;
-    }
-    exe_close(&fd);
+	int	fd;
+	int	target_fd;
+	int	flags;
+
+	fd = -1;
+	target_fd = STDOUT_FILENO;
+	flags = O_WRONLY | O_CREAT | O_TRUNC;
+	if (file->type == INFILE || file->type == NON_HEREDOC)
+	{
+		target_fd = STDIN_FILENO;
+		flags = O_RDONLY;
+	}
+	else if (file->type == APPEND)
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	fd = open(file->path, flags, 0644);
+	if (fd == -1)
+		return (err_open(errno, file->path), 1);
+	if (dup2(fd, target_fd) == -1)
+	{
+		err_open(errno, file->path);
+		exe_close(&fd);
+		return (1);
+	}
+	exe_close(&fd);
+	return (0);
 }
 
 // goes through redirs list

@@ -6,18 +6,32 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:31 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 13:37:11 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:29:56 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// we can exit here because we are in a child process
-void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
+static int	handle_redir_and_bltins(t_shell *ctx, t_exec *temp, int *exit_code)
 {
-	int	exit_code;
+	if (err_redirs(temp))
+	{
+		free_all_shell(ctx);
+		ctx->exit_code = 1;
+		*exit_code = ctx->exit_code;
+		return (1);
+	}
+	if (check_is_builtin(temp->cmd))
+	{
+		*exit_code = exec_builtin(ctx, temp->cmd, temp->args);
+		free_all_shell(ctx);
+		return (1);
+	}
+	return (0);
+}
 
-	exit_code = 0;
+static void	setup_redir(t_shell *ctx, int (*fd)[2], int i)
+{
 	signal(SIGQUIT, SIG_DFL);
 	if (ctx->exec_count > 1)
 	{
@@ -34,29 +48,29 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 		close_fds(ctx->exec_count - 1, fd, i, false);
 	}
 	ft_close(ctx);
-	if (err_redirs(temp))
-	{
-		free_all_shell(ctx);
-		ctx->exit_code = 1;
-		exit(ctx->exit_code);
-	}
-	if (check_is_builtin(temp->cmd))
-	{
-		exit_code = exec_builtin(ctx, temp->cmd, temp->args);
-		free_all_shell(ctx);
+}
+
+// we can exit here because we are in a child process
+void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
+{
+	int	exit_code;
+
+	exit_code = 0;
+	setup_redir(ctx, fd, i);
+	if (handle_redir_and_bltins(ctx, temp, &exit_code))
 		exit(exit_code);
-	}
-	exit_code = ft_execution(ft_args_lstsize(temp->args), ctx, temp);
+	exit_code = ft_execution(ctx, temp);
 	free_all_shell(ctx);
 	if (exit_code == -2)
 		exit(126);
 	exit(127);
 }
 
+//MAX_FDS : The default limit for file descriptors (ulimit -n -> 1024)
 int	exec_parent(t_shell *ctx)
 {
 	t_exec	*temp;
-	int		fd[ctx->exec_count][2];
+	int		fd[MAX_FDS][2];
 	pid_t	pid;
 
 	temp = ctx->exec;
@@ -67,8 +81,7 @@ int	exec_parent(t_shell *ctx)
 		signal(SIGINT, sig_exec);
 		pid = fork();
 		if (pid == -1)
-			return (err_fork(errno, ctx, fd, ctx->pid_count - 1,
-					ctx->pid_count));
+			return (err_fork(errno, ctx, fd));
 		else if (pid == 0)
 			child_process(ctx, fd, ctx->pid_count, temp);
 		ctx->pids[ctx->pid_count] = pid;
