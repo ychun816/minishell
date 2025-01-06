@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:31 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/23 15:33:55 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 13:37:11 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 		free_all_shell(ctx);
 		exit(exit_code);
 	}
-	exit_code = ft_execution(ctx, temp);
+	exit_code = ft_execution(ft_args_lstsize(temp->args), ctx, temp);
 	free_all_shell(ctx);
 	if (exit_code == -2)
 		exit(126);
