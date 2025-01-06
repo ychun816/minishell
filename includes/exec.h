@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:55:19 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/23 17:29:51 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:37:42 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ typedef struct s_env		t_env;
 typedef struct s_exec		t_exec;
 typedef struct s_arg		t_arg;
 typedef struct s_filename	t_filename;
+
+# define MAX_FDS 1024
 
 void						exe_close(int *fd);
 void						ft_close(t_shell *ctx);
@@ -48,10 +50,10 @@ int							err_redirs(t_exec *exec);
 int							exec_redirs(t_exec *exec);
 void						redirs_type(t_filename *file);
 int							err_pipe(int err_no, t_shell *ctx);
-int							err_fork(int err_no, t_shell *ctx, int fd[][2],
-								int pipe_nb, int fork_success);
+int							err_fork(int err_no, t_shell *ctx, int fd[][2]);
 void						close_all(int pipe_nb, int (*fd)[2]);
 void						err_open(int err_no, char *file);
 void						ft_free_all(char **arr);
+int							check_is_alr_path(char *cmd);
 
 #endif

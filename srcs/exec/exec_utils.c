@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:45 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/23 15:31:45 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:37:01 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ int	ft_args_lstsize(t_arg *args)
 	return (count);
 }
 
+//args[0] = cmd
+//args[1] = args1
+//args[2] = args2
+//args[last] = NULL
 void	exec_args_create(t_exec *temp, int args_nb, char *args[args_nb])
 {
 	t_arg	*curr;
@@ -70,4 +74,18 @@ void	ft_free_all(char **arr)
 	while (arr[i])
 		free(arr[i++]);
 	free(arr);
+}
+
+int	check_is_alr_path(char *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
 }

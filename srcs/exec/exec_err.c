@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:05 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 13:33:50 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:32:21 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,13 @@ int	err_pipe(int err_no, t_shell *ctx)
 	return (2);
 }
 
-int	err_fork(int err_no, t_shell *ctx, int fd[][2], int pipe_nb,
-		int fork_success)
+int	err_fork(int err_no, t_shell *ctx, int fd[][2])
 {
+	int	pipe_nb;
+	int	fork_success;
+
+	pipe_nb = ctx->pid_count - 1;
+	fork_success = ctx->pid_count;
 	dup2(STDERR_FILENO, STDOUT_FILENO);
 	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
 	close_all(pipe_nb, fd);
@@ -61,7 +65,8 @@ void	exe_err_coredump(int pid)
 	dup2(fd_tmp, STDOUT_FILENO);
 	exe_close(&fd_tmp);
 }
-//TODO
+
+// TODO
 void	err_execve(char *path, int err_no)
 {
 	int			fd_tmp;

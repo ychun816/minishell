@@ -6,54 +6,20 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:01 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 15:42:35 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:39:01 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	check_is_alr_path(char *cmd)
+static char	*get_exec_path(char **paths, char *cmd)
 {
-	int	i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == '/')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-/** Modified find_path
- * + Add empty string check: check both condition -> avoid segfault
- * + Add Add absolute path check! MUST check before search in PATH!
- * @note
- * Absolute paths should always be checked first!
- * -> cuz they provide the full location of the executable
- * -> and can be used directly without needing to search in PATH!
- */
-char	*find_path(char *cmd, t_env *env)
-{
-	char	**paths;
 	char	*path;
 	char	*exec;
-	t_env	*curr;
 	int		i;
 
-	if (cmd && cmd[0] == '\0')
-		return (NULL);
-	if (!env || check_is_alr_path(cmd) == 1)
-		return (ft_strdup(cmd));
-	curr = env;
-	while (curr && ft_strncmp("PATH=", curr->env_line, 5) != 0)
-		curr = curr->next;
-	if (!curr)
-		return (ft_strdup(cmd));
-	paths = ft_split(curr->value, ':');
-	i = -1;
-	while (paths[++i])
+	i = 0;
+	while (paths[i])
 	{
 		path = ft_strjoin(paths[i], "/");
 		exec = ft_strjoin(path, cmd);
@@ -64,22 +30,26 @@ char	*find_path(char *cmd, t_env *env)
 			return (exec);
 		}
 		free(exec);
+		i++;
 	}
 	ft_free_all(paths);
 	return (NULL);
 }
 
-int	ft_env_lstsize(t_env *env)
+char	*find_path(char *cmd, t_env *env)
 {
-	int	count;
+	char	**paths;
 
-	count = 0;
-	while (env)
-	{
-		count++;
+	if (cmd && cmd[0] == '\0')
+		return (NULL);
+	if (!env || check_is_alr_path(cmd) == 1)
+		return (ft_strdup(cmd));
+	while (env && ft_strncmp("PATH=", env->env_line, 5) != 0)
 		env = env->next;
-	}
-	return (count);
+	if (!env)
+		return (ft_strdup(cmd));
+	paths = ft_split(env->value, ':');
+	return (get_exec_path(paths, cmd));
 }
 
 char	**env_format(t_env *env)
@@ -110,40 +80,34 @@ char	**env_format(t_env *env)
 
 // 126 : Command found but cannot be executed(due to permission issues)
 // 127 : Command not found(the file does not exist or is not in the PATH)
-// execve(path, comd, env);
+// int execve(const char *fichier, char *const argv[], char *const envp[])
 // char	*args[] = {"/bin/ls", "-l", "/home", NULL};
-// 
-int	ft_execution(int args_size, t_shell *ctx, t_exec *temp)
+// +2 for path and NULL
+int	ft_execution(t_shell *ctx, t_exec *temp)
 {
 	int		args_nb;
 	char	*path;
-	char	*args[args_size + 2];
+	char	**args;
 	char	**env;
 
 	if (!temp->cmd)
 		return (0);
 	path = find_path(temp->cmd, ctx->env);
 	if (!path)
-	{
-		err_execve(temp->cmd, errno);
-		return (4);
-	}
+		return (err_execve(temp->cmd, errno), 4);
 	env = env_format(ctx->env);
 	if (!env)
-	{
-		free(path);
-		return (4);
-	}
+		return (free(path), 4);
 	args_nb = ft_args_lstsize(temp->args) + 2;
+	args = malloc(sizeof(char *) * args_nb);
+	if (!args)
+		return (free(path), ft_free_all(env), 4);
 	exec_args_create(temp, args_nb, args);
 	if (execve(path, args, env) == -1)
-	{
-		err_execve(path, errno);
-		free(path);
-		ft_free_all(env);
-		return (-2);
-	}
+		return (err_execve(path, errno), free(path), ft_free_all(env),
+			free(args), -2);
 	free(path);
 	ft_free_all(env);
+	free(args);
 	return (0);
 }
