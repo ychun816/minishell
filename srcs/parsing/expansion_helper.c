@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/30 21:02:03 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/06 17:47:04 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 //  * 		as an environment variable name.
 //  * - If a character is neither alphanumeric nor an underscore, stop counting.
 //  * @return (int) length AFTER $ sign
-int	ft_envvar_len(char	*env_var)
+int	ft_envvar_len(char *env_var)
 {
 	int	i;
 
@@ -67,7 +67,7 @@ char	*get_envvar_name(char *env_var)
 //  * len = found - str; would be 6, because $ is at position 6 in the string
 //		"Hello $USER world!" (0-based index).
 //  * ft_strndup(str, 6) would return "Hello " (the substring before $USER).
-//  * 
+//  *
 //  * @return (char *) the part(string) BEFORE $USER (environment variable).
 char	*get_str_before_envvar(char *full_str, char *env_var)
 {
@@ -94,13 +94,13 @@ char	*get_str_after_envvar(char *env_var)
 
 // GET ENVVAR_VALUE
 //  * Retrieves the value of the environment variable USER.
-//  * 
-//  * @param 
+//  *
+//  * @param
 //  * char	*path : the path name of an environment variable,
 //  * Ex: "$USER", ctx (with "USER" = "john"); "john" is the value
-//  * 
+//  *
 //  * @note
-//  * $? : expands to the exit status (return code) 
+//  * $? : expands to the exit status (return code)
 //		of the last command executed.
 //  * $$ : expands to the process ID (PID) of the shell
 //		that is executing the script or command.
@@ -112,7 +112,8 @@ char	*get_envvar_value(char *env_var, t_shell *content)
 	char	*result;
 
 	path = get_envvar_name(env_var);
-	if (path && ft_strncmp(path, "?", 1) == 0)// if (path && ft_strcmp(path, "?") == 0)
+	if (path && ft_strncmp(path, "?", 1) == 0) // if (path && ft_strcmp(path,
+			"?") == 0)
 	{
 		result = handle_qmark_exit_status(content);
 		free(path);
@@ -134,8 +135,8 @@ char	*get_envvar_value(char *env_var, t_shell *content)
 // * @note
 // * After return the signal code, it’s reset to 0 to avoid using stale
 // 		signal values for future processes.
-// * @return string (ft_itoa(code)); If a process was terminated by a signal
-// * @return normal exit code (ft_itoa(ctx->exit_code)); If the process
+// * @return (string (ft_itoa(code))); If a process was terminated by a signal
+// * @return (normal exit code (ft_itoa(ctx->exit_code))); If the process
 // 		wasn’t terminated by a signal (g_signals.signal_code == 0)
 char	*handle_qmark_exit_status(t_shell *content)
 {
@@ -150,13 +151,14 @@ char	*handle_qmark_exit_status(t_shell *content)
 	}
 	return (ft_itoa(content->exit_code));
 }
-//TODO
+// TODO
 /** HANDLE DOLLAR SIGN PID ($$)*/
 char	*handle_dollar_pid(void)
 {
-	/* Using a constant string instead of actual PID for consistent behavior */
-    // return (ft_strdup("program_pid"));
 	int	pid;
+
+	/* Using a constant string instead of actual PID for consistent behavior */
+	// return (ft_strdup("program_pid"));
 	pid = getpid();
 	return (ft_itoa(pid));
 }

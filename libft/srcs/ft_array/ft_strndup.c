@@ -37,7 +37,6 @@ char	*ft_strndup(const char *str, int nb)
 	return (new);
 }
 
-
 // char	*ft_strndup(const char *src, int n)
 // {
 // 	char	*dest;

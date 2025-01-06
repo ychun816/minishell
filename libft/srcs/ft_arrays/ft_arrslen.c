@@ -15,7 +15,7 @@
 int	ft_arrslen(char **arrs)
 {
 	int	len;
-	
+
 	len = 0;
 	while (arrs[len])
 		len++;

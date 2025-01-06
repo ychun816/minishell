@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-/*#include <stdlib.h>*/
 
 static unsigned int	ft_nblen(int nb)
 {
@@ -21,10 +20,7 @@ static unsigned int	ft_nblen(int nb)
 	if (nb == 0)
 		return (1);
 	if (nb < 0)
-	{
 		nblen += 1;
-		//nb *= -1;
-	}
 	while (nb != 0)
 	{
 		nb /= 10;
@@ -33,7 +29,7 @@ static unsigned int	ft_nblen(int nb)
 	return (nblen);
 }
 
-char	*ft_itoa(int n)//
+char	*ft_itoa(int n)
 {
 	unsigned int	nb;
 	unsigned int	nblen;

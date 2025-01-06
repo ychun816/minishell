@@ -20,8 +20,6 @@ void	arrs_free(char **arrs)
 {
 	int	i;
 
-	// if (!arrs)
-    //     return ;
 	i = 0;
 	while (arrs[i])
 	{

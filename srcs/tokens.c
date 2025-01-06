@@ -6,30 +6,33 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:08:18 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/17 14:36:09 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/06 17:01:15 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /** CREATE TOKEN
- * - Creates a new token and initializes its properties based on the provided values.
- * - (1) Allocates Memory:  for a new token structure to hold the token’s data
- * - (2) Dup input txt by parts: strndup() -> dup and saves this copy as the token’s "value." 
- * - (3) Label the token: t_token_type
- * - (4) Link context: It attaches any additional context, like where it came from, if needed.
-
- * @param token_value:  A pointer to the start of the token’s value in the input string.
- * @param n: The number of characters to copy from `value` to the token’s value.
- * @param type: The type of the token (e.g., STRING, COMMAND)
- * @param content: A content pointer (e.g., to provide additional info about the token’s environment)
+ * Creates a new token then initialize its properties based on provided values
  * 
- * For example:
+ * (1) Allocates Memory:  for a new token structure to hold the token’s data
+ * (2) Dup input_str by parts: strndup()
+ * -> dup and saves this copy as the token’s value
+ * - (3) Label the token: store in t_token_type
+ * - (4) Link content: It attaches any additional context,
+	like where it came from, if needed.
+ * 
+ * @param token_value: Point to start of token’s value in the input_str
+ * @param n: The number of characters to copy to the token’s value.
+ * @param type: The type of the token (e.g., STRING, COMMAND)
+ * @param content: Provide additional info about the token’s environment)
+ *
+ * EX:
  * - token_value: points to the h in "hello" in "echo hello"
  * - n:  n is 5 (the length of "hello"),
- * 
  */
-t_token	*token_create(char *token_value, int n, t_token_type type, t_shell *content)
+t_token	*token_create(char *token_value, int n, t_token_type type,
+		t_shell *content)
 {
 	t_token	*new_token;
 	char	*dup_token_value;
@@ -50,12 +53,10 @@ t_token	*token_create(char *token_value, int n, t_token_type type, t_shell *cont
 	return (new_token);
 }
 
-/** TOKEN ADD BACK
- * - Adds a new token to the end of a linked list of tokens.
- * - If the list is empty (head is NULL), sets the new token as the head.
- * 
- * @return 0 if successful / 1 if the new token is NULL.
- * 
+/** TOKEN_ADD_BACK
+ * - Add a new token to the end of a linked list of tokens.
+ * - If the list is empty (head is NULL) -> Set the new token as the head.
+ * @return (0) if successful / (1) if the new token is NULL.
  */
 int	token_add_back(t_token **head, t_token *new_token)
 {
@@ -75,17 +76,16 @@ int	token_add_back(t_token **head, t_token *new_token)
 	return (SUCCESS);
 }
 
-/**TOKEN FREE 
- * Frees an entire linked list of tokens: 
+/**TOKEN_FREE
+ * Frees an entire linked list of tokens:
  * - (1) value inside each token(node)
  * - (2) pointer to linked list
- * 
-*/
+ */
 void	token_free(t_token *head)
 {
 	t_token	*current;
 	t_token	*tmp_next;
-	
+
 	current = head;
 	while (current != NULL)
 	{

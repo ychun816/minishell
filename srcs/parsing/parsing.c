@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/30 15:45:46 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/06 17:47:31 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 //  * - Check if the first token is PIPE -> ERROR
 //  * - Loop List, Check if token valid (INFILE, OUTFILE, HEREDOC, APPEND)
 //  * Ensures that a valid filename follows each redirection operator
-//  * Handles an error if the redirection is improperly formed (e.g., 
+//  * Handles an error if the redirection is improperly formed (e.g.,
 //  * 		missing filename after redirection operator or misplaced PIPE).
 int	prs_handle_redir(t_token *token)
 {
@@ -42,13 +42,13 @@ int	prs_handle_redir(t_token *token)
  * - (1) Loop to check if it's string -> Mark as command
  * - (2) Process any tokens that follow until a PIPE or the end of the list
  * - (3) If it's a STR (an argument), mark it as an ARG type
- * 
+ *
  * @note if (token != NULL) : extra protection conditon at the end of while loop
  * -> prevent looping til one after NULL
- * 
+ *
  * EX:
  * echo "Hello, world" > output.txt | cat -n output.txt
- * 
+ *
  */
 int	prs_handle_cmd(t_token *token)
 {
@@ -72,46 +72,46 @@ int	prs_handle_cmd(t_token *token)
 
 /** GENERATE RANDOM FILENAME
  * 1. Function takes a string pointer
- * 2. Generates a filename in format "/tmp/hd_xxxxxxxx" 
+ * 2. Generates a filename in format "/tmp/hd_xxxxxxxx"
  * where x are random lowercase letters a-z
- * 
+ *
  * @note
  * - Uses Linear Congruential Generator formula:
  *   rand = rand * 1103515245 + 12345
  * 	(Linear congruential generator)
  * - Starting seed is the input string pointer value cast to unsigned long
  * *Security note: Not cryptographically secure due to predictable randomness
-*/
+ */
 static char	*generate_random_filename(char *str)
 {
-    char	*new;
-    int	i;
-    unsigned long	rand;
+	char			*new;
+	int				i;
+	unsigned long	rand;
 
-    if (!str)
-		return NULL;
-    new = malloc(sizeof(char) * 17);
-    if (!new)
-		return NULL;
+	if (!str)
+		return (NULL);
+	new = malloc(sizeof(char) * 17);
+	if (!new)
+		return (NULL);
 	i = 0;
-	while (i < 8) 
+	while (i < 8)
 	{
-        new[i] = "/tmp/hd_"[i];
+		new[i] = "/tmp/hd_"[i];
 		i++;
-    }
-    rand = (unsigned long)str;
+	}
+	rand = (unsigned long)str;
 	i = 8;
-	while (i < 16) 
+	while (i < 16)
 	{
-        rand = rand * 1103515245 + 12345;
-        new[i] = 'a' + (rand % 26);
+		rand = rand * 1103515245 + 12345;
+		new[i] = 'a' + (rand % 26);
 		i++;
-    }
-    new[16] = '\0';
-    return (new);
+	}
+	new[16] = '\0';
+	return (new);
 }
 
-// HANDLE HEREDOC 
+// HANDLE HEREDOC
 //  * @param char *filename; Variable to store the name of the generated file
 //  * @param int fd; File descriptor for the temporary file
 //  * @param int end; Flag to indicate an error (if set to 1)
@@ -135,13 +135,14 @@ int	prs_handle_heredoc(t_token *token)
 	{
 		if (token->type == HEREDOC)
 		{
-			filename = generate_random_filename(token->next->value); //generate random -> generate random file
+			filename = generate_random_filename(token->next->value);
+				// generate random -> generate random file
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (!fd)
 				return (FAILURE);
 			if (prs_init_heredoc(fd, token->next->value) != 0)
 				end = 1;
-			close (fd);
+			close(fd);
 			free(token->next->value);
 			token->next->value = filename;
 			token->type = NON_HEREDOC;
@@ -152,26 +153,32 @@ int	prs_handle_heredoc(t_token *token)
 }
 
 /** INIT HEREDOC
- * 
- * (1) Set up a signal handler for SIGINT, which will execute `sig_heredoc` when Ctrl+C is pressed.
+ *
+ * (1) Set up a signal handler for SIGINT,
+	which will execute `sig_heredoc` when Ctrl+C is pressed.
  * (2) Start infinite loop
  * -1 Display a "heredoc>" prompt and wait for the user to enter a line of text.
- * -2 If the user enters Ctrl+D (end-of-file), `line` will be NULL. -> print error -> exit the loop
- * -3 Check if (input matches the end-of-file marker) OR (signal to end heredoc has been triggered) -> free -> exit
- * -4 Write the line to the file descriptor `fd` (where heredoc output is being saved)
+ * -2 If the user enters Ctrl+D (end-of-file), `line` will be NULL.
+	-> print error -> exit the loop
+ *
+	-3 Check if (input matches the end-of-file marker) OR (signal to end heredoc has been triggered)
+	-> free -> exit
+ *
+	-4 Write the line to the file descriptor `fd` (where heredoc output is being saved)
  * -5 Add a newline after each line in the output file
  * -6 Free line buffer for the next iteration
- * (3) Check if the `end_heredoc` flag in `g_signals` is set to 1, 
- * 	   Indicate heredoc process was interrupted (e.g., by a signal like Ctrl+C)
- * -> Reset the `end_heredoc` flag to 0 so it’s ready for future heredoc operations.
- * 
+ * (3) Check if the `end_heredoc` flag in `g_signals` is set to 1,
+ * 		Indicate heredoc process was interrupted (e.g., by a signal like Ctrl+C)
+ *
+	-> Reset the `end_heredoc` flag to 0 so it’s ready for future heredoc operations.
+ *
  */
 int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
 	char	*line;
 
 	signal(SIGINT, sig_heredoc);
-	while (1) 
+	while (1)
 	{
 		line = readline("heredoc>");
 		if (!line)
@@ -199,11 +206,14 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 /** REMOVE NODE NULL
  * (1) Initialize 'token' to point to the head of the list
  * (2) Loop & handle NULL values at the beginning of the list: Loop and delete
- * (3) Loop & handle NULL not at the beginning of the list: Loop and delete; if not NULL -> continue loop
- * 
+
+	* (3) Loop & handle NULL not at the beginning of the list: Loop and delete; if not NULL
+	-> continue loop
+ *
  * @note *head = token;
- * it updates the head pointer to the new start of the linked list after removing any initial nodes with NULL values.
- * 
+
+	* it updates the head pointer to the new start of the linked list after removing any initial nodes with NULL values.
+ *
  */
 int	prs_remove_node_null(t_token **head)
 {

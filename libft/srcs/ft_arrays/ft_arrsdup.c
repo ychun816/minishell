@@ -12,14 +12,21 @@
 
 #include "libft.h"
 
+/**
+ * @note
+ * + result = malloc(sizeof(char *) * (srcslen + 1));
+ * Save space for NULL
+ * + arrs_free(result);
+ * Free everything allocated so far
+ */
 char	**ft_arrsdup(char **src_arrs)
 {
-	char **result;
-	int	srcslen;
-	int	i;
-	
-	srcslen = ft_arrslen(src_arrs);	
-	result = malloc(sizeof(char*) * (srcslen + 1));//save space for NULL
+	char	**result;
+	int		srcslen;
+	int		i;
+
+	srcslen = ft_arrslen(src_arrs);
+	result = malloc(sizeof(char *) * (srcslen + 1));
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -28,7 +35,7 @@ char	**ft_arrsdup(char **src_arrs)
 		result[i] = ft_strdup(src_arrs[i]);
 		if (!result[i])
 		{
-			arrs_free(result);  // Free everything allocated so far
+			arrs_free(result);
 			return (NULL);
 		}
 		i++;

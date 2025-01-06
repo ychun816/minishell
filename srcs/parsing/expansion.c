@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:44:48 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/23 16:09:43 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:33:21 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /** PARSE- FT_COUNT_DOLLAR_SIGN
- * Counts how many times the dollar sign ($) appears in a string.
- * Determine how many environment variables (envvar) need to be expanded.
+ * Counts how many times the dollar sign ($) appears in a string
+ * Determine how many environment variables (envvar) need to be expanded
  */
 int	prs_count_dollar_sign(char *input_str)
 {
@@ -32,22 +32,22 @@ int	prs_count_dollar_sign(char *input_str)
 	return (count);
 }
 
-// PARSE- EXPAND 1ENVVAR
-//  * - Replace SINGLE environment variable(envvar) with corresponding value.
-//  * - Separates the string into parts before and after
-//		the environment variable, 
-//  * - Retrieves the variable's value from the environment, 
-//  * - Lastly joins these parts together with the expanded
-//			environment variable. 
-//  * @param 
-//  * char *before_envvar;  // The part of the string before `$VAR`
-//  * char *env_var;     // The value of the variable from the environment
-//  * char *after_envvar;   // The part of the string after `$VAR`
-//  * char *new;         // The newly constructed string
-//  * @note REMEMBER TO FREE USED / INVALID POINTERS!
-//  * -> strjoin/append [befor_env & env_var] & [after_env] ;
-//		free afteruse or invalid
-//  * @return String with $VAR replaced with its value.
+/** PRS_EXPAND_1ENVVAR
+ * - Replace SINGLE environment variable(envvar) with corresponding value
+ * - Separates the string into parts before and after the environment variable
+ * - Retrieves the variable's value from the environment
+ * - Lastly joins these parts together with the expanded environment variable
+ * @param
+ * char *before_envvar; (The part of the string before `$VAR`)
+ * char *env_var; (The value of the variable from the environment)
+ * char *after_envvar; (The part of the string after `$VAR`)
+ * char *new; (The newly constructed string)
+ *  
+ * @note REMEMBER TO FREE USED / INVALID POINTERS!!
+ * -> strjoin/append [befor_env & env_var] & [after_env] ;
+ * -> free after use or invalid
+ * @return String with $VAR replaced with its value.
+*/
 char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
 {
 	char	*before_envvar;
@@ -71,20 +71,21 @@ char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
 	return (free(after_envvar), new);
 }
 
-// PRS- HANDLE ENVVAR EXPANSION
-//  * - Check how many environment variable(envvar) need expanded
-//  * - Iterates thru string, expanding ONE environment variable AT A TIME.
-//  * - Expanding environment variables in a SINGLE token.
-//  * 
-//  * -1 Stop if NO `$` || NO expansions left
-//  * -2 Stop if Edge cases ie. standalone `$`
-//		(environment variable named $ doesn't exist.)
-//  * -3 Store the current value of the token for later freeing
-//  * -4 Convert the envvar_found environment variable into its value
-//  * -5 If the expansion results in an empty string,
-//		clean up and set `new` to NULL.
-//  * -6 Update the token's value with the new string.
-//  * -7 Free used current pointer
+/** PRS_HANDLE ENVVAR EXPANSION
+ * - Check how many environment variable(envvar) need expanded
+ * - Iterates thru string, expanding ONE environment variable AT A TIME
+ * - Expanding environment variables in a SINGLE token
+ * 
+ * -1 Stop if NO `$` || NO expansions left
+ * -2 Stop if Edge cases ie. standalone `$`
+	(environment variable named $ doesn't exist.)
+ * -3 Store the current value of the token for later freeing
+ * -4 Convert the envvar_found environment variable into its value
+ * -5 If the expansion results in an empty string, 
+ 		clean up and set `new` to NULL.
+ * -6 Update the token's value with the new string.
+ * -7 Free used current pointer
+*/
 int	prs_handle_envvar_expansion(t_token *token)
 {
 	int		n_dollar;
@@ -114,22 +115,20 @@ int	prs_handle_envvar_expansion(t_token *token)
 	return (SUCCESS);
 }
 
-// PARSE- EXPAND ENV
-//  * Iterates through all tokens in a list and applies ps_handle_env
-//  * 	to process $VAR expansions.
-// 	* Loops through a list of tokens and expands environment variables
-// 		in tokens of type STRING or DOUBLEQUOTE.
-//  * It calls (ps_handle_env) to handle the expansion for each token
-//		that requires it.
-//  * @return Tokens updated with $VAR expansions.
+/** PRS_EXPAND_ENV
+ * Iterates through all tokens in a list and applies ps_handle_env()
+ * -> Process $VAR expansions
+ * Loops through a list of tokens 
+ * -> Expands environment variables in tokens of type STR or DOUBLEQUOTE
+ * It calls ps_handle_env() -> handle the expansion for each token
+ * @return Tokens updated with $VAR expansions
+*/
 int	prs_expand_env(t_token *token)
 {
 	while (token)
 	{
 		if (token->type == STR || token->type == DBL_QUOTE)
-		{
 			prs_handle_envvar_expansion(token);
-		}
 		token = token->next;
 	}
 	return (SUCCESS);

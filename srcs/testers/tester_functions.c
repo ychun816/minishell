@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+/*****************************************/
+/*********** TESTERS FUNCITONS  **********/
+/*****************************************/
+/*
+///parsing test///
+int				test_read_n_loop(t_shell *content);
+void			test_display_env(t_env *env);
+void			test_token_append(t_token **head, char *value, int n, t_token_type type, t_shell *content);
+void			test_print_tokens(t_token *head);
+t_token			*test_tokenize_input(char *input, t_shell *shell);
+const char		*test_tokentype_to_str(t_token_type type);
+
+///exec test///
+void			test_print_exec(t_exec *exec);
+*/
+
+
 /******************************/
 /*********** PARSING **********/
 /******************************/
