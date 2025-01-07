@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/06 16:39:49 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 14:26:10 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ t_token			*lexing(t_shell *content, char *input_line);
 t_token_type	lex_get_token_meta_type(char *str);
 int				lex_ft_1tokenlen(char *str, t_token_type type);
 int				ft_token_str_len(char *str);
-int				ft_quotes_len(char *str, char sd_quote);
 int				check_meta_char(char c);
 
 /*token*/

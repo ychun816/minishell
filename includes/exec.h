@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:55:19 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 18:01:53 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 11:58:45 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void						set_std(t_shell *ctx, int mode);
 void						unlink_all(t_shell *ctx);
 int							err_redirs(t_exec *exec);
 int							exec_redirs(t_exec *exec);
-int						redirs_type(t_filename *file);
+int							redirs_type(t_filename *file);
 int							err_pipe(int err_no, t_shell *ctx);
 int							err_fork(int err_no, t_shell *ctx, int fd[][2]);
 void						close_all(int pipe_nb, int (*fd)[2]);

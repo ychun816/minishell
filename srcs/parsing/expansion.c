@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:44:48 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:42:31 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 13:56:44 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
 	after_envvar = get_str_after_envvar(envvar_found);
 	if (!after_envvar)
 		return (free(before_envvar), free(envvar_value), NULL);
-	new = prs_strjoin(before_envvar, envvar_value);
+	new = check_null_strjoin(before_envvar, envvar_value);
 	if (!new)
 		return (free(after_envvar), NULL);
-	new = prs_strjoin(new, after_envvar);
+	new = check_null_strjoin(new, after_envvar);
 	if (envvar_value)
 		free(envvar_value);
 	return (free(after_envvar), new);
@@ -103,7 +103,7 @@ int	prs_handle_envvar_expansion(t_token *token)
 			break ;
 		current = token->value;
 		new = prs_exapnd_1envvar(token->value, envvar_found, token->content);
-		if (new &&new[0] == '\0')
+		if (new && new[0] == '\0')
 		{
 			free(new);
 			new = NULL;
@@ -111,25 +111,6 @@ int	prs_handle_envvar_expansion(t_token *token)
 		token->value = new;
 		free(current);
 		n_dollar--;
-	}
-	return (SUCCESS);
-}
-
-/** PRS_EXPAND_ENV
- * Iterates through all tokens in a list and applies ps_handle_env()
- * -> Process $VAR expansions
- * Loops through a list of tokens
- * -> Expands environment variables in tokens of type STR or DOUBLEQUOTE
- * It calls ps_handle_env() -> handle the expansion for each token
- * @return Tokens updated with $VAR expansions
- */
-int	prs_expand_env(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == STR || token->type == DBL_QUOTE)
-			prs_handle_envvar_expansion(token);
-		token = token->next;
 	}
 	return (SUCCESS);
 }

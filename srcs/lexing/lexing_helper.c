@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:02 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/06 17:30:59 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 14:25:54 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,23 +119,5 @@ int	ft_token_str_len(char *str)
 			break ;
 		len++;
 	}
-	return (len);
-}
-
-/** FT_QUOTE_LEN
- * Calculate the length of a quoted substring ("..." or '...')
- * @param sd_quote : single or double quote
- * - Start after the opening quote,
- * - Continues until it finds the matching closing quote
- * @note
- * len = 1; (skip the first quote sign)!  
- */
-int	ft_quotes_len(char *str, char sd_quote)
-{
-	int	len;
-
-	len = 1;
-	while (str[len] && str[len] != sd_quote)
-		len++;
 	return (len);
 }

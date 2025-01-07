@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:48:18 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/06 18:35:07 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 14:06:52 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,11 @@ t_env	*get_env(char *pathname, t_env *env)
 }
 
 /** PRS_TOKENS_COMBINE
- *
-
-	* (1) Duplicate an empty string ("")(Initialize `value` as an empty string to start the concatenation process.)
+ * (1) Duplicate an empty string ("")
+ * -> Initialize `value` as an empty string -> start concatenation process
  * (2) Loop thru token list
- * - If the current token has a non-NULL value, concatenate it,
- * -> Append the token's value to `value` using `prs_strjoin`
+ * - If the current token has a non-NULL value -> concatenate it,
+ * - Append the token's value to `value` using check_null_strjoin()
  *
  */
 char	*prs_tokens_combine(t_token *token)
@@ -47,7 +46,7 @@ char	*prs_tokens_combine(t_token *token)
 	{
 		if (token->value != NULL)
 		{
-			result = prs_strjoin(result, token->value);
+			result = check_null_strjoin(result, token->value);
 			if (!result)
 				break ;
 		}
@@ -56,40 +55,18 @@ char	*prs_tokens_combine(t_token *token)
 	return (result);
 }
 
-/** CHECK ALL NODES NULL
- * Checks if all nodes in the linked list have NULL values,
- *
- * @return 1 if found NULL value
- * @return 0 if found non-NULL value.
- *
- */
-int	prs_check_allnodes_null(t_token *token)
+/** CHECK_NULL_STRJOIN*/
+char	*check_null_strjoin(char *s1, char *s2)
 {
-	while (token)
-	{
-		if (token->value)
-			return (SUCCESS);
-		token = token->next;
-	}
-	return (FAILURE_VOID);
-}
+	char	*result;
 
-// UNLINK ERROR
-//  * Iterates through a linked list of t_token nodes,
-//  * When it encounters a node with a specific type (NON_HEREDOC),
-//  * It unlinks (deletes) a file whose path is stored
-//  * 		in the value field of the next node.
-//  *
-//  * @note
-//  * unlink():
-//  * - Delete temporary files associated with here-documents.
-//  * - Ensures that these temporary files are properly removed.
-void	prs_unlink_error(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == NON_HEREDOC)
-			unlink(token->next->value);
-		token = token->next;
-	}
+	if (s1 == NULL && s2 == NULL)
+		return (NULL);
+	else if (s2 == NULL)
+		return (s1);
+	else if (s1 == NULL)
+		return (ft_strdup(s2));
+	result = ft_strjoin(s1, s2);
+	free(s1);
+	return (result);
 }
