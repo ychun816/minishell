@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:31 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 17:29:56 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:35:48 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	exec_parent(t_shell *ctx)
 		return (err_pipe(errno, ctx));
 	while (temp)
 	{
-		signal(SIGINT, sig_exec);
+		signal(SIGINT, sigint_exec);
 		pid = fork();
 		if (pid == -1)
 			return (err_fork(errno, ctx, fd));
@@ -90,7 +90,7 @@ int	exec_parent(t_shell *ctx)
 	}
 	close_all(ctx->exec_count - 1, fd);
 	set_std(ctx, 1);
-	exe_wait_all(ctx->pid_count, ctx);
+	wait_children(ctx->pid_count, ctx);
 	return (0);
 }
 

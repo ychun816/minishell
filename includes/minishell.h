@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/06 16:39:49 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:35:48 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@
 
 # define IS_DIRECTORY 126
 # define CMD_NOT_FOUND 127
-# define SIGNAL_OFFSET 128
+# define SIG_OFFSET 128
+//OFFSET usefull if we use echo $?
 
 # define PROMPT "\001\033[1;36m\002supershell>$ \001\033[0m\002"
 # define DEFAULT_ENV "SHELL=supershell"
@@ -114,10 +115,9 @@ int				token_add_back(t_token **head, t_token *new_token);
 void			token_free(t_token *token);
 
 /************ SIGNALS ************/
-void			sig_int_handler(int status);
-void			sig_init_signals(void);
+void			init_signals(void);
 void			sig_heredoc(int status);
-void			sig_exec(int status);
+void			sigint_exec(int status);
 int				sig_event(void);
 
 /************ MAIN FREE ************/

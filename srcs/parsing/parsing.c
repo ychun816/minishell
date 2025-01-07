@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:42:41 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:53:53 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ int	prs_handle_heredoc(t_token *token)
 	-> Reset the `end_heredoc` flag to 0 so it’s ready for future heredoc operations.
  *
  */
+
 int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
 	char	*line;

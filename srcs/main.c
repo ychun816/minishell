@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:50:01 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/06 16:52:17 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 12:42:12 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /** READ N LOOP */
+//readline returns NULL if receieves EOF(Ctrl+D), standard behavior
 int	read_n_loop(t_shell *content)
 {
 	char	*line;
@@ -21,7 +22,7 @@ int	read_n_loop(t_shell *content)
 	line = NULL;
 	while (1)
 	{
-		sig_init_signals();
+		init_signals();
 		line = readline(PROMPT);
 		if (!line)
 			break ;

@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:55:19 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 18:01:53 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 13:56:59 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int							ft_execution(t_shell *ctx, t_exec *temp);
 void						child_process(t_shell *ctx, int (*fd)[2], int i,
 								t_exec *temp);
 void						exe_err_coredump(int pid);
-void						exe_wait_all(int pid_count, t_shell *ctx);
+void						wait_children(int pid_count, t_shell *ctx);
 int							exec(t_shell *ctx);
 int							exec_parent(t_shell *ctx);
 void						set_std(t_shell *ctx, int mode);

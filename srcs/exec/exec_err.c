@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:05 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 17:32:21 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 13:56:59 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ int	err_fork(int err_no, t_shell *ctx, int fd[][2])
 	printf("%s: %s\n", PROMPT_NAME, strerror(err_no));
 	close_all(pipe_nb, fd);
 	set_std(ctx, 1);
-	exe_wait_all(fork_success, ctx);
+	wait_children(fork_success, ctx);
 	ctx->exit_code = 2;
 	return (2);
 }
-
+//TODO
 void	exe_err_coredump(int pid)
 {
 	int	fd_tmp;

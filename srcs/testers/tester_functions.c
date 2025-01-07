@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tester_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:44:33 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/27 19:36:05 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 12:22:07 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ int test_read_n_loop(t_shell *content)
 	line = NULL;
 	while (1)
 	{
-		// sig_init_signals(); // Set up signal handling for each loop iteration
+		// init_signals(); // Set up signal handling for each loop iteration
 		line = readline(PROMPT);
 		if (!line)// EOF or NULL input
 			break ;// EOF or NULL input

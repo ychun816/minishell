@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:51 by varodrig          #+#    #+#             */
-/*   Updated: 2024/12/23 15:30:48 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:09:57 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,19 @@ void	unlink_all(t_shell *ctx)
 	}
 }
 
-// TODO
-void	exe_wait_all(int pid_count, t_shell *ctx)
+//if (WIFEXITED(status)) : returns non null value if child exit()
+//it means no signal received by child
+//WEXITSTATUS : exit(value)of child or return(value)of parent
+//WIFSIGNALED : terminated because of a signal
+//!!! SIGQUIT ignored only by parent, can be recieved by child
+//g_signal.signal_code stored to be called in handle_qmark_exit_status($?)
+void	wait_children(int pid_count, t_shell *ctx)
 {
 	int	status;
 	int	i;
 
-	i = 0;
-	while (i < pid_count)
+	i = -1;
+	while (++i < pid_count)
 	{
 		if (waitpid(ctx->pids[i], &(status), 0))
 		{
@@ -108,10 +113,9 @@ void	exe_wait_all(int pid_count, t_shell *ctx)
 			{
 				if (WTERMSIG(status) == SIGQUIT)
 					exe_err_coredump(ctx->pids[i]);
-				g_signal.signal_code = SIGNAL_OFFSET + WTERMSIG(status);
+				g_signal.signal_code = SIG_OFFSET + WTERMSIG(status);
 			}
 		}
-		i++;
 	}
 	unlink_all(ctx);
 }
