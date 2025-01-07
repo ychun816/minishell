@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:53:59 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:38:53 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:14:09 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_export(t_shell *content, t_arg *args)
 {
 	if (!args)
 	{
-		if (export_print_ordered_env(content->env) != 0)
+		if (export_print_sorted_env(content->env) != 0)
 			return (SUCCESS);
 	}
 	else
@@ -40,7 +40,16 @@ int	ft_export(t_shell *content, t_arg *args)
 	return (SUCCESS);
 }
 
-static void	print_all_export(char **sorted)
+/** EXPORT_PRINT_SORTED_ENV
+ * (1) Transform env list to env arrays
+ * (2) Sort env arrays by alphabetic orders
+ * (3) Print arrays (export USER="lin"), 'export' + 'VAR=VALUE'
+ * (4) Free the original environment array
+ * (5) Free the sorted array
+ * @note tmp_value = ft_strchr(sorted[i], '=') + 1; -> +1 to get value after '='
+ *
+ */
+static void	print_export_all(char **sorted)
 {
 	int		i;
 	char	*tmp_value;
@@ -63,16 +72,7 @@ static void	print_all_export(char **sorted)
 	}
 }
 
-/** export_print_ordered_env
- * (1) Transform env list to env arrays
- * (2) Sort env arrays by alphabetic orders
- * (3) Print arrays (export USER="lin"), 'export' + 'VAR=VALUE'
- * (4) Free the original environment array
- * (5) Free the sorted array
- * @note tmp_value = ft_strchr(sorted[i], '=') + 1; -> +1 to get value after '='
- *
- */
-int	export_print_ordered_env(t_env *env)
+int	export_print_sorted_env(t_env *env)
 {
 	char	**env_arrs;
 	char	**sorted;
@@ -83,12 +83,17 @@ int	export_print_ordered_env(t_env *env)
 	sorted = sort_env_arrs(env_arrs);
 	if (!sorted)
 		return (arrs_free(env_arrs), FAILURE);
-	print_all_export(sorted);
+	print_export_all(sorted);
 	arrs_free(sorted);
 	arrs_free(env_arrs);
 	return (SUCCESS);
 }
 
+/** SORT_ENV_ARRS
+ * (1) Count the len of arrs
+ * (2) copy env_arrs to reuslt, ft_strdup unsorted arrs
+ * (3) sort arrs
+ */
 static void	ft_swap_ptr(char **a, char **b)
 {
 	char	*tmp;
@@ -98,11 +103,6 @@ static void	ft_swap_ptr(char **a, char **b)
 	*b = tmp;
 }
 
-/** sort_env_arrs
- * (1) Count the len of arrs
- * (2) copy env_arrs to reuslt, ft_strdup unsorted arrs
- * (3) sort arrs
- */
 char	**sort_env_arrs(char **env_arrs)
 {
 	char	**result;

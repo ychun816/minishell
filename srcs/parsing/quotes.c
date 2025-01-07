@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:04:39 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 14:28:50 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 19:05:24 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,43 +80,30 @@ int	prs_check_quotes_valid(t_token *token)
  * *i += ft_strlen(new_token->value) + 1; (This updates the original i)
  * handle_quoted_token(..., &i); (i is updated after function return)
 */
-static t_token	*handle_quoted_token(char *str, char quote,
-					t_shell *content, int *i)
+t_token	*prs_quotes_to_tokens(char *str, t_shell *cnt)
 {
-	t_token	*new_token;
-
-	new_token = prs_get_quoted_str(str, quote, content);
-	if (!new_token)
-	{
-		new_token = token_create("", 0, STR, content);
-		*i += 1;
-	}
-	else
-		*i += ft_strlen(new_token->value) + 1;
-	return (new_token);
-}
-
-t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
-{
-	t_token	*token;
-	t_token	*new_token;
 	int		i;
+	t_token	*token;
+	t_token	*tmp;
 
-	token = NULL;
 	i = 0;
-	while (input_str[i])
+	token = NULL;
+	tmp = NULL;
+	while (str[i])
 	{
-		if (input_str[i] == '\'' || input_str[i] == '\"')
-			new_token = handle_quoted_token(&input_str[i],
-					input_str[i], content, &i);
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+			tmp = prs_get_quoted_str(&(str[i]), str[i], cnt);
+			i += ft_strlen(tmp->value) + 1;
+		}
 		else
 		{
-			new_token = token_create(&input_str[i], ft_rogue_len(&input_str[i]),
-					STR, content);
-			i += ft_strlen(new_token->value) - 1;
+			tmp = token_create(&(str[i]), ft_rogue_len(&(str[i])), STR, cnt);
+			i += ft_strlen(tmp->value) - 1;
 		}
-		if (!new_token || !token_add_back(&token, new_token))
+		if (!tmp)
 			return (NULL);
+		token_add_back(&(token), tmp);
 		i++;
 	}
 	return (token);
@@ -149,7 +136,7 @@ int	prs_handle_quotes_n_expand_env(t_token *token)
 	return (SUCCESS);
 }
 
-/* OG prs_quotes_to_tokens
+/* OG prs_quotes_to_tokens (correct)
 t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 {
 	int		i;
@@ -182,6 +169,50 @@ t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 		if (!new_token)
 			return (NULL);
 		token_add_back(&token, new_token);
+		i++;
+	}
+	return (token);
+}
+
+////////////////////////////////////////
+Modified vr. (incorrect)
+static t_token	*handle_quoted_token(char *str, char quote,
+					t_shell *content, int *i)
+{
+	t_token	*new_token;
+
+	new_token = prs_get_quoted_str(str, quote, content);
+	if (!new_token)
+	{
+		new_token = token_create("", 0, STR, content);
+		(*i)++; 
+	}
+	else
+		*i += ft_strlen(new_token->value) + 1;
+	return (new_token);
+}
+
+t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
+{
+	int		i;
+	t_token	*token;
+	t_token	*new_token;
+
+	i = 0;
+	token = NULL;
+	while (input_str[i])
+	{
+		if (input_str[i] == '\'' || input_str[i] == '\"')
+			new_token = handle_quoted_token(&input_str[i],
+					input_str[i], content, &i);
+		else
+		{
+			new_token = token_create(&input_str[i], ft_rogue_len(&input_str[i]),
+					STR, content);
+			i += ft_strlen(new_token->value);
+		}
+		if (!new_token || !token_add_back(&token, new_token))
+			return (NULL);
 		i++;
 	}
 	return (token);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:56:29 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:38:39 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:00:24 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,31 +48,23 @@ int	ft_cd(t_shell *content, t_arg *args)
 		return (free(cwd), 1);
 	return (free(cwd), SUCCESS);
 }
-/** UPDATE PWD
 
-	* Updates the PWD (current working directory) and OLDPWD (previous working directory) environment variables.
-	*
- *
+/** UPDATE PWD
+ * Update PWD + OLDPWD environment variables
  * @param
- *
-	- t_shell *content: A pointer to the shell's context structure containing the environment.
  * - t_env *old_pwd / pwd: interact wiht the environment
- * - char *current_cwd: Directly holds the raw directory path returned by getcwd
+ * - char *current_cwd: Hold raw directory path returned by getcwd()
  * - char *pwd_path
  * - char *oldpwd_path
- *
  * (1) Get the current working directory and store it in new_cwd
-
-	* (2) Retrieve the OLDPWD and PWD environment variables from the environment list.
- * (3) If PWD valid && current_cwd (current working directory) is valid,
- * -> Create a new string in the format "PWD=<current_working_directory>".
- *
-	-> Check for memory allocation failure or failure to add the variable to the environment.
+ * (2) Retrieve the OLDPWD + PWD env variables frm env list
+ * (3) If PWD valid && current_cwd (current working directory) valid,
+ * -> Create new string in the format "PWD=<current_working_directory>"
+ * -> Check for memory allocation failure OR failure to add variable to env
  * -> Free the temporary string
  * (4) If OLDPWD valid && OLDPWD value exists/provided
- * -> Create a new string "OLDPWD=<previous_working_directory>".
-	-> Check if fail -> Cleanup
- *
+ * -> Create a new string "OLDPWD=<previous_working_directory>"
+ * -> Check if fail -> Cleanup
  */
 int	update_pwd(t_shell *content, char *oldpwd_value)
 {
@@ -103,6 +95,7 @@ int	update_pwd(t_shell *content, char *oldpwd_value)
 	return (SUCCESS);
 }
 
+/* ft_arg_listsize*/
 int	ft_arg_lstsize(t_arg *args)
 {
 	int	i;

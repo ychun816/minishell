@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:44:48 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 13:56:44 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:53:56 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,14 @@ char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content)
  * - Iterates thru string, expanding ONE environment variable AT A TIME
  * - Expanding environment variables in a SINGLE token
  *
- * -1 Stop if NO `$` || NO expansions left
+ * -1 Stop char	*prs_exapnd_1envvar() if NO `$` || NO expansions left
  * -2 Stop if Edge cases ie. standalone `$`
-	(environment variable named $ doesn't exist.)
+	  (environment variable named $ doesn't exist)
  * -3 Store the current value of the token for later freeing
  * -4 Convert the envvar_found environment variable into its value
- * -5 If the expansion results in an empty string,
-		clean up and set `new` to NULL.
- * -6 Update the token's value with the new string.
+ * -5 If the expansion results in an empty string
+ *    -> clean up + set `new` to NULL
+ * -6 Update the token's value with the new string
  * -7 Free used current pointer
 */
 int	prs_handle_envvar_expansion(t_token *token)
