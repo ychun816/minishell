@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:46:01 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/07 18:26:20 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:32:35 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static void	init_sigint(int status)
 		rl_redisplay();
 	}
 }
+
 int	sig_event(void)
 {
 	return (EXIT_SUCCESS);
