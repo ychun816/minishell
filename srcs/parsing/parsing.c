@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 18:30:18 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 19:33:44 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,58 +25,7 @@ int	prs_check_allnodes_null(t_token *token)
 			return (SUCCESS);
 		token = token->next;
 	}
-	return (end);
-}
-
-/** INIT HEREDOC
- *
- * (1) Set up a signal handler for SIGINT,
-	which will execute `sig_heredoc` when Ctrl+C is pressed.
- * (2) Start infinite loop
- * -1 Display a "heredoc>" prompt and wait for the user to enter a line of text.
- * -2 If the user enters Ctrl+D (end-of-file), `line` will be NULL.
-	-> print error -> exit the loop
- *
-	-3 Check if (input matches the end-of-file marker) OR (signal to end heredoc has been triggered)
-	-> free -> exit
- *
-	-4 Write the line to the file descriptor `fd` (where heredoc output is being saved)
- * -5 Add a newline after each line in the output file
- * -6 Free line buffer for the next iteration
- * (3) Check if the `end_heredoc` flag in `g_signals` is set to 1,
- * 		Indicate heredoc process was interrupted (e.g., by a signal like Ctrl+C)
- *
-	-> Reset the `end_heredoc` flag to 0 so it’s ready for future heredoc operations.
- *
- */
-int	prs_init_heredoc(int fd, char *eof_delimiter)
-{
-	char	*line;
-
-	signal(SIGINT, sig_heredoc);
-	while (1)
-	{
-		line = readline("heredoc>");
-		if (!line)
-		{
-			ft_putstr_fd("here_doc: called end-of-line (ctrl-d)\n", 2);
-			break ;
-		}
-		if (ft_strcmp(line, eof_delimiter) == 0 || g_signal.end_heredoc == 1)
-		{
-			free(line);
-			break ;
-		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
-	}
-	if (g_signal.end_heredoc == 1)
-	{
-		g_signal.end_heredoc = 0;
-		return (FAILURE);
-	}
-	return (SUCCESS);
+	return (FAILURE);
 }
 
 /** PRS_REMOVE_NODE_NULL
