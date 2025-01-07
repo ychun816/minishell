@@ -6,147 +6,23 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:02:54 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 17:53:53 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:30:18 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// REDIR
-//  * - Check if the first token is PIPE -> ERROR
-//  * - Loop List, Check if token valid (INFILE, OUTFILE, HEREDOC, APPEND)
-//  * Ensures that a valid filename follows each redirection operator
-//  * Handles an error if the redirection is improperly formed (e.g.,
-//  * 		missing filename after redirection operator or misplaced PIPE).
-int	prs_handle_redir(t_token *token)
+/** CHECK ALL NODES NULL
+ * Checks if all nodes in the linked list have NULL values,
+ * @return 1 if found NULL value
+ * @return 0 if found non-NULL value.
+ */
+int	prs_check_allnodes_null(t_token *token)
 {
-	if (token && token->type == PIPE)
-		return (FAILURE);
 	while (token)
 	{
-		if (token->type == INFILE || token->type == OUTFILE
-			|| token->type == HEREDOC || token->type == APPEND)
-		{
-			if (token->next == NULL || token->next->type != STR)
-				return (FAILURE);
-			token->next->type = FILENAME;
-		}
-		else if (token->type == PIPE && token->next == NULL)
-			return (FAILURE);
-		token = token->next;
-	}
-	return (SUCCESS);
-}
-
-/** CMD
- * - (1) Loop to check if it's string -> Mark as command
- * - (2) Process any tokens that follow until a PIPE or the end of the list
- * - (3) If it's a STR (an argument), mark it as an ARG type
- *
- * @note if (token != NULL) : extra protection conditon at the end of while loop
- * -> prevent looping til one after NULL
- *
- * EX:
- * echo "Hello, world" > output.txt | cat -n output.txt
- *
- */
-int	prs_handle_cmd(t_token *token)
-{
-	while (token != NULL)
-	{
-		if (token->type == STR)
-		{
-			token->type = COMMAND;
-			while (token != NULL && token->type != PIPE)
-			{
-				if (token->type == STR)
-					token->type = ARG;
-				token = token->next;
-			}
-		}
-		if (token != NULL)
-			token = token->next;
-	}
-	return (SUCCESS);
-}
-
-/** GENERATE RANDOM FILENAME
- * 1. Function takes a string pointer
- * 2. Generates a filename in format "/tmp/hd_xxxxxxxx"
- * where x are random lowercase letters a-z
- *
- * @note
- * - Uses Linear Congruential Generator formula:
- *   rand = rand * 1103515245 + 12345
- * 	(Linear congruential generator)
- * - Starting seed is the input string pointer value cast to unsigned long
- * *Security note: Not cryptographically secure due to predictable randomness
- */
-static char	*generate_random_filename(char *str)
-{
-	char			*new;
-	int				i;
-	unsigned long	rand;
-
-	if (!str)
-		return (NULL);
-	new = malloc(sizeof(char) * 17);
-	if (!new)
-		return (NULL);
-	i = 0;
-	while (i < 8)
-	{
-		new[i] = "/tmp/hd_"[i];
-		i++;
-	}
-	rand = (unsigned long)str;
-	i = 8;
-	while (i < 16)
-	{
-		rand = rand * 1103515245 + 12345;
-		new[i] = 'a' + (rand % 26);
-		i++;
-	}
-	new[16] = '\0';
-	return (new);
-}
-
-// HANDLE HEREDOC
-//  * @param char *filename; Variable to store the name of the generated file
-//  * @param int fd; File descriptor for the temporary file
-//  * @param int end; Flag to indicate an error (if set to 1)
-//  * (1) Initialize the error flag to 0 (no error)
-//  * (2) Loop token list -> check if it's HEREDOC
-//  * -1  Generate a unique filename based on the heredoc content
-//  * -2  open() //6: 4+2(Owner can read + write); 4: Group can read
-//  * -3  Initialize the heredoc file with input content (if error -> end = 1)
-//  * -4  close(fd); + free() (Free the original value of next token and replace
-//  * 		it with the generated filename)
-//  * -5  Mark this token as NON_TERM_HEREDOC to indicate it has been processed
-//  * (3) Return end, which is 0 if successful or 1 if an error occurred
-int	prs_handle_heredoc(t_token *token)
-{
-	char	*filename;
-	int		fd;
-	int		end;
-
-	end = 0;
-	while (token != NULL && end == 0)
-	{
-		if (token->type == HEREDOC)
-		{
-			filename = generate_random_filename(token->next->value);
-			// generate random -> generate random file
-			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (!fd)
-				return (FAILURE);
-			if (prs_init_heredoc(fd, token->next->value) != 0)
-				end = 1;
-			close(fd);
-			free(token->next->value);
-			token->next->value = filename;
-			token->type = NON_HEREDOC;
-		}
+		if (token->value)
+			return (SUCCESS);
 		token = token->next;
 	}
 	return (end);
@@ -173,7 +49,6 @@ int	prs_handle_heredoc(t_token *token)
 	-> Reset the `end_heredoc` flag to 0 so it’s ready for future heredoc operations.
  *
  */
-
 int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
 	char	*line;
@@ -204,16 +79,13 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 	return (SUCCESS);
 }
 
-/** REMOVE NODE NULL
+/** PRS_REMOVE_NODE_NULL
  * (1) Initialize 'token' to point to the head of the list
- * (2) Loop & handle NULL values at the beginning of the list: Loop and delete
-
-	* (3) Loop & handle NULL not at the beginning of the list: Loop and delete; if not NULL
-	-> continue loop
- *
+ * (2) Loop & handle NULL values at the beginning of the list -> Loop + delete
+ * (3) Loop & handle NULL not at the beginning of the list -> Loop + delete;
+ *     If not NULL-> continue loop
  * @note *head = token;
-
-	* it updates the head pointer to the new start of the linked list after removing any initial nodes with NULL values.
+ * Update head pointer to new start of linked list after remove initial NULL node
  *
  */
 int	prs_remove_node_null(t_token **head)
@@ -241,6 +113,56 @@ int	prs_remove_node_null(t_token **head)
 			token = token->next;
 	}
 	return (SUCCESS);
+}
+
+/** PRS_HANDLE_CMD
+ * - (1) Loop to check if it's string -> Mark as command
+ * - (2) Process any tokens that follow until a PIPE or the end of the list
+ * - (3) If it's STR (an argument) -> mark as "ARG" type
+ * @note 
+ *  if (token != NULL) : extra protection conditon at end of while loop
+ * -> prevent looping til one after NULL
+ * EX:
+ * echo "Hello, world" > output.txt | cat -n output.txt
+ */
+int	prs_handle_cmd(t_token *token)
+{
+	while (token != NULL)
+	{
+		if (token->type == STR)
+		{
+			token->type = COMMAND;
+			while (token != NULL && token->type != PIPE)
+			{
+				if (token->type == STR)
+					token->type = ARG;
+				token = token->next;
+			}
+		}
+		if (token != NULL)
+			token = token->next;
+	}
+	return (SUCCESS);
+}
+
+/** PRS_UNLINK ERROR
+ * - Iterates through a linked list of t_token nodes,
+ * - When encounters a node with a specific type (NON_HEREDOC),
+ * -> Unlinks (deletes) a file whose path is stored
+ *    in the value field of the next node
+ * @note
+ * unlink():
+ * - Delete temporary files associated with here-documents
+ * - Ensures that these temporary files are properly removed
+*/
+void	prs_unlink_error(t_token *token)
+{
+	while (token)
+	{
+		if (token->type == NON_HEREDOC)
+			unlink(token->next->value);
+		token = token->next;
+	}
 }
 
 /** PARSING */

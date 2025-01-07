@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 17:35:48 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:30:42 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ t_token			*lexing(t_shell *content, char *input_line);
 t_token_type	lex_get_token_meta_type(char *str);
 int				lex_ft_1tokenlen(char *str, t_token_type type);
 int				ft_token_str_len(char *str);
-int				ft_quotes_len(char *str, char sd_quote);
 int				check_meta_char(char c);
 
 /*token*/

@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:55:19 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/07 13:56:59 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:30:36 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void						set_std(t_shell *ctx, int mode);
 void						unlink_all(t_shell *ctx);
 int							err_redirs(t_exec *exec);
 int							exec_redirs(t_exec *exec);
-int						redirs_type(t_filename *file);
+int							redirs_type(t_filename *file);
 int							err_pipe(int err_no, t_shell *ctx);
 int							err_fork(int err_no, t_shell *ctx, int fd[][2]);
 void						close_all(int pipe_nb, int (*fd)[2]);

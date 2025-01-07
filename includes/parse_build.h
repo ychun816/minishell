@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_build.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:21 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/23 15:00:37 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:29:07 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,54 +69,54 @@ typedef struct s_exec
 	int					fd_out;
 }						t_exec;
 
-/*********************************/
 /************ PARSING ************/
-/*********************************/
 /*parsing*/
-int			parsing(t_token **token);
-int			prs_check_quotes_valid(t_token *token);
-int			prs_handle_quotes_n_expand_env(t_token *token);
-int			prs_remove_node_null(t_token **head);
-int			prs_check_allnodes_null(t_token *token);
-int			prs_handle_redir(t_token *token);
-int			prs_handle_cmd(t_token *token);
-int			prs_handle_heredoc(t_token *token);
-void		prs_unlink_error(t_token *token);
-
-t_token		*prs_quotes_to_tokens(char *input_str, t_shell *content);
-t_token		*prs_get_quoted_str(char *input_str, char c, t_shell *content);
-int			ft_rogue_len(char	*str);
+int	parsing(t_token **token);
+int	prs_check_allnodes_null(t_token *token);
+int	prs_remove_node_null(t_token **head);
+int	prs_handle_cmd(t_token *token);
+void	prs_unlink_error(t_token *token);
 
 /*parsing helper*/
-t_env		*get_env(char *pathname, t_env *env);
-int			prs_expand_env(t_token *token);
-char		*prs_tokens_combine(t_token *token);
+t_env	*get_env(char *pathname, t_env *env);
+char	*prs_tokens_combine(t_token *token);
+char	*check_null_strjoin(char *s1, char *s2);
 
-/***********************************/
 /************ EXPANSION ************/
-/***********************************/
 /*expansion*/
-int			prs_count_dollar_sign(char *input_str);
-char		*prs_exapnd_1envvar(char *str, char *envvar_found,
-				t_shell *content);
-int			prs_handle_envvar_expansion(t_token *token);
+int		prs_count_dollar_sign(char *input_str);
+char	*prs_exapnd_1envvar(char *str, char *envvar_found, t_shell *content);
+int		prs_handle_envvar_expansion(t_token *token);
+
+/*expansion env*/
+int		ft_envvar_len(char *env_var);
+char	*get_envvar_name(char *env_var);
+char	*get_str_before_envvar(char *full_str, char *env_var);
+char	*get_str_after_envvar(char *env_var);
+char	*get_envvar_value(char *env_var, t_shell *content);
 
 /*expansion helper*/
-int			ft_envvar_len(char	*env_var);
-char		*get_envvar_name(char *env_var);
-char		*get_str_before_envvar(char *full_str, char *env_var);
-char		*get_str_after_envvar(char *env_var);
-char		*get_envvar_value(char *env_var, t_shell *content);
-char		*handle_qmark_exit_status(t_shell *content);
-char		*handle_dollar_pid(void);
-char		*prs_strjoin(char *s1, char *s2);
+char	*handle_qmark_exit_status(t_shell *content);
+char	*handle_dollar_pid(void);
+int	prs_expand_env(t_token *token);
 
-/*heredoc*/
-int			prs_init_heredoc(int fd, char *eof_delimiter);
+/************ HEREDOC ************/
+int	prs_handle_redir(t_token *token);
+int	prs_handle_heredoc(t_token *token);
+int	prs_init_heredoc(int fd, char *eof_delimiter);
 
-/********************************/
+/************ QUOTES ************/
+/*quotes*/
+int	prs_check_quotes_valid(t_token *token);
+t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content);
+int	prs_handle_quotes_n_expand_env(t_token *token);
+
+/*quotes helper*/
+t_token	*prs_get_quoted_str(char *input_str, char c, t_shell *content);
+int	ft_quotes_len(char *str, char sd_quote);
+int	ft_rogue_len(char *str);
+
 /************ BUILD ************/
-/*******************************/
 /*build to exec*/
 t_exec		*init_build(void);
 t_exec		*build_to_exec(t_token *token);
