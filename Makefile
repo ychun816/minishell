@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
+#    By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2024/12/27 17:58:19 by yilin            ###   ########.fr        #
+#    Updated: 2025/01/07 11:34:47 by varodrig         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ BUILTIN_FL = $(addprefix $(BUILTIN_DIR)/, builtins_error.c builtins_handler.c  f
 EXEC_FL = $(addprefix $(EXEC_DIR)/, exec.c exec_err.c exec_redirs.c exec_toolbox1.c exec_toolbox2.c exec_utils.c exec_execution.c)
 LEX_FL = $(addprefix $(LEX_DIR)/, lexing.c  lexing_helper.c)
 PRS_FL = $(addprefix $(PRS_DIR)/, expansion.c  expansion_helper.c  parsing.c  parsing_helper.c  quotes.c)
-MAIN_FL = main.c env.c signal.c tokens.c
+MAIN_FL = main.c env.c signal.c tokens.c main_free.c main_functions.c
 #TESTER_FL = $(addprefix $(TESTER_DIR)/, tester_functions.c  testers_build.c  testers.c)
 
 # **************************************************************************** #

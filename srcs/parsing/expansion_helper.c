@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/06 17:47:04 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:14:07 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,7 @@ char	*get_envvar_value(char *env_var, t_shell *content)
 	char	*result;
 
 	path = get_envvar_name(env_var);
-	if (path && ft_strncmp(path, "?", 1) == 0) // if (path && ft_strcmp(path,
-			"?") == 0)
+	if (path && ft_strncmp(path, "?", 1) == 0)
 	{
 		result = handle_qmark_exit_status(content);
 		free(path);

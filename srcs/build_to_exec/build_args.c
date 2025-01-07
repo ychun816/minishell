@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   build_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 18:31:05 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/27 20:45:42 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:37:41 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /** bd_handle_args();
- * Processes tokens representing arguments to a command (e.g., filenames, options).
+ * Processes tokens representing arguments to a command (e.g., filenames,
+	options).
  * Creates and appends each argument to the exec->args list.
- * 
+ *
  */
 int	bd_handle_args(t_exec *exec, t_token *token)
 {
 	t_arg	*new;
-	
+
 	new = NULL;
 	if (token->type == ARG)
 	{
@@ -29,7 +30,7 @@ int	bd_handle_args(t_exec *exec, t_token *token)
 			return (-1);
 		arg_add_back(&(exec->args), new);
 	}
-	return(0);
+	return (0);
 }
 
 /** BUILD - ARG CREATE */
@@ -56,7 +57,7 @@ t_arg	*bd_args_create(char *arg_value)
 int	arg_add_back(t_arg **head, t_arg *new)
 {
 	t_arg	*current;
-	
+
 	if (new == NULL)
 		return (FAILURE);
 	if (*head == NULL)
@@ -75,7 +76,7 @@ int	arg_add_back(t_arg **head, t_arg *new)
 void	arg_free(t_arg *args)
 {
 	t_arg	*tmp;
-	
+
 	while (args != NULL)
 	{
 		tmp = args;

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:20 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/30 19:56:52 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:38:49 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "minishell.h"
 
 /** EXIT (no options)
  * exit [n]
@@ -50,7 +50,7 @@ int	ft_exit(t_shell *content, t_arg *args)
  * Convert the value to a long integer using ft_atol
  * Check if the number overflows or underflows the range of valid exit codes
  * Return 0 if the value is a valid exit code
- * 
+ *
  * @note 2-step casting:
  * exit_status = (unsigned char *)exit_nb;
  * -> Ensures the value is constrained to 8 bits (0–255).
@@ -59,8 +59,8 @@ int	ft_exit(t_shell *content, t_arg *args)
  */
 int	check_exitcode(char *input_line)
 {
-	char *tmp;
-	long exit_nb;
+	char			*tmp;
+	long			exit_nb;
 	unsigned char	*exit_status;
 
 	tmp = input_line;

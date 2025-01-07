@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:04:39 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/06 17:47:38 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:45:39 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,9 @@ t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 	int		i;
 	t_token	*token;
 	t_token	*new_token;
+	int		i;
+	t_token	*token;
+	t_token	*new_token;
 
    i = 0;
    token = NULL;
@@ -166,6 +169,10 @@ t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 /* DEBUG prs_quotes_to_tokens*/
 t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 {
+	int i;
+	t_token *token;
+	t_token *new_token;
+
 	i = 0;
 	token = NULL;
 	new_token = NULL;

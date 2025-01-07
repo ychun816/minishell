@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_error.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:26:27 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/14 18:24:26 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:38:32 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	error_env(char *input_line)
 }
 
 /** ERROR PWD */
-void	error_pwd(char	*option)
+void	error_pwd(char *option)
 {
 	ft_putstr_fd(P_NAME, STDERR_FILENO);
 	ft_putstr_fd(" pwd: ", STDERR_FILENO);

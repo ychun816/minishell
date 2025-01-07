@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:54:39 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/23 15:53:03 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 11:38:57 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 /** UNSET (with no options)
  * unset VAR1 VAR2 VAR3
- * 
-*/
+ *
+ */
 int	ft_unset(t_shell *content, t_arg *args)
 {
 	// if (!content->env || ft_env_lstsize(content->env) == 0)
@@ -34,20 +34,20 @@ int	ft_unset(t_shell *content, t_arg *args)
 	return (SUCCESS);
 }
 
-/** delete env var 
+/** delete env var
  * BEFORE:
  * HEAD -> [USER=lin] -> [PATH=/bin] -> [SHELL=/bin/bash] -> NULL
  * AFTER:
  * HEAD -> [USER=lin] -> [SHELL=/bin/bash] -> NULL
- * 
+ *
  * (1) Find the node matching 'value' in the environment list
  * (2) If the node does not exist, return 0 (nothing to delete)
  * (3) If the node to delete == the first node in list,
  * => Update the head of the list to skip the node to be deleted
  * (4) If the node to delete != the first node in list,
  * => Skip to unlink the node
- * 
-*/
+ *
+ */
 /*OG
 int	delete_env_var(char *env_value, t_env **env)
 {
@@ -105,11 +105,12 @@ int	delete_env_var(char *env_value, t_env **env)
 }
 
 /** env_delete_1node
- * 
+ *
  * @note
  * - Safe to set if() conditions -> Avoid freeing NULL nodes
- * - free(env) at last 
- * -> Remove the structure itself, de-allocate the pointer -> prevent memory leak
+ * - free(env) at last
+ * -> Remove the structure itself, de-allocate the pointer
+	-> prevent memory leak
  */
 void	env_delete_1node(t_env *env)
 {

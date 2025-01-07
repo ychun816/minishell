@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_handler.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:04:26 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 18:03:11 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:38:36 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include "builtins.h"
 
 /** CHECK IS BUILTIN **/
-int	check_is_builtin(char* input_cmd)
+int	check_is_builtin(char *input_cmd)
 {
 	if (!input_cmd)
 		return (0);
@@ -46,7 +46,7 @@ int	check_is_builtin(char* input_cmd)
 }
 
 /** EXEC BUILTIN **/
-int	exec_builtin(t_shell *content, char* input_cmd, t_arg *args)
+int	exec_builtin(t_shell *content, char *input_cmd, t_arg *args)
 {
 	if (ft_strcmp(input_cmd, "echo") == 0)
 		return (ft_echo(args));
@@ -70,7 +70,7 @@ int	exec_builtin(t_shell *content, char* input_cmd, t_arg *args)
  * Adds or updates an environment variable
  * Ensures that the variable's name and value are valid
  * Creates a new environment entry or updates an existing one.
- * 
+ *
  * @param
  * char	*arg_id;         // The name/ID of the environment variable.
  * char	*arg_value_dup;  // Duplicate of the value string.
@@ -78,22 +78,22 @@ int	exec_builtin(t_shell *content, char* input_cmd, t_arg *args)
 {
 	char	*env_id;
 	char	*env_value;
-	char	*dup_inputlinenv not exist => Create new one (initialize + add end-node)
- * -> If env exit => Update the existing variable.
- * 
-*/
-/* OG
-int	add_envvar(char *input_line, t_env **env_head)
-{
 	char	*env_id;
 	char	*env_value;
 	char	*dup_inputline;
 	t_env	*env;
-	
+
+	char	*dup_inputlinenv not exist => Create new one (initialize
+				+ add end-node)
+ * -> If env exit => Update the existing variable.
+ *
+*/
+/* OG
+int	add_envvar(char *input_line, t_env **env_head)
+{
 	env_id = get_env_id(input_line);
 	if (!env_id || !check_envid_valid(env_id))
 		return (free(env_id), error_export(input_line), FAILURE);
-	
 	env_value = get_env_value(input_line);
 	if (!env_value)
 		return (free(env_id), SUCCESS);
@@ -109,7 +109,7 @@ int	add_envvar(char *input_line, t_env **env_head)
 		env = env_create(env_id, env_value, dup_inputline);//input_line
 		if (!env)
 			return (free(dup_inputline), free(env_id), FAILURE);//input_line
-		env_add_back(env_head, env);	
+		env_add_back(env_head, env);
 	}
 	else
 	{
@@ -127,19 +127,18 @@ int	add_envvar(char *input_line, t_env **env_head)
 	char	*env_value;
 	char	*dup_inputline;
 	t_env	*env;
-	
+
 	env_id = get_env_id(input_line);
-	env = get_env(env_id, *env_head);//input_line
+	env = get_env(env_id, *env_head); // input_line
 	if (!env_id || !check_envid_valid(env_id))
 		return (free(env_id), error_export(input_line), FAILURE);
 	dup_inputline = ft_strdup(input_line);
 	if (!dup_inputline)
 		return (free(env_id), FAILURE);
-
 	if (!env)
 	{
 		env_value = get_env_value(input_line);
-		env = env_create(env_id, env_value, dup_inputline);//input_line
+		env = env_create(env_id, env_value, dup_inputline); // input_line
 		if (!env)
 		{
 			free(input_line);
@@ -153,32 +152,32 @@ int	add_envvar(char *input_line, t_env **env_head)
 	}
 	else
 	{
-		free (env_id);
+		free(env_id);
 		update_envvar(env, dup_inputline);
 	}
 	return (SUCCESS);
 }
 
-/** CHECK ENVID VALID 
+/** CHECK ENVID VALID
  * (1) Check if env_id empty
  * (2) Check if env_id first character alpha or not '_'
  * (3) Then loop to check if env_id rest of character numeric
- * 
+ *
  * @note
  * - Valid: "HOME", "USER_NAME", "_PWD".
  * - Invalid: "123ABC", "$PATH", "!VAR" (
  * because the first character is not a letter or underscore).
- * 
-*/
+ *
+ */
 int	check_envid_valid(char *env_id)
 {
 	int	i;
 
 	i = 0;
 	if (env_id[i] == '\0')
-    	return (0);
-	if (ft_isalpha(env_id[i]) == 0  && env_id[i] != '_')
-        return (0);
+		return (0);
+	if (ft_isalpha(env_id[i]) == 0 && env_id[i] != '_')
+		return (0);
 	i++;
 	while (env_id[i])
 	{
@@ -190,22 +189,26 @@ int	check_envid_valid(char *env_id)
 }
 
 /** UPDATE ENV VAR
- * Updates an existing environment variable node's value and its full line representation.
+
+	* Updates an existing environment variable node's value and its full line representation.
  * It frees old memory for the value and line and assigns new ones.
- * 
+ *
  * (1) Retrieve the value associated with the raw environment string
- * (2) If no valid value was found (arg_value is NULL), free the raw string -> exit
- * (3) If the 'node (update_env)' has an existing value => free the old value memory.
- * (4) If the 'node  (update_env)' has an existing environment line (raw string) => free old env_line
- * (5) Assign the new value and environment line to the 'node' (update_env) structure.
- * 
-*/
+ * (2) If no valid value was found (arg_value is NULL), free the raw string
+	-> exit
+
+	* (3) If the 'node (update_env)' has an existing value => free the old value memory.
+
+	* (4) If the 'node  (update_env)' has an existing environment line (raw string) => free old env_line
+
+	* (5) Assign the new value and environment line to the 'node' (update_env) structure.
+ *
+ */
 void	update_envvar(t_env *update_env, char *env_line)
 {
 	char	*env_value;
 
 	env_value = get_env_value(env_line);
-	
 	if (!env_value)
 	{
 		free(env_value);

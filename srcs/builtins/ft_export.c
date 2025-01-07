@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:53:59 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/30 16:32:21 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:38:53 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
 /** EXPORT (with no options)
- * Handling casess: 
+ * Handling casess:
  * 1. export
  * 2. export ENV_VARIABLE=VALUE (-> add env variable)
  * 3. export ENV_VARIABLE1=VALUE1 ENV_VARIABLE2=VALUE2 ENV_VARIABLE3=VALUE3
- * 
+ *
  * - If no arg -> print env according to alphabetic order
  * - If there's arg
-*/
+ */
 int	ft_export(t_shell *content, t_arg *args)
-{	
+{
 	if (!args)
 	{
-		if (export_print_ordered_env(content->env)!= 0)
+		if (export_print_ordered_env(content->env) != 0)
 			return (SUCCESS);
 	}
 	else
@@ -42,7 +42,7 @@ int	ft_export(t_shell *content, t_arg *args)
 
 static void	print_all_export(char **sorted)
 {
-	int	i;
+	int		i;
 	char	*tmp_value;
 	char	*tmp_id;
 
@@ -52,7 +52,7 @@ static void	print_all_export(char **sorted)
 		printf("export ");
 		tmp_value = ft_strchr(sorted[i], '=');
 		if (!tmp_value)
-			printf ("%s\n", sorted[i]);
+			printf("%s\n", sorted[i]);
 		else
 		{
 			tmp_value += 1;
@@ -63,15 +63,15 @@ static void	print_all_export(char **sorted)
 	}
 }
 
-/** export_print_ordered_env 
+/** export_print_ordered_env
  * (1) Transform env list to env arrays
  * (2) Sort env arrays by alphabetic orders
  * (3) Print arrays (export USER="lin"), 'export' + 'VAR=VALUE'
  * (4) Free the original environment array
  * (5) Free the sorted array
  * @note tmp_value = ft_strchr(sorted[i], '=') + 1; -> +1 to get value after '='
- * 
-*/
+ *
+ */
 int	export_print_ordered_env(t_env *env)
 {
 	char	**env_arrs;
@@ -95,19 +95,19 @@ static void	ft_swap_ptr(char **a, char **b)
 
 	tmp = *a;
 	*a = *b;
-	*b = tmp;	
+	*b = tmp;
 }
 
 /** sort_env_arrs
  * (1) Count the len of arrs
  * (2) copy env_arrs to reuslt, ft_strdup unsorted arrs
- * (3) sort arrs 
-*/
-char **sort_env_arrs(char **env_arrs)
+ * (3) sort arrs
+ */
+char	**sort_env_arrs(char **env_arrs)
 {
 	char	**result;
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	result = ft_arrsdup(env_arrs);
 	if (!result)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 19:15:24 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/08 19:03:23 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:37:17 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_build_lstsize(t_exec *exec)
 void	build_free_all(t_exec *exec)
 {
 	t_exec	*current;
-	
+
 	while (exec != NULL)
 	{
 		current = exec;

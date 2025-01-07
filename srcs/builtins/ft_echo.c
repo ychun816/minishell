@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:44 by yilin             #+#    #+#             */
-/*   Updated: 2024/12/16 15:44:58 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:38:43 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
  * -n / -nnnnnn (followed only by character 'n') -> valid option => remove \n
  * -nP , -n-n, -nOPEK (followed by non 'n') -> invlaid
  * @note use n_arg to flag when 'n' is found
-*/
+ */
 int	ft_echo(t_arg *args)
 {
 	int	n_arg;
-	
+
 	n_arg = 0;
 	while (args && check_echo_has_nargs(args->value) != 0)
 	{
@@ -40,11 +40,11 @@ int	ft_echo(t_arg *args)
 	return (SUCCESS);
 }
 
-/** CHECK ECHO HAS N ARGS 
+/** CHECK ECHO HAS N ARGS
  * - return (0) if no n found
  * - return (1) if n found -> valid n args
  * @note Ensure has '-' in first character, then check rest
-*/
+ */
 int	check_echo_has_nargs(char *flag)
 {
 	int	i;
