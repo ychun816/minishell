@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 19:15:51 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/07 19:24:37 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@
 // note: return 0 : success
 // note: return 1 : general error
 // note: return 2 : Incorrect Usage or Invalid Option
+//  * - BUILD_FAILURE (-1): Severe or unexpected error, 
+//  *   (often due to resource allocation failure or similar critical problems)
+//  * - SUCCESS (0): Function succeeded without issues
+//  * - FAILURE (1): General failure or expected failure condition
+//  * - FAILURE_VOID (2): Specific type of failure, 
+//  *   (possibly for a void return or non-critical issue)
 //  * - BUILD_FAILURE (-1): Severe or unexpected error, 
 //  *   (often due to resource allocation failure or similar critical problems)
 //  * - SUCCESS (0): Function succeeded without issues
