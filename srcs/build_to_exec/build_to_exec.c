@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   build_to_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 18:05:40 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:36:22 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:32:09 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/** INIT BUILD */
 t_exec	*init_build(void)
 {
 	t_exec	*new;
@@ -28,15 +29,11 @@ t_exec	*init_build(void)
 	return (new);
 }
 
-/** BD- HANDLE PIPE
- *
- * @note
- * - Input token list:
- * [COMMAND: "ls"] -> [PIPE] -> [COMMAND: "grep file"] -> [PIPE]
-	-> [COMMAND: "wc -l"]
- * - Recursion will build:
+/** BD_HANDLE_PIPE
+ * @note Input token list:
+ * [CMD: "ls"] -> [PIPE] -> [CMD: "grep file"] -> [PIPE] -> [CMD: "wc -l"]
+ * @note Recursion will build:
  * exec (cmd: "ls", next: exec(cmd: "grep file", next: exec(cmd: "wc -l")))
- *
  */
 int	bd_handle_pipe(t_exec *exec, t_token *token)
 {
@@ -59,10 +56,8 @@ int	bd_handle_cmd(t_exec *exec, t_token *token)
 	return (SUCCESS);
 }
 
-/** build_to_exec
- *
- * Builds a `t_exec` structure from the linked list of tokens.
- *
+/** BUILD_TO_EXEC
+ * Build a `t_exec` structure from the linked list of tokens.
  * (1) Initialize the `t_exec` structure; If fail -> return NULL
  * (2) Loop thru token list
  * -1 Handle PIPE
@@ -70,25 +65,14 @@ int	bd_handle_cmd(t_exec *exec, t_token *token)
  * -2 Handle COMMAND -> Storing its value in the `cmd` field.
  * -3 Handle redirection tokens
  * -4 Handle argument tokens
- *
- * @note
- * if (bd_handle_pipe(exec, token) == FAILURE)
- * 		break ;
- * NEED break
- *
-	-> The loop would continue processing tokens that belong to the next command segment,
-
-	* which is incorrect since those tokens should be handled by the recursive call.
- *
- * @note
- * if (handle_command(exec, token))
- * 		return (NULL);
- * NEED return NULL
+ * @note if (bd_handle_pipe(exec, token) == FAILURE) -> NEED break
+ * -> Loop would continue process tokens that belong to next command segment,
+ * which is incorrect cuz the tokens should be handled by the recursive call
+ * @note if (handle_command(exec, token)) -> NEED return NULL
  * -> If memory allocation fails,
-	the program need stop processing the current segment to avoid undefined behavior or memory leaks.
- *
- * @return constructed `t_exec` structure
- *
+ * the program need stop processing the current segment
+ * to avoid undefined behavior or memory leaks.
+ * @return constructed `t_exec` structure -> to proceed exec
  */
 t_exec	*build_to_exec(t_token *token)
 {

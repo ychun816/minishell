@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 18:30:42 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 19:15:51 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,16 @@
 # define SUCCESS 0
 # define FAILURE 1
 # define FAILURE_VOID 2
-// # define BUILD_FAILURE -1
+# define BUILD_FAILURE -1
 // note: return 0 : success
 // note: return 1 : general error
 // note: return 2 : Incorrect Usage or Invalid Option
+//  * - BUILD_FAILURE (-1): Severe or unexpected error, 
+//  *   (often due to resource allocation failure or similar critical problems)
+//  * - SUCCESS (0): Function succeeded without issues
+//  * - FAILURE (1): General failure or expected failure condition
+//  * - FAILURE_VOID (2): Specific type of failure, 
+//  *   (possibly for a void return or non-critical issue)
 
 # define PROMPT_NAME "minishell"
 

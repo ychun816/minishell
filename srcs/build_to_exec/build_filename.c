@@ -3,29 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   build_filename.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 18:28:46 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:42:15 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:52:29 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**	bd_handle_redirs();
- *
- * Adds these redirections to the redirs list in the t_exec structure.
- * Processes tokens representing redirections (e.g., >, >>, <, <<).
-
-	* Creates and appends a redirection entry (target file or heredoc content) to the exec->redirs list.
- *
+/**	BD_HANDLE_REDIRS
+ * - Add redirections to the redirs list in t_exec structure
+ * - Process tokens representing redirections (e.g., >, >>, <, <<)
+ * - Create + appends a redirection entry (target file OR heredoc content) 
+ *   to the exec->redirs list
  * (1) Check if:
- * - The token has a valid next token (the filename or target of redirection)
- * - The current token type is a redirection type (APPEND, HEREDOC, INFILE,
-	OUTFILE)
-
-	* (2) Create a new redirection file structure using the next token's value (the next token of the redir sign)
+ * - The token has a valid next token (filename OR target of redirection)
+ * - Current token type is redirs type(APPEND, HEREDOC, INFILE, OUTFILE)
+ * (2) Create a new redir file structure with next token value
  * (3) Add to redirs list
+ * 
+ * @return
+ * - BUILD_FAILURE (-1): Severe or unexpected error, 
+ *   (often due to resource allocation failure or similar critical problems)
+ * - SUCCESS (0): Function succeeded without issues
+ * - FAILURE (1): General failure or expected failure condition
+ * - FAILURE_VOID (2): Specific type of failure, 
+ *   (possibly for a void return or non-critical issue)
  */
 
 int	bd_handle_redirs(t_exec *exec, t_token *token)
@@ -36,37 +40,31 @@ int	bd_handle_redirs(t_exec *exec, t_token *token)
 			|| token->type == HEREDOC || token->type == INFILE
 			|| token->type == OUTFILE))
 	{
-		tmp = filename_create(token->next->value, token->type);
+		tmp = bd_filenames_create(token->next->value, token->type);
 		if (!tmp)
-			return (-1); // FAILURE_VOID ? //TODO
+			return (BUILD_FAILURE);
 		filename_add_back(&(exec->redirs), tmp);
-		return (1);
+		return (FAILURE);
 	}
-	return (0);
+	return (SUCCESS);
 }
 
-/** BUILD- FILENAME CREATE
-
-	* Creates a structured object (t_filename) that stores the file path and the type of redirection
- *
+/** bd_filenames_create
+ * Create t_filename that stores the file path & the type of redirs
  * @param  t_filename *filename;
-	// Declare a pointer to a t_filename structure to hold the redirection information
+ * Pointer storing a t_filename structure to hold the redirection info
  * @param  char *new;
-	// Declare a pointer to store the duplicated string (path)
- *
- * Example:
- * For < input.txt:
- * Call filename_create("input.txt",
-	INFILE) to create a structure with the file path "input.txt" and type INFILE.
- *
- * For > output.txt:
- * Call filename_create("output.txt",
-	OUTFILE) to create a structure with the file path "output.txt" and type OUTFILE.
-
-	* Initialize the next pointer to NULL (this will link to the next t_filename structure in a linked list,
-	if needed)
+ * Pointer storing the duplicated string (path)
+ * EX: < input.txt
+ * - Call bd_filenames_create("input.txt", INFILE)
+ * - Create a structure with the file path "input.txt" and type INFILE
+ * EX: > output.txt
+ * - Call bd_filenames_create("output.txt", OUTFILE) 
+ * - Create a structure with the file path "output.txt" and type OUTFILE
+ * @note Initialize the next pointer to NULL
+ * -> Link to the next t_filename structure in a linked list if needed
  */
-t_filename	*filename_create(char *pathname, t_token_type type)
+t_filename	*bd_filenames_create(char *pathname, t_token_type type)
 {
 	t_filename	*filename;
 	char		*dup_path;
@@ -81,10 +79,9 @@ t_filename	*filename_create(char *pathname, t_token_type type)
 	return (filename);
 }
 
-/** BUILD - FILENAME ADD BACK
- * @note
- * No need to set NULL after new,
-	cuz in file_creat() already attach NULL to new node
+/** FILENAME_ADD_BACK
+ * @note NO NEED set NULL after new!
+ * -> in filename_creat() already attach NULL to new node
  */
 int	filename_add_back(t_filename **head, t_filename *new)
 {
@@ -104,6 +101,7 @@ int	filename_add_back(t_filename **head, t_filename *new)
 	return (SUCCESS);
 }
 
+/** FILENAME_FREE */
 void	filename_free(t_filename *filename)
 {
 	t_filename	*tmp;

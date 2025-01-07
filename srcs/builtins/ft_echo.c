@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:44 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:38:43 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:01:57 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	ft_echo(t_arg *args)
 	}
 	while (args)
 	{
-		// printf("DB: IM HERE?\n");
 		printf("%s", args->value);
 		if (args->next)
 			printf(" ");
@@ -40,10 +39,11 @@ int	ft_echo(t_arg *args)
 	return (SUCCESS);
 }
 
-/** CHECK ECHO HAS N ARGS
- * - return (0) if no n found
- * - return (1) if n found -> valid n args
+/** CHECK_ECHO_HAS_N_ARGS
  * @note Ensure has '-' in first character, then check rest
+ * @return 
+ * - (0) if no n found
+ * - (1) if n found -> valid n args
  */
 int	check_echo_has_nargs(char *flag)
 {

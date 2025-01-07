@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   build_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 18:31:05 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 11:37:41 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:34:39 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/** bd_handle_args();
- * Processes tokens representing arguments to a command (e.g., filenames,
-	options).
- * Creates and appends each argument to the exec->args list.
- *
+/** BD_HANDLE_ARGS
+ * - Process tokens representing arguments to a command 
+ *  (e.g., filenames, options)
+ * - Creates and appends each argument to the exec->args list
  */
 int	bd_handle_args(t_exec *exec, t_token *token)
 {
@@ -33,7 +32,7 @@ int	bd_handle_args(t_exec *exec, t_token *token)
 	return (0);
 }
 
-/** BUILD - ARG CREATE */
+/** BD_ARGS_CREATE */
 t_arg	*bd_args_create(char *arg_value)
 {
 	t_arg	*args;
@@ -53,7 +52,7 @@ t_arg	*bd_args_create(char *arg_value)
 	return (args);
 }
 
-/** BUILD - ARG ADD BACK */
+/** BD_ARG_ADD_BACK */
 int	arg_add_back(t_arg **head, t_arg *new)
 {
 	t_arg	*current;
@@ -72,7 +71,7 @@ int	arg_add_back(t_arg **head, t_arg *new)
 	return (SUCCESS);
 }
 
-/** BUILD - ARG FREE */
+/** ARG_FREE */
 void	arg_free(t_arg *args)
 {
 	t_arg	*tmp;
