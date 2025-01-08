@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:48:18 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/08 19:22:00 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/08 20:43:05 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
  */
 t_env	*get_env(char *env_id, t_env *env)
 {
-	printf("🤯env_id: %s\n", env_id);
 	if (env_id == NULL || env == NULL)
 		return (NULL);
 	while (env != NULL)

@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/08 15:57:46 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/08 20:30:07 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@
 //OFFSET usefull if we use echo $?
 
 # define PROMPT "\001\033[1;36m\002supershell>$ \001\033[0m\002"
-# define DEFAULT_ENV "SHELL=supershell"
+# define DEFAULT_ENV "MINISHELL=supershell"
 
 typedef struct s_shell
 {
