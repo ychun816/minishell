@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_err.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:05 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/07 13:56:59 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/08 15:48:16 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	err_fork(int err_no, t_shell *ctx, int fd[][2])
 	ctx->exit_code = 2;
 	return (2);
 }
+
 //TODO
 void	exe_err_coredump(int pid)
 {

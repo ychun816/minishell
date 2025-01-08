@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:04:39 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 19:08:21 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:59:56 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,34 +80,86 @@ int	prs_check_quotes_valid(t_token *token)
  * *i += ft_strlen(new_token->value) + 1; (This updates the original i)
  * handle_quoted_token(..., &i); (i is updated after function return)
 */
-t_token	*prs_quotes_to_tokens(char *str, t_shell *cnt)
+// Helper function to process a single token
+static t_token	*process_single_token(char *str, t_shell *content, int *i)
+{
+	t_token	*new_token;
+
+	if (str[0] == '\'' || str[0] == '\"')
+	{
+		new_token = prs_get_quoted_str(str, str[0], content);
+		if (!new_token)
+		{
+			new_token = token_create("", 0, STR, content);
+			*i += 1;
+		}
+		else
+			*i += ft_strlen(new_token->value) + 1;
+	}
+	else
+	{
+		new_token = token_create(str, ft_rogue_len(str), STR, content);
+		*i += ft_strlen(new_token->value) - 1;
+	}
+	return (new_token);
+}
+
+t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
 {
 	int		i;
 	t_token	*token;
-	t_token	*tmp;
+	t_token	*new_token;
 
 	i = 0;
 	token = NULL;
-	tmp = NULL;
-	while (str[i])
+	while (input_str[i])
 	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			tmp = prs_get_quoted_str(&(str[i]), str[i], cnt);
-			i += ft_strlen(tmp->value) + 1;
-		}
-		else
-		{
-			tmp = token_create(&(str[i]), ft_rogue_len(&(str[i])), STR, cnt);
-			i += ft_strlen(tmp->value) - 1;
-		}
-		if (!tmp)
+		new_token = process_single_token(&(input_str[i]), content, &i);
+		if (!new_token)
 			return (NULL);
-		token_add_back(&(token), tmp);
+		token_add_back(&token, new_token);
 		i++;
 	}
 	return (token);
 }
+
+/*
+t_token	*prs_quotes_to_tokens(char *input_str, t_shell *content)
+{
+	int		i;
+	t_token	*token;
+	t_token	*new_token;
+
+	i = 0;
+	token = NULL;
+	new_token = NULL;
+	while (input_str[i])
+	{
+		if (input_str[i] == '\'' || input_str[i] == '\"')
+		{
+			new_token = prs_get_quoted_str(&(input_str[i]),
+							input_str[i], content);
+			if (!new_token)
+			{
+				new_token = token_create("", 0, STR, content);
+				i += 1;
+			}
+			else
+				i += ft_strlen(new_token->value) + 1;
+		}
+		else
+		{
+			new_token = token_create(&(input_str[i]), ft_rogue_len(&(input_str[i])),
+							STR, content);
+			i += ft_strlen(new_token->value) - 1;
+		}
+		if (!new_token)
+			return (NULL);
+		token_add_back(&token, new_token);
+		i++;
+	}
+	return (token);
+}*/
 
 /**handle quotes n expand env
  * Processes tokens in a linked list of tokens (t_token) by handling:

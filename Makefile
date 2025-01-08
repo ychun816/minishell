@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2025/01/08 15:30:52 by yilin            ###   ########.fr        #
+#    Updated: 2025/01/08 16:23:05 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,6 @@ BUILTIN_DIR = builtins
 EXEC_DIR = exec
 LEX_DIR = lexing
 PRS_DIR = parsing
-
 #TESTER_DIR = testers
 
 BUILD_FL = $(addprefix $(BUILD_DIR)/, build_args.c  build_filename.c  build_helper.c  build_to_exec.c)
@@ -97,7 +96,6 @@ $(LIBFT_A):
 archives: libft
 	@mkdir -p archives
 	@if [ -f $(LIBFT_A) ]; then cp $(LIBFT_A) archives/; fi
-
 #--silent: add at the back if don't want it displayed!
 
 ### Clean up object files and directories ###
@@ -120,7 +118,6 @@ re: fclean all
 #                              PHONY TARGETS                                   #
 # **************************************************************************** #
 
-#.PHONY: all clean fclean re libft archives
 .PHONY: all clean fclean re libft archives
 
 # **************************************************************************** #
