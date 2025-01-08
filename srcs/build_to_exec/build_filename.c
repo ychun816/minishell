@@ -37,7 +37,7 @@ int	bd_handle_redirs(t_exec *exec, t_token *token)
 	t_filename	*tmp;
 
 	if (token->next && token->next->value != NULL && (token->type == APPEND
-			|| token->type == HEREDOC || token->type == INFILE
+			|| token->type == NON_HEREDOC || token->type == INFILE
 			|| token->type == OUTFILE))
 	{
 		tmp = bd_filenames_create(token->next->value, token->type);
