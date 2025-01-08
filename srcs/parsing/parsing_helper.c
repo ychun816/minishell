@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:48:18 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 14:06:52 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/08 19:22:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@
  * Search for an environment variable by its name (path),
  * in a linked list of environment variables (env)
  */
-t_env	*get_env(char *pathname, t_env *env)
+t_env	*get_env(char *env_id, t_env *env)
 {
-	if (pathname == NULL || env == NULL)
+	printf("🤯env_id: %s\n", env_id);
+	if (env_id == NULL || env == NULL)
 		return (NULL);
 	while (env != NULL)
 	{
-		if (ft_strcmp(pathname, env->id) == 0)
+		if (ft_strcmp(env_id, env->id) == 0)
 			return (env);
 		env = env->next;
 	}

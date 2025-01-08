@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:54:39 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 17:19:55 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/08 20:09:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,35 @@ int	ft_unset(t_shell *content, t_arg *args)
  * => Skip to unlink the node
  *
  */
-int	delete_envvar(char *env_value, t_env **env)
+int	delete_envvar(char *env_id, t_env **env)
 {
 	t_env	*head;
 	t_env	*to_delete;
 
-	head = get_env(env_value, *env);
+	head = get_env(env_id, *env);
+	// printf("env_id: %s\n", env_id);
+	// printf("head: %s\n", head->value);
+	// printf("*env: %s\n", (*env)->value);
 	if (!head)
 		return (SUCCESS);
 	if (*env == head)
+	{
 		*env = head->next;
+		printf("entered if condition\n");
+	}	
 	else
 	{
 		to_delete = *env;
+		printf("entered else condition\n");
+		// while (to_delete->next != NULL)
 		while (to_delete->next != head)
+		{
+			printf("inside while loop\n");
 			to_delete = to_delete->next;
+		}
 		to_delete->next = head->next;
 	}
+	printf("HERE\n");
 	env_delete_1node(head);
 	return (SUCCESS);
 }
