@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:11:31 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/07 17:35:48 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/09 18:39:01 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 static int	handle_redir_and_bltins(t_shell *ctx, t_exec *temp, int *exit_code)
 {
-	if (err_redirs(temp))
+	if (err_redirs(temp, ctx))
 	{
+		fprintf(stderr, "err_redirs return 1");
 		free_all_shell(ctx);
 		ctx->exit_code = 1;
 		*exit_code = ctx->exit_code;
@@ -58,7 +59,10 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 	exit_code = 0;
 	setup_redir(ctx, fd, i);
 	if (handle_redir_and_bltins(ctx, temp, &exit_code))
+	{
+		fprintf(stderr, "exiting child with redir pb");
 		exit(exit_code);
+	}
 	exit_code = ft_execution(ctx, temp);
 	free_all_shell(ctx);
 	if (exit_code == -2)
@@ -108,7 +112,7 @@ int	exec(t_shell *ctx)
 	temp = ctx->exec;
 	if (ctx->exec_count == 1 && check_is_builtin(temp->cmd))
 	{
-		if (err_redirs(temp))
+		if (err_redirs(temp, ctx))
 		{
 			ctx->exit_code = 1;
 			return (ctx->exit_code);

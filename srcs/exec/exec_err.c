@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_err.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:05 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/08 15:48:16 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/09 14:09:24 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ int	err_fork(int err_no, t_shell *ctx, int fd[][2])
 	return (2);
 }
 
-//TODO
+//if child process terminated by signal
 void	exe_err_coredump(int pid)
 {
-	int	fd_tmp;
+	int	fd_backup;
 
-	fd_tmp = dup(STDOUT_FILENO);
+	fd_backup = dup(STDOUT_FILENO);
 	dup2(STDERR_FILENO, STDOUT_FILENO);
 	printf("[%d]: Quit (core dumped)\n", pid);
-	dup2(fd_tmp, STDOUT_FILENO);
-	exe_close(&fd_tmp);
+	dup2(fd_backup, STDOUT_FILENO);
+	exe_close(&fd_backup);
 }
 
 // TODO

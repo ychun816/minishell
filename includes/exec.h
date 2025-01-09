@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:55:19 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/07 18:30:36 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/09 18:39:27 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int							exec(t_shell *ctx);
 int							exec_parent(t_shell *ctx);
 void						set_std(t_shell *ctx, int mode);
 void						unlink_all(t_shell *ctx);
-int							err_redirs(t_exec *exec);
+int							err_redirs(t_exec *exec, t_shell *ctx);
 int							exec_redirs(t_exec *exec);
 int							redirs_type(t_filename *file);
 int							err_pipe(int err_no, t_shell *ctx);
