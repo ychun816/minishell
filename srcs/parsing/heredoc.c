@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 12:20:54 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/09 15:52:55 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/09 23:09:10 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	prs_handle_heredoc(t_token *token)
 		{
 			filename = generate_random_filename(token->next->value);
 			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (!fd)
+			if (fd == -1)
 				return (FAILURE);
 			if (prs_init_heredoc(fd, token->next->value) != 0)
 				end = 1;
