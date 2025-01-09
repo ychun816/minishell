@@ -3,61 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:44 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 17:01:57 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/09 22:30:53 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-/** FT_ECHO (with option -n)
- * -n / -nnnnnn (followed only by character 'n') -> valid option => remove \n
- * -nP , -n-n, -nOPEK (followed by non 'n') -> invlaid
- * @note use n_arg to flag when 'n' is found
- */
-int	ft_echo(t_arg *args)
-{
-	int	n_arg;
-
-	n_arg = 0;
-	while (args && check_echo_has_nargs(args->value) != 0)
-	{
-		n_arg = 1;
-		args = args->next;
-	}
-	while (args)
-	{
-		printf("%s", args->value);
-		if (args->next)
-			printf(" ");
-		args = args->next;
-	}
-	if (n_arg == 0)
-		printf("\n");
-	return (SUCCESS);
-}
-
-/** CHECK_ECHO_HAS_N_ARGS
- * @note Ensure has '-' in first character, then check rest
- * @return 
- * - (0) if no n found
- * - (1) if n found -> valid n args
- */
-int	check_echo_has_nargs(char *flag)
+static int	check_n_option(char *str)
 {
 	int	i;
 
-	i = 0;
-	if (!flag || flag[0] != '-')
+	i = 1;
+	if (str[0] != '-')
 		return (0);
-	i += 1;
-	while (flag[i])
+	while (str[i])
 	{
-		if (flag[i] != 'n')
+		if (str[i] != 'n')
 			return (0);
 		i++;
 	}
 	return (1);
+}
+
+int	ft_echo(t_arg *args)
+{
+	int	n_flag;
+
+	n_flag = 0;
+	while (args && args->value && check_n_option(args->value))
+	{
+		n_flag = 1;
+		args = args->next;
+	}
+	while (args)
+	{
+		ft_printf("%s", args->value);
+		if (args->next)
+			ft_printf(" ");
+		args = args->next;
+	}
+	if (!n_flag)
+		ft_printf("\n");
+	return (SUCCESS);
 }
