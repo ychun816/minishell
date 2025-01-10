@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/07 14:28:21 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/09 22:23:00 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	prs_expand_env(t_token *token)
 	while (token)
 	{
 		if (token->type == STR || token->type == DBL_QUOTE)
-			prs_handle_envvar_expansion(token);
+				prs_handle_envvar_expansion(token);
 		token = token->next;
 	}
 	return (SUCCESS);
