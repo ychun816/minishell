@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:14:21 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/09 22:23:00 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/10 13:46:48 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 * After return the signal code, it’s reset to 0 to avoid using stale
 * signal values for future processes.
 * @return (string (ft_itoa(code))); If a process was terminated by a signal
-* @return (normal exit code (ft_itoa(ctx->exit_code))); 
+* @return (normal exit code (ft_itoa(ctx->exit_code)));
 * If the process not terminated by a signal (g_signals.signal_code == 0)
 
 //TO CHECK: *status_code = 0;? should initialize??
@@ -38,9 +38,9 @@ char	*handle_qmark_exit_status(t_shell *content)
 }
 
 /** HANDLE DOLLAR SIGN PID ($$)
-* @note Alternative way: return (ft_strdup("program_pid"));
-* Using a constant string instead of actual PID for consistent behavior
-*/
+ * @note Alternative way: return (ft_strdup("program_pid"));
+ * Using a constant string instead of actual PID for consistent behavior
+ */
 char	*handle_dollar_pid(void)
 {
 	int	pid;
@@ -62,7 +62,7 @@ int	prs_expand_env(t_token *token)
 	while (token)
 	{
 		if (token->type == STR || token->type == DBL_QUOTE)
-				prs_handle_envvar_expansion(token);
+			prs_handle_envvar_expansion(token);
 		token = token->next;
 	}
 	return (SUCCESS);

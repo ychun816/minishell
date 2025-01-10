@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
+#    By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2025/01/08 16:23:05 by yilin            ###   ########.fr        #
+#    Updated: 2025/01/10 13:45:43 by varodrig         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ PRS_DIR = parsing
 
 BUILD_FL = $(addprefix $(BUILD_DIR)/, build_args.c  build_filename.c  build_helper.c  build_to_exec.c)
 BUILTIN_FL = $(addprefix $(BUILTIN_DIR)/, builtins_env.c builtins_error2.c ft_cd.c ft_env_pwd.c ft_export.c builtins_error1.c builtins_handler.c ft_echo.c ft_exit.c ft_unset.c)
-EXEC_FL = $(addprefix $(EXEC_DIR)/, exec.c exec_err.c exec_redirs.c exec_toolbox1.c exec_toolbox2.c exec_utils.c exec_execution.c)
+EXEC_FL = $(addprefix $(EXEC_DIR)/, exec.c exec_err.c exec_redirs.c exec_toolbox1.c exec_toolbox2.c exec_utils.c exec_execution.c exec_family).c
 LEX_FL = $(addprefix $(LEX_DIR)/, lexing.c  lexing_helper.c)
 PRS_FL = $(addprefix $(PRS_DIR)/, expansion.c expansion_helper.c parsing.c quotes.c expansion_env.c heredoc.c parsing_helper.c quotes_helper.c)
 MAIN_FL = main.c main_setup.c main_check_free.c env.c signal.c tokens.c 
