@@ -6,7 +6,7 @@
 /*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:00:20 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/09 20:19:06 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/10 21:04:32 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,60 @@ static int	ft_atol_overflow(const char *str, long *result);
  * @note
  * //Apply modulo 256 to match Bash behavior!!!
  */
+// int handle_exit_arguments(t_shell *content, t_arg *args, long *exit_code)
+// {
+//     if (check_exitcode(args->value) || ft_atol_overflow(args->value,
+//		exit_code))
+//     {
+//         error_exit(args->value);
+//         *exit_code = 2;  // Set exit code to 2 in case of error
+//         return (0);  // Indicate an error occurred
+//     }
+//     else if (args->next)  // Check if there are too many arguments
+//     {
+//         ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+//         content->exit_code = 1;  // Set exit code to 1 for too many arguments
+//         return (1);  // Indicate error due to too many arguments
+//     }
+//     else  // Valid exit code, apply modulo operation
+//     {
+//         *exit_code = (unsigned char)(*exit_code % 256);
+//     }
+//     return (1);  // Indicate success
+// }
+
+// int ft_exit(t_shell *content, t_arg *args)
+// {
+//     long exit_code;
+//     exit_code = content->exit_code;
+
+//     if (args)  // If there are arguments passed to `exit`
+//     {
+//         if (!handle_exit_arguments(content, args, &exit_code)) 
+	// Call helper function
+//         {
+//             return (1);  // Return early if there was an error
+//         }
+//     }
+//     else  // No arguments passed, set exit code based on signal
+//     {
+//         if (g_signal.signal_code > 0)
+//             exit_code = 128 + (g_signal.signal_code - SIG_OFFSET);
+//     }
+
+//     set_std(content, 1);
+//     free_all_shell(content);
+//     exit(exit_code);
+// }
+
+static int	too_many(t_shell *content)
+{
+	ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+	content->exit_code = 1;
+	return (1);
+}
+
+// OG
 int	ft_exit(t_shell *content, t_arg *args)
 {
 	long	exit_code;
@@ -38,13 +92,14 @@ int	ft_exit(t_shell *content, t_arg *args)
 			exit_code = 2;
 		}
 		else if (args->next)
-		{
-			ft_putstr_fd("minishell: exit: too many arguments\n",
-				STDERR_FILENO);
-			exit_code = 1;
-		}
+			return (too_many(content));
 		else
 			exit_code = (unsigned char)(exit_code % 256);
+	}
+	else
+	{
+		if (g_signal.signal_code > 0)
+			exit_code = 128 + (g_signal.signal_code - SIG_OFFSET);
 	}
 	set_std(content, 1);
 	free_all_shell(content);
