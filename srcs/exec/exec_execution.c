@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:01 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/06 17:39:01 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:31:13 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,33 @@ char	**env_format(t_env *env)
 // int execve(const char *fichier, char *const argv[], char *const envp[])
 // char	*args[] = {"/bin/ls", "-l", "/home", NULL};
 // +2 for path and NULL
+// ENOENT (Error NO ENTry)
+// EACCES (Error ACCESS)
+static int	handle_exec_error(char *path, char **env, char **args)
+{
+	if (errno == ENOENT)
+	{
+		err_execve(path, errno);
+		free(path);
+		ft_free_all(env);
+		free(args);
+		return (-127);
+	}
+	if (errno == EACCES)
+	{
+		err_execve(path, errno);
+		free(path);
+		ft_free_all(env);
+		free(args);
+		return (-126);
+	}
+	err_execve(path, errno);
+	free(path);
+	ft_free_all(env);
+	free(args);
+	return (-1);
+}
+
 int	ft_execution(t_shell *ctx, t_exec *temp)
 {
 	int		args_nb;
@@ -104,8 +131,7 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 		return (free(path), ft_free_all(env), 4);
 	exec_args_create(temp, args_nb, args);
 	if (execve(path, args, env) == -1)
-		return (err_execve(path, errno), free(path), ft_free_all(env),
-			free(args), -2);
+		return (handle_exec_error(path, env, args));
 	free(path);
 	ft_free_all(env);
 	free(args);

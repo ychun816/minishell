@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:42:07 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/10 13:42:27 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:30:43 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,16 @@ void	child_process(t_shell *ctx, int (*fd)[2], int i, t_exec *temp)
 	}
 	exit_code = ft_execution(ctx, temp);
 	free_all_shell(ctx);
-	if (exit_code == -2)
+	if (exit_code == -127)
+		exit(127);
+	else if (exit_code == -126)
 		exit(126);
-	exit(127);
+	else if (exit_code != 0)
+		exit(1);
+	exit(0);
 }
 
-//MAX_FDS : The default limit for file descriptors (ulimit -n -> 1024)
+// MAX_FDS : The default limit for file descriptors (ulimit -n -> 1024)
 int	exec_parent(t_shell *ctx)
 {
 	t_exec	*temp;

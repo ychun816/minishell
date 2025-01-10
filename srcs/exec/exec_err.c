@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:05 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/10 15:17:27 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:24:50 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	err_fork(int err_no, t_shell *ctx, int fd[][2])
 	return (2);
 }
 
-//if child process terminated by signal
+// if child process terminated by signal
 void	exe_err_coredump(int pid)
 {
 	int	fd_backup;
@@ -80,6 +80,10 @@ void	err_execve(char *path, int err_no)
 			printf("%s: %s: Is a directory\n", PROMPT_NAME, path);
 		else
 			printf("%s: %s: %s\n", PROMPT_NAME, path, strerror(err_no));
+	}
+	else if (err_no == ENOENT)
+	{
+		printf("%s: %s: No such file or directory\n", PROMPT_NAME, path);
 	}
 	else
 		printf("%s: %s: command not found\n", PROMPT_NAME, path);
