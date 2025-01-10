@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+         #
+#    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2025/01/10 13:45:43 by varodrig         ###   ########.fr        #
+#    Updated: 2025/01/10 14:06:00 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,7 +70,7 @@ RM = rm -rf
 
 ### Build Targets ###
 all: $(NAME)
-	$(print_flag)
+#$(print_flag)
 
 ### NAME Create the executable ###
 $(NAME): $(OBJS) $(LIBFT_A)
