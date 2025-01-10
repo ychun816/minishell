@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:05 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/09 14:09:24 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:17:27 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	exe_err_coredump(int pid)
 	exe_close(&fd_backup);
 }
 
-// TODO
 void	err_execve(char *path, int err_no)
 {
 	int			fd_tmp;

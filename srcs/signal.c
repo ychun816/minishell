@@ -6,11 +6,11 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:46:01 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/07 18:32:35 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:19:08 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h" //TODO
+#include "minishell.h"
 
 /*
 typedef struct s_signal
@@ -52,16 +52,7 @@ void	init_signals(void)
 	signal(SIGTSTP, SIG_IGN);
 }
 
-//read by the parent so it doesnt exit the program
-//when CTRL+C is pressed
-void	sigint_exec(int status)
-{
-	(void)status;
-	g_signal.signal_code = SIGINT + SIG_OFFSET ;
-	write(STDERR_FILENO, "\n", 1);
-}
-
-void	sig_heredoc(int status)
+void	signals_heredoc(int status)
 {
 	(void)status;
 	rl_replace_line("", 0);
@@ -69,4 +60,13 @@ void	sig_heredoc(int status)
 	rl_done = 1;
 	g_signal.end_heredoc = 1;
 	g_signal.signal_code = SIG_OFFSET + SIGINT;
+}
+
+//read by the parent so it doesnt exit the program
+//when CTRL+C is pressed
+void	sigint_exec(int status)
+{
+	(void)status;
+	g_signal.signal_code = SIGINT + SIG_OFFSET ;
+	write(STDERR_FILENO, "\n", 1);
 }

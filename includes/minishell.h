@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
+/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:55:25 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/08 20:30:07 by yilin            ###   ########.fr       */
+/*   Updated: 2025/01/10 15:16:02 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void			token_free(t_token *token);
 
 /************ SIGNALS ************/
 void			init_signals(void);
-void			sig_heredoc(int status);
+void			signals_heredoc(int status);
 void			sigint_exec(int status);
 int				sig_event(void);
 
