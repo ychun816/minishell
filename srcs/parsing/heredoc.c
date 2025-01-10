@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yilin <yilin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 12:20:54 by yilin             #+#    #+#             */
-/*   Updated: 2025/01/09 23:09:10 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:30:06 by yilin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ int	prs_init_heredoc(int fd, char *eof_delimiter)
 {
 	char	*line;
 
-	signal(SIGINT, sig_heredoc);
+	signal(SIGINT, signals_heredoc);
 	while (1)
 	{
 		line = readline("heredoc>");
