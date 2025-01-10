@@ -6,7 +6,7 @@
 /*   By: varodrig <varodrig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 14:12:01 by varodrig          #+#    #+#             */
-/*   Updated: 2025/01/10 17:31:13 by varodrig         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:24:07 by varodrig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,27 +87,18 @@ char	**env_format(t_env *env)
 // EACCES (Error ACCESS)
 static int	handle_exec_error(char *path, char **env, char **args)
 {
+	int	ret;
+
+	ret = 1;
 	if (errno == ENOENT)
-	{
-		err_execve(path, errno);
-		free(path);
-		ft_free_all(env);
-		free(args);
-		return (-127);
-	}
-	if (errno == EACCES)
-	{
-		err_execve(path, errno);
-		free(path);
-		ft_free_all(env);
-		free(args);
-		return (-126);
-	}
+		ret = 127;
+	else if (errno == EACCES)
+		ret = 126;
 	err_execve(path, errno);
 	free(path);
 	ft_free_all(env);
 	free(args);
-	return (-1);
+	return (ret);
 }
 
 int	ft_execution(t_shell *ctx, t_exec *temp)
@@ -121,14 +112,14 @@ int	ft_execution(t_shell *ctx, t_exec *temp)
 		return (0);
 	path = find_path(temp->cmd, ctx->env);
 	if (!path)
-		return (err_execve(temp->cmd, errno), 4);
+		return (err_execve(temp->cmd, errno), 127);
 	env = env_format(ctx->env);
 	if (!env)
-		return (free(path), 4);
+		return (free(path), 127);
 	args_nb = ft_args_lstsize(temp->args) + 2;
 	args = malloc(sizeof(char *) * args_nb);
 	if (!args)
-		return (free(path), ft_free_all(env), 4);
+		return (free(path), ft_free_all(env), 127);
 	exec_args_create(temp, args_nb, args);
 	if (execve(path, args, env) == -1)
 		return (handle_exec_error(path, env, args));
