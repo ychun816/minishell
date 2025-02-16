@@ -1,5 +1,6 @@
 ![supershell_flag](https://github.com/user-attachments/assets/d7455ed8-e2cc-4c2d-b354-0fc2495949de)
 [![Spotify](https://img.shields.io/badge/Listen_on-Spotify-1DB954?style=for-the-badge&logo=spotify)](https://open.spotify.com/track/5sdQOyqq2IDhvmx2lHOpwd)
+<iframe src="https://open.spotify.com/embed/track/5sdQOyqq2IDhvmx2lHOpwd" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 # Minishell
 ## Some Notions to be Aware of :
 + Built-in Functions in Bash Shell : https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/HkONOaSNJe
