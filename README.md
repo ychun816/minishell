@@ -5,5 +5,5 @@
 + Built-in Functions in Bash Shell : https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/HkONOaSNJe
 + Exit Codes in Shell : https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/rJMw9uQf1g
 + Signals in Bash Shell : https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/B1bVLAezkg
-+ libc functions that could cause leaks (That will be annoying when debugging) : https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/rkjxA_lUyx
++ libc functions that could cause leaks (For general understanding for debugging) : https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/rkjxA_lUyx
 + 42 Minishell Eval Preparations : https://hackmd.io/@QBrv51OvRPqs9dJjL2YIig/BJhAJ30Iyl
