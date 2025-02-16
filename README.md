@@ -1,5 +1,5 @@
 ![supershell_flag](https://github.com/user-attachments/assets/d7455ed8-e2cc-4c2d-b354-0fc2495949de)
-<iframe src="https://open.spotify.com/embed/track/5sdQOyqq2IDhvmx2lHOpwd" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+[Listen to the song on GitHub Pages](https://your-username.github.io/your-repo)
 [![Spotify](https://img.shields.io/badge/Listen_on-Spotify-1DB954?style=for-the-badge&logo=spotify)](https://open.spotify.com/track/5sdQOyqq2IDhvmx2lHOpwd)
 
 # Minishell
