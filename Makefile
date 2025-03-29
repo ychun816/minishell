@@ -6,7 +6,7 @@
 #    By: yilin <yilin@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 14:47:59 by yilin             #+#    #+#              #
-#    Updated: 2025/01/13 17:18:44 by yilin            ###   ########.fr        #
+#    Updated: 2025/01/21 12:58:31 by yilin            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,7 +72,7 @@ RM = rm -rf
 all: $(NAME)
 	$(print_flag)
 
-### NAME Create the executable ###
+### NAME Create the executablse ###
 $(NAME): $(OBJS) $(LIBFT_A)
 	@$(CC) $(CFLAGS) $(OBJS) $(LFLAGS) -o $(NAME) $(LDFLAGS)
 	@echo "$(ROSEB)🚀🦄 $(NAME) SUCCESSFULLY COMPILED! 🦄🚀$(COLOR_RESET)"
